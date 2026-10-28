@@ -1,0 +1,83 @@
+{
+ "first_round_first_labels": {
+  "relevance": {
+   "agree": 18,
+   "of": 20,
+   "pct": 90.0
+  },
+  "themes_exact": {
+   "agree": 3,
+   "of": 16,
+   "pct": 18.8
+  },
+  "themes_overlap": {
+   "agree": 12,
+   "of": 16,
+   "pct": 75.0
+  },
+  "stage": {
+   "agree": 9,
+   "of": 16,
+   "pct": 56.2
+  },
+  "status": {
+   "agree": 10,
+   "of": 16,
+   "pct": 62.5
+  }
+ },
+ "first_round_reviewed_labels": {
+  "relevance": {
+   "agree": 19,
+   "of": 20,
+   "pct": 95.0
+  },
+  "themes_exact": {
+   "agree": 8,
+   "of": 16,
+   "pct": 50.0
+  },
+  "themes_overlap": {
+   "agree": 12,
+   "of": 16,
+   "pct": 75.0
+  },
+  "stage": {
+   "agree": 13,
+   "of": 16,
+   "pct": 81.2
+  },
+  "status": {
+   "agree": 13,
+   "of": 16,
+   "pct": 81.2
+  }
+ },
+ "final": {
+  "relevance": {
+   "agree": 20,
+   "of": 20,
+   "pct": 100.0
+  },
+  "themes_exact": {
+   "agree": 9,
+   "of": 17,
+   "pct": 52.9
+  },
+  "themes_overlap": {
+   "agree": 15,
+   "of": 17,
+   "pct": 88.2
+  },
+  "stage": {
+   "agree": 15,
+   "of": 17,
+   "pct": 88.2
+  },
+  "status": {
+   "agree": 14,
+   "of": 17,
+   "pct": 82.4
+  }
+ }
+}

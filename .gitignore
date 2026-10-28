@@ -1,0 +1,9 @@
+# raw collected posts, intermediate tagging output and keys stay out of the repo
+discovery-engine/data/
+**/__pycache__/
+*.log
+.env
+.streamlit/secrets.toml
+# recruiting and interview material is personal data
+recruiting/
+interviews/

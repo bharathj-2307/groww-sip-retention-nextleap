@@ -1,0 +1,466 @@
+{
+ "posts_tagged": 7386,
+ "relevant": 4487,
+ "by_source": {
+  "appstore": {
+   "collected": 30,
+   "relevant": 29
+  },
+  "play": {
+   "collected": 751,
+   "relevant": 726
+  },
+  "reddit": {
+   "collected": 5256,
+   "relevant": 3137
+  },
+  "tqna": {
+   "collected": 647,
+   "relevant": 171
+  },
+  "youtube": {
+   "collected": 702,
+   "relevant": 424
+  }
+ },
+ "themes": {
+  "T9": {
+   "name": "Asking others",
+   "posts": 2345,
+   "share_pct": 52.3
+  },
+  "T0": {
+   "name": "Other",
+   "posts": 664,
+   "share_pct": 14.8
+  },
+  "T10": {
+   "name": "App friction",
+   "posts": 606,
+   "share_pct": 13.5
+  },
+  "T1": {
+   "name": "Why they started",
+   "posts": 535,
+   "share_pct": 11.9
+  },
+  "T6": {
+   "name": "Pause, reduce, stop or redeem",
+   "posts": 482,
+   "share_pct": 10.7
+  },
+  "T12": {
+   "name": "Feature request",
+   "posts": 240,
+   "share_pct": 5.3
+  },
+  "T3": {
+   "name": "Confusing numbers",
+   "posts": 195,
+   "share_pct": 4.3
+  },
+  "T4": {
+   "name": "Low or negative returns",
+   "posts": 190,
+   "share_pct": 4.2
+  },
+  "T13": {
+   "name": "Support and charges",
+   "posts": 170,
+   "share_pct": 3.8
+  },
+  "T5": {
+   "name": "Missed or failed instalment",
+   "posts": 118,
+   "share_pct": 2.6
+  },
+  "T11": {
+   "name": "Trust and safety",
+   "posts": 73,
+   "share_pct": 1.6
+  },
+  "T2": {
+   "name": "Expectation gap",
+   "posts": 63,
+   "share_pct": 1.4
+  },
+  "T7": {
+   "name": "Life event or cash crunch",
+   "posts": 39,
+   "share_pct": 0.9
+  },
+  "T8": {
+   "name": "Checking too often",
+   "posts": 24,
+   "share_pct": 0.5
+  }
+ },
+ "stage": {
+  "0-3 months": 368,
+  "12+ months": 563,
+  "unknown": 2569,
+  "considering": 854,
+  "3-12 months": 133
+ },
+ "status": {
+  "continuing": 1492,
+  "stopped": 162,
+  "unknown": 2546,
+  "wavering": 147,
+  "paused_or_reduced": 137,
+  " unknown": 3
+ },
+ "age_band": {
+  "unknown": 3675,
+  "under 25": 443,
+  " unknown": 3,
+  "25-35": 273,
+  "36+": 90,
+  "32": 1,
+  "salaried": 1,
+  "35-35": 1
+ },
+ "income_type": {
+  "unknown": 3980,
+  "salaried": 370,
+  " unknown": 3,
+  "student": 117,
+  "self_employed": 17
+ },
+ "money_source": {
+  "unknown": 3954,
+  "salary": 421,
+  " unknown": 3,
+  "family": 30,
+  "savings": 79
+ },
+ "first_time_investor": {
+  "yes": 625,
+  "no": 803,
+  "unknown": 3056,
+  " unknown": 3
+ },
+ "influenced_by_others": {
+  "unknown": 2591,
+  "no": 892,
+  "yes": 1001,
+  " unknown": 3
+ },
+ "drop_vs_continuing": {
+  "drop_posts": 446,
+  "continuing_posts": 1492,
+  "themes": {
+   "T1": {
+    "name": "Why they started",
+    "in_drop_pct": 1.6,
+    "in_continuing_pct": 15.1,
+    "drop_posts": 7,
+    "drop_rate_among_theme_pct": 3.0
+   },
+   "T2": {
+    "name": "Expectation gap",
+    "in_drop_pct": 3.8,
+    "in_continuing_pct": 1.3,
+    "drop_posts": 17,
+    "drop_rate_among_theme_pct": 45.9
+   },
+   "T3": {
+    "name": "Confusing numbers",
+    "in_drop_pct": 3.4,
+    "in_continuing_pct": 2.6,
+    "drop_posts": 15,
+    "drop_rate_among_theme_pct": 27.8
+   },
+   "T4": {
+    "name": "Low or negative returns",
+    "in_drop_pct": 17.5,
+    "in_continuing_pct": 4.8,
+    "drop_posts": 78,
+    "drop_rate_among_theme_pct": 52.3
+   },
+   "T5": {
+    "name": "Missed or failed instalment",
+    "in_drop_pct": 7.4,
+    "in_continuing_pct": 0.6,
+    "drop_posts": 33,
+    "drop_rate_among_theme_pct": 78.6
+   },
+   "T6": {
+    "name": "Pause, reduce, stop or redeem",
+    "in_drop_pct": 85.7,
+    "in_continuing_pct": 5.4,
+    "drop_posts": 382,
+    "drop_rate_among_theme_pct": 82.7
+   },
+   "T7": {
+    "name": "Life event or cash crunch",
+    "in_drop_pct": 4.9,
+    "in_continuing_pct": 0.5,
+    "drop_posts": 22,
+    "drop_rate_among_theme_pct": 75.9
+   },
+   "T8": {
+    "name": "Checking too often",
+    "in_drop_pct": 0.7,
+    "in_continuing_pct": 0.9,
+    "drop_posts": 3,
+    "drop_rate_among_theme_pct": 17.6
+   },
+   "T9": {
+    "name": "Asking others",
+    "in_drop_pct": 38.8,
+    "in_continuing_pct": 56.9,
+    "drop_posts": 173,
+    "drop_rate_among_theme_pct": 16.9
+   },
+   "T10": {
+    "name": "App friction",
+    "in_drop_pct": 20.9,
+    "in_continuing_pct": 3.5,
+    "drop_posts": 93,
+    "drop_rate_among_theme_pct": 64.1
+   },
+   "T11": {
+    "name": "Trust and safety",
+    "in_drop_pct": 4.0,
+    "in_continuing_pct": 0.3,
+    "drop_posts": 18,
+    "drop_rate_among_theme_pct": 78.3
+   },
+   "T12": {
+    "name": "Feature request",
+    "in_drop_pct": 1.1,
+    "in_continuing_pct": 2.3,
+    "drop_posts": 5,
+    "drop_rate_among_theme_pct": 12.5
+   },
+   "T13": {
+    "name": "Support and charges",
+    "in_drop_pct": 7.2,
+    "in_continuing_pct": 0.7,
+    "drop_posts": 32,
+    "drop_rate_among_theme_pct": 74.4
+   },
+   "T0": {
+    "name": "Other",
+    "in_drop_pct": 0.2,
+    "in_continuing_pct": 15.4,
+    "drop_posts": 1,
+    "drop_rate_among_theme_pct": 0.4
+   }
+  }
+ },
+ "opportunity": [
+  {
+   "theme": "T9",
+   "name": "Asking others",
+   "share_pct": 52.3,
+   "drop_rate_among_theme_pct": 16.9,
+   "score": 8.83
+  },
+  {
+   "theme": "T10",
+   "name": "App friction",
+   "share_pct": 13.5,
+   "drop_rate_among_theme_pct": 64.1,
+   "score": 8.66
+  },
+  {
+   "theme": "T13",
+   "name": "Support and charges",
+   "share_pct": 3.8,
+   "drop_rate_among_theme_pct": 74.4,
+   "score": 2.82
+  },
+  {
+   "theme": "T4",
+   "name": "Low or negative returns",
+   "share_pct": 4.2,
+   "drop_rate_among_theme_pct": 52.3,
+   "score": 2.21
+  },
+  {
+   "theme": "T5",
+   "name": "Missed or failed instalment",
+   "share_pct": 2.6,
+   "drop_rate_among_theme_pct": 78.6,
+   "score": 2.07
+  },
+  {
+   "theme": "T11",
+   "name": "Trust and safety",
+   "share_pct": 1.6,
+   "drop_rate_among_theme_pct": 78.3,
+   "score": 1.27
+  },
+  {
+   "theme": "T3",
+   "name": "Confusing numbers",
+   "share_pct": 4.3,
+   "drop_rate_among_theme_pct": 27.8,
+   "score": 1.21
+  },
+  {
+   "theme": "T12",
+   "name": "Feature request",
+   "share_pct": 5.3,
+   "drop_rate_among_theme_pct": 12.5,
+   "score": 0.67
+  },
+  {
+   "theme": "T7",
+   "name": "Life event or cash crunch",
+   "share_pct": 0.9,
+   "drop_rate_among_theme_pct": 75.9,
+   "score": 0.66
+  },
+  {
+   "theme": "T2",
+   "name": "Expectation gap",
+   "share_pct": 1.4,
+   "drop_rate_among_theme_pct": 45.9,
+   "score": 0.64
+  },
+  {
+   "theme": "T1",
+   "name": "Why they started",
+   "share_pct": 11.9,
+   "drop_rate_among_theme_pct": 3.0,
+   "score": 0.36
+  },
+  {
+   "theme": "T8",
+   "name": "Checking too often",
+   "share_pct": 0.5,
+   "drop_rate_among_theme_pct": 17.6,
+   "score": 0.09
+  }
+ ],
+ "segment_vs_rest": {
+  "segment_posts": 2,
+  "other_posts": 4485,
+  "themes": {
+   "T1": {
+    "segment_pct": 0.0,
+    "other_pct": 11.9
+   },
+   "T2": {
+    "segment_pct": 0.0,
+    "other_pct": 1.4
+   },
+   "T3": {
+    "segment_pct": 0.0,
+    "other_pct": 4.3
+   },
+   "T4": {
+    "segment_pct": 50.0,
+    "other_pct": 4.2
+   },
+   "T5": {
+    "segment_pct": 0.0,
+    "other_pct": 2.6
+   },
+   "T6": {
+    "segment_pct": 0.0,
+    "other_pct": 10.7
+   },
+   "T7": {
+    "segment_pct": 0.0,
+    "other_pct": 0.9
+   },
+   "T8": {
+    "segment_pct": 0.0,
+    "other_pct": 0.5
+   },
+   "T9": {
+    "segment_pct": 100.0,
+    "other_pct": 52.2
+   },
+   "T10": {
+    "segment_pct": 0.0,
+    "other_pct": 13.5
+   },
+   "T11": {
+    "segment_pct": 0.0,
+    "other_pct": 1.6
+   },
+   "T12": {
+    "segment_pct": 0.0,
+    "other_pct": 5.4
+   },
+   "T13": {
+    "segment_pct": 0.0,
+    "other_pct": 3.8
+   },
+   "T0": {
+    "segment_pct": 0.0,
+    "other_pct": 14.8
+   }
+  },
+  "segment_drop_pct": 0.0,
+  "other_drop_pct": 9.9
+ },
+ "stated_attributes_pct": {
+  "age_band": 18.1,
+  "income_type": 11.3,
+  "money_source": 11.9,
+  "first_time_investor": 31.9,
+  "stage": 42.7,
+  "status": 43.3
+ },
+ "drop_by_stage": {
+  "considering": {
+   "posts": 9,
+   "drop_pct": 55.6
+  },
+  "0-3 months": {
+   "posts": 287,
+   "drop_pct": 6.6
+  },
+  "3-12 months": {
+   "posts": 114,
+   "drop_pct": 18.4
+  },
+  "12+ months": {
+   "posts": 509,
+   "drop_pct": 19.1
+  }
+ },
+ "segment_cuts": {
+  "salaried": {
+   "posts": 370,
+   "status_known": 228,
+   "drop_pct": 10.5
+  },
+  "age 25-35": {
+   "posts": 273,
+   "status_known": 171,
+   "drop_pct": 4.1
+  },
+  "salaried and 25-35": {
+   "posts": 97,
+   "status_known": 60,
+   "drop_pct": 5.0
+  },
+  "first-time investor, 0-12 months": {
+   "posts": 225,
+   "status_known": 173,
+   "drop_pct": 6.9
+  },
+  "all four (strict)": {
+   "posts": 2,
+   "status_known": 2,
+   "drop_pct": 0.0
+  }
+ },
+ "confidence": {
+  "high": 4195,
+  "medium": 287,
+  "low": 5
+ },
+ "model_used": {
+  "gemini-3.5-flash-lite": 4242,
+  "gemini-3.1-flash-lite": 3066,
+  "gemini-3.5-flash": 78
+ }
+}

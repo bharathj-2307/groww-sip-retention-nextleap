@@ -1,0 +1,17 @@
+{
+ "collected": {
+  "appstore": 30,
+  "play": 751,
+  "reddit": 5256,
+  "tqna": 647,
+  "youtube": 702
+ },
+ "relevant": {
+  "appstore": 29,
+  "play": 726,
+  "reddit": 3137,
+  "tqna": 171,
+  "youtube": 424
+ },
+ "second_pass_posts": 1680
+}
