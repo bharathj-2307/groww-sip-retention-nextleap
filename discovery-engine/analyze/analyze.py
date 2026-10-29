@@ -29,6 +29,9 @@ def clean(r):
     for f in ("first_time_investor", "influenced_by_others"):
         r[f] = {"false": "no", "true": "yes"}.get(str(r.get(f)).lower(), r.get(f, "unknown"))
     r["themes"] = [t for t in r.get("themes", []) if t in THEME_NAMES]
+    for f, ok in (("age_band", {"under 25", "25-35", "36+"}), ("income_type", {"salaried", "student", "self_employed"})):
+        v = str(r.get(f) or "unknown").strip()
+        r[f] = v if v in ok else "unknown"  # stray labels (a bare age, a wrong field's value) are not trusted
     return r
 
 
