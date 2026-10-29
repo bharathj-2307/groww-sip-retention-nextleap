@@ -4,71 +4,71 @@
  "areas": [
   {
    "area": "SIP set-up and date control",
-   "posts": 434,
-   "reach_pct": 9.7,
-   "drop_rate_in_pct": 57.3,
-   "status_known_in": 124,
-   "drop_rate_out_pct": 20.6,
-   "drop_diff_pp": 36.6,
+   "posts": 429,
+   "reach_pct": 9.6,
+   "drop_rate_in_pct": 56.9,
+   "status_known_in": 123,
+   "drop_rate_out_pct": 20.7,
+   "drop_diff_pp": 36.2,
    "drop_diff_ci_pp": [
-    27.7,
-    45.5
+    27.3,
+    45.2
    ],
-   "early_life_pct": 36.8,
-   "stage_known_in": 117,
-   "early_life_vs_all_pp": 10.6,
-   "salaried_share_pct": 61.5,
+   "early_life_pct": 36.3,
+   "stage_known_in": 113,
+   "early_life_vs_all_pp": 10.2,
+   "salaried_share_pct": 72.7,
    "salaried_share_all_pct": 73.0,
-   "income_known_in": 13,
-   "age_25_35_share_pct": 28.6,
+   "income_known_in": 11,
+   "age_25_35_share_pct": 33.3,
    "age_25_35_share_all_pct": 33.6,
-   "age_known_in": 7,
+   "age_known_in": 6,
    "fixable": "in_app",
    "metric_lever": "Starting well and keeping instalments on schedule",
-   "high_confidence_pct": 95.9,
+   "high_confidence_pct": 95.8,
    "sources": {
     "appstore": 2,
     "play": 78,
-    "reddit": 196,
+    "reddit": 191,
     "tqna": 56,
     "youtube": 102
    },
    "evidence": "firm",
-   "score": 3.54,
+   "score": 3.46,
    "quotes": [
     {
-     "quote": "However, over the past few days, almost every transaction has failed due to what the app describes as a “technical issue.”",
-     "source": "reddit",
-     "url": "https://www.reddit.com/r/IndiaInvestments/comments/1r31bmb/_/o55mfqa"
+     "quote": "Mere sip 1000 hai par Same date pe jada cut ho Kar raha hai jaise 4 bar ya 5 bar to use kaise stop karu",
+     "source": "youtube",
+     "url": "https://www.youtube.com/watch?v=sIeD8Z_nUTE&lc=Ugwyu7NUhH4halUsBlZ4AaABAg"
     },
     {
-     "quote": "There should be an option, but you would need to dig around. I did stop my SIP in Feb.",
-     "source": "reddit",
-     "url": "https://www.reddit.com/r/mutualfunds/comments/1p8nf3q/_/nr6dwpz"
+     "quote": "today I cancel my buy order I want to know when my fund get refunded",
+     "source": "tqna",
+     "url": "https://tradingqna.com/t/sip-cancel-on-mf/190338/1"
     },
     {
-     "quote": "SIP cancellation requested but amount still deducted – does it take a month to stop?",
-     "source": "reddit",
-     "url": "https://www.reddit.com/r/IndiaInvestments/comments/1rfv3xe/sip_cancellation_requested_but_amount_still/"
+     "quote": "I tried a lot to skip my sips for a month and it shows it can be done 2 days before sip date, but even before 2 days it doesn't work.",
+     "source": "play",
+     "url": "https://play.google.com/store/apps/details?id=com.nextbillion.groww"
     }
    ],
    "second_pass_coverage_pct": 100.0
   },
   {
    "area": "Support and grievance resolution",
-   "posts": 235,
+   "posts": 234,
    "reach_pct": 5.2,
-   "drop_rate_in_pct": 75.4,
-   "status_known_in": 61,
+   "drop_rate_in_pct": 76.7,
+   "status_known_in": 60,
    "drop_rate_out_pct": 21.3,
-   "drop_diff_pp": 54.1,
+   "drop_diff_pp": 55.4,
    "drop_diff_ci_pp": [
-    43.2,
-    65.1
+    44.5,
+    66.3
    ],
-   "early_life_pct": 36.2,
+   "early_life_pct": 34.0,
    "stage_known_in": 47,
-   "early_life_vs_all_pp": 10.0,
+   "early_life_vs_all_pp": 7.9,
    "salaried_share_pct": null,
    "salaried_share_all_pct": 73.0,
    "income_known_in": 0,
@@ -81,46 +81,46 @@
    "sources": {
     "appstore": 6,
     "play": 128,
-    "reddit": 65,
+    "reddit": 64,
     "tqna": 24,
     "youtube": 12
    },
    "evidence": "firm",
-   "score": 2.84,
+   "score": 2.89,
    "quotes": [
     {
-     "quote": "I havent got my money from the mutual funds i sold 3 months ago and have emailed them many times",
-     "source": "appstore",
-     "url": "https://apps.apple.com/in/app/groww/id1404871703"
+     "quote": "Do not use this app, they automatically redeem your mutual fund and customer support is the worst.",
+     "source": "play",
+     "url": "https://play.google.com/store/apps/details?id=com.nextbillion.groww"
     },
     {
-     "quote": "Sir agar hamne 3 years ka sip on kiya ab ham ko band Krna hoga to koi changes katega??",
-     "source": "youtube",
-     "url": "https://www.youtube.com/watch?v=MExMf8_g4CE&lc=UgylT8R1i_Len2md-iB4AaABAg"
+     "quote": "6 days and my KYC is still pending. Your support team LIED to me on email",
+     "source": "play",
+     "url": "https://play.google.com/store/apps/details?id=com.nextbillion.groww"
     },
     {
-     "quote": "I want to cancel and close an SIP on paytm money but i simply can’t do it!",
-     "source": "reddit",
-     "url": "https://www.reddit.com/r/mutualfunds/comments/1kpe92z/i_want_to_cancel_and_close_an_sip_on_paytm_money/"
+     "quote": "jido mai order kita c result positive c , fund name UTI nifty 50 index fund (No exit load) , jido care ch gall kiti side muhh gall ni karde",
+     "source": "play",
+     "url": "https://play.google.com/store/apps/details?id=com.nextbillion.groww"
     }
    ],
    "second_pass_coverage_pct": 100.0
   },
   {
    "area": "Autopay and mandate reliability",
-   "posts": 200,
+   "posts": 201,
    "reach_pct": 4.5,
-   "drop_rate_in_pct": 65.1,
-   "status_known_in": 63,
-   "drop_rate_out_pct": 21.6,
-   "drop_diff_pp": 43.5,
+   "drop_rate_in_pct": 62.9,
+   "status_known_in": 62,
+   "drop_rate_out_pct": 21.7,
+   "drop_diff_pp": 41.2,
    "drop_diff_ci_pp": [
-    31.6,
-    55.4
+    29.1,
+    53.4
    ],
-   "early_life_pct": 44.4,
-   "stage_known_in": 45,
-   "early_life_vs_all_pp": 18.3,
+   "early_life_pct": 47.8,
+   "stage_known_in": 46,
+   "early_life_vs_all_pp": 21.7,
    "salaried_share_pct": null,
    "salaried_share_all_pct": 73.0,
    "income_known_in": 0,
@@ -133,93 +133,93 @@
    "sources": {
     "appstore": 4,
     "play": 37,
-    "reddit": 89,
+    "reddit": 90,
     "tqna": 32,
     "youtube": 38
    },
    "evidence": "firm",
-   "score": 1.94,
+   "score": 1.85,
    "quotes": [
     {
-     "quote": "Im having an issue with the bank account linked to my Mutual fund SIP.",
-     "source": "reddit",
-     "url": "https://www.reddit.com/r/mutualfunds/comments/1i1qjre/whats_the_best_method_to_close_a_sip_and_invest/"
+     "quote": "Sir me 5000 ka sip kr rha hu to payment temporary blocked show ho rhi h paisa jama kese kre ?",
+     "source": "youtube",
+     "url": "https://www.youtube.com/watch?v=MExMf8_g4CE&lc=Ugw8oAHcRSIko4V09PF4AaABAg"
     },
     {
-     "quote": "Dear Investor, the transaction submitted by you on19-Jan-2026 for Parag Parikh Flexi Cap - Dir Plan Growth is not in good order. We are therefore unable to process this transaction.",
-     "source": "reddit",
-     "url": "https://www.reddit.com/r/mutualfunds/comments/1qi2zns/parag_parikh_flexi_cap_sip_is_not_in_good_order/"
-    },
-    {
-     "quote": "I was wondering why my sip was never executed which i have put in for months Zerodha support tells me i need to start sip manually",
+     "quote": "Banks are charging arm and a leg for unfilled SIP transactions (for the lack of funds) and multiple attempts by Coin is only making matters worse.",
      "source": "tqna",
-     "url": "https://tradingqna.com/t/coins-customer-workflow-is-broken-for-auto-sip/173335/1"
+     "url": "https://tradingqna.com/t/an-appeal-to-zerodha-investor-awareness/168343/1"
+    },
+    {
+     "quote": "Mere sip 1000 hai par Same date pe jada cut ho Kar raha hai jaise 4 bar ya 5 bar to use kaise stop karu",
+     "source": "youtube",
+     "url": "https://www.youtube.com/watch?v=sIeD8Z_nUTE&lc=Ugwyu7NUhH4halUsBlZ4AaABAg"
     }
    ],
    "second_pass_coverage_pct": 100.0
   },
   {
    "area": "Reassurance during market falls",
-   "posts": 271,
-   "reach_pct": 6.0,
-   "drop_rate_in_pct": 63.2,
-   "status_known_in": 220,
-   "drop_rate_out_pct": 17.8,
-   "drop_diff_pp": 45.3,
+   "posts": 285,
+   "reach_pct": 6.4,
+   "drop_rate_in_pct": 63.8,
+   "status_known_in": 235,
+   "drop_rate_out_pct": 17.4,
+   "drop_diff_pp": 46.5,
    "drop_diff_ci_pp": [
-    38.7,
-    52.0
+    40.1,
+    52.9
    ],
-   "early_life_pct": 29.5,
-   "stage_known_in": 149,
-   "early_life_vs_all_pp": 3.4,
-   "salaried_share_pct": 82.6,
+   "early_life_pct": 29.6,
+   "stage_known_in": 152,
+   "early_life_vs_all_pp": 3.5,
+   "salaried_share_pct": 83.3,
    "salaried_share_all_pct": 73.0,
-   "income_known_in": 23,
-   "age_25_35_share_pct": 22.9,
+   "income_known_in": 24,
+   "age_25_35_share_pct": 22.2,
    "age_25_35_share_all_pct": 33.6,
-   "age_known_in": 35,
+   "age_known_in": 36,
    "fixable": "partly",
    "metric_lever": "Surviving the first dip",
-   "high_confidence_pct": 97.8,
+   "high_confidence_pct": 97.9,
    "sources": {
     "play": 8,
-    "reddit": 239,
+    "reddit": 253,
     "tqna": 3,
     "youtube": 21
    },
    "evidence": "firm",
-   "score": 1.64,
+   "score": 1.77,
    "quotes": [
     {
-     "quote": "me redem 1042 and after 2 Day my redeem money is the 1018 income verybad",
-     "source": "play",
-     "url": "https://play.google.com/store/apps/details?id=com.nextbillion.groww"
+     "quote": "I have invested in a quant mutual fund and right now in loss of -5% I am not sure if to exit or to continue.",
+     "source": "youtube",
+     "url": "https://www.youtube.com/watch?v=faiHvcWLAWI&lc=UgxYpFymy2kXJ3B002N4AaABAg"
     },
     {
-     "quote": "I have already stopped my SIPs. Will wait till I get at least a 15% XIRR on my portfolio.",
-     "source": "youtube",
-     "url": "https://www.youtube.com/watch?v=gdxbs19Gt_E&lc=UgynnzShNhdB9OfSDE54AaABAg"
+     "quote": "Canara robeco large cap : 24.4 % (paused, underperforming from 2 years)",
+     "source": "reddit",
+     "url": "https://www.reddit.com/r/mutualfunds/comments/1uedsko/pls_review_my_sip_holding/"
     },
     {
-     "quote": "till the date loss show kr rha hai .\nKya mein rest amount withdrawn kr lu ya wait kru increase hone ka ?",
+     "quote": "I have invested in SIP of Franklin prima fund for 5 years & then stopped SIP. Now the CAGR returns are in single digit.",
      "source": "youtube",
-     "url": "https://www.youtube.com/watch?v=MExMf8_g4CE&lc=UgxMh4-mL8g2kpWJiRZ4AaABAg"
+     "url": "https://www.youtube.com/watch?v=CPEatoLkXNI&lc=UgwwadUsgvr8ENVPcgp4AaABAg"
     }
    ],
    "second_pass_coverage_pct": 100.0
   },
   {
    "area": "Withdrawal and redemption experience",
-   "posts": 78,
+   "posts": 77,
    "reach_pct": 1.7,
-   "drop_rate_in_pct": 95.2,
-   "status_known_in": 21,
+   "drop_rate_in_pct": 95.0,
+   "status_known_in": 20,
    "drop_rate_out_pct": 22.2,
-   "drop_diff_pp": 73.1,
+   "drop_diff_pp": 72.8,
    "drop_diff_ci_pp": [
-    63.8,
-    82.3
+    63.0,
+    82.5
    ],
    "early_life_pct": 26.7,
    "stage_known_in": 15,
@@ -236,25 +236,25 @@
    "sources": {
     "appstore": 1,
     "play": 52,
-    "reddit": 3,
+    "reddit": 2,
     "tqna": 7,
     "youtube": 15
    },
    "evidence": "thin",
-   "score": 1.27,
+   "score": 1.25,
    "quotes": [
-    {
-     "quote": "I havent got my money from the mutual funds i sold 3 months ago and have emailed them many times",
-     "source": "appstore",
-     "url": "https://apps.apple.com/in/app/groww/id1404871703"
-    },
     {
      "quote": "I also applied for refund . but no refund occur even after a week",
      "source": "play",
      "url": "https://play.google.com/store/apps/details?id=com.nextbillion.groww"
     },
     {
-     "quote": "after redeeming 5 SIP.i only get 4 SIP and they don't pay 1 SIP amount of 9,500.",
+     "quote": "I havent got my money from the mutual funds i sold 3 months ago and have emailed them many times",
+     "source": "appstore",
+     "url": "https://apps.apple.com/in/app/groww/id1404871703"
+    },
+    {
+     "quote": "I want to cancel sip but amount withdrawal option not showing.",
      "source": "play",
      "url": "https://play.google.com/store/apps/details?id=com.nextbillion.groww"
     }
@@ -263,71 +263,71 @@
   },
   {
    "area": "Trust and reassurance",
-   "posts": 157,
-   "reach_pct": 3.5,
-   "drop_rate_in_pct": 81.4,
-   "status_known_in": 59,
-   "drop_rate_out_pct": 21.1,
-   "drop_diff_pp": 60.2,
+   "posts": 144,
+   "reach_pct": 3.2,
+   "drop_rate_in_pct": 84.0,
+   "status_known_in": 50,
+   "drop_rate_out_pct": 21.4,
+   "drop_diff_pp": 62.6,
    "drop_diff_ci_pp": [
-    50.1,
-    70.3
+    52.3,
+    73.0
    ],
-   "early_life_pct": 29.4,
-   "stage_known_in": 51,
-   "early_life_vs_all_pp": 3.3,
-   "salaried_share_pct": 80.0,
+   "early_life_pct": 27.9,
+   "stage_known_in": 43,
+   "early_life_vs_all_pp": 1.8,
+   "salaried_share_pct": 75.0,
    "salaried_share_all_pct": 73.0,
-   "income_known_in": 5,
+   "income_known_in": 4,
    "age_25_35_share_pct": 0.0,
    "age_25_35_share_all_pct": 33.6,
-   "age_known_in": 5,
+   "age_known_in": 3,
    "fixable": "partly",
    "metric_lever": "Resisting the exit",
-   "high_confidence_pct": 96.8,
+   "high_confidence_pct": 96.5,
    "sources": {
     "appstore": 2,
     "play": 76,
-    "reddit": 58,
+    "reddit": 45,
     "tqna": 4,
     "youtube": 17
    },
    "evidence": "firm",
-   "score": 1.26,
+   "score": 1.21,
    "quotes": [
     {
-     "quote": "I am planning to withdraw entire fund and transfer to Paytm money",
-     "source": "play",
-     "url": "https://play.google.com/store/apps/details?id=com.nextbillion.groww"
+     "quote": "I am done now with Zerodha and coin, will leave the current investment as it is there and find something else",
+     "source": "tqna",
+     "url": "https://tradingqna.com/t/new-features-and-updates-on-coin-mutual-funds/160438/19"
     },
     {
-     "quote": "SIP का पैसा नही आया एकाउंट में GROWW ने अपने एकाउंट में ले लिया FAKE आप है GROWW isme koe sip mat karna",
-     "source": "play",
-     "url": "https://play.google.com/store/apps/details?id=com.nextbillion.groww"
+     "quote": "I am loosing faith kuvera , too much complications, i want things to be simple and easy.",
+     "source": "reddit",
+     "url": "https://www.reddit.com/r/mutualfunds/comments/1m8ppp1/kuvera_sip_issue/"
     },
     {
-     "quote": "To aab kya FOF fund se redeem kar lena chahiye? Kahin lock na karde paisa",
-     "source": "youtube",
-     "url": "https://www.youtube.com/watch?v=IZOZdpGhs7M&lc=UgxWFFyYS_u5sUpqebh4AaABAg"
+     "quote": "even after activating Autopay sips gets cancelled. bank balance everything was there.",
+     "source": "play",
+     "url": "https://play.google.com/store/apps/details?id=com.nextbillion.groww"
     }
    ],
    "second_pass_coverage_pct": 100.0
   },
   {
    "area": "Clear view of returns",
-   "posts": 298,
-   "reach_pct": 6.6,
-   "drop_rate_in_pct": 36.2,
-   "status_known_in": 69,
+   "posts": 299,
+   "reach_pct": 6.7,
+   "drop_rate_in_pct": 35.7,
+   "status_known_in": 70,
    "drop_rate_out_pct": 22.5,
-   "drop_diff_pp": 13.7,
+   "drop_diff_pp": 13.2,
    "drop_diff_ci_pp": [
-    2.2,
-    25.2
+    1.8,
+    24.6
    ],
-   "early_life_pct": 44.4,
-   "stage_known_in": 90,
-   "early_life_vs_all_pp": 18.3,
+   "early_life_pct": 45.1,
+   "stage_known_in": 91,
+   "early_life_vs_all_pp": 18.9,
    "salaried_share_pct": 100.0,
    "salaried_share_all_pct": 73.0,
    "income_known_in": 4,
@@ -340,98 +340,46 @@
    "sources": {
     "appstore": 2,
     "play": 100,
-    "reddit": 101,
+    "reddit": 102,
     "tqna": 26,
     "youtube": 69
    },
    "evidence": "firm",
-   "score": 0.91,
+   "score": 0.88,
    "quotes": [
     {
-     "quote": "today I cancel my buy order I want to know when my fund get refunded",
-     "source": "tqna",
-     "url": "https://tradingqna.com/t/sip-cancel-on-mf/190338/1"
-    },
-    {
-     "quote": "The app was adamant on pushing for pro subscription for even basic tracking and i just snapped and stopped all my sip then and there and switched to coin app.",
+     "quote": "Some advised me to stop SIP in MOMF but I reduced SIP by 50% and another 50% invested in index fund.",
      "source": "reddit",
-     "url": "https://www.reddit.com/r/IndiaInvestments/comments/1lzhlzf/_/n329cbs"
+     "url": "https://www.reddit.com/r/mutualfunds/comments/1tp78a6/_/oo7mb6y"
     },
     {
-     "quote": "I'm not very happy with the returns and am considering moving to a different mutual fund.",
+     "quote": "was so pissed off seeing the returns and immediately stopped sips in this elss fund.",
      "source": "reddit",
-     "url": "https://www.reddit.com/r/mutualfunds/comments/1w0uhzi/should_i_move_my_existing_137l_from_my_mutual/"
-    }
-   ],
-   "second_pass_coverage_pct": 100.0
-  },
-  {
-   "area": "Charges and fee transparency",
-   "posts": 58,
-   "reach_pct": 1.3,
-   "drop_rate_in_pct": 69.2,
-   "status_known_in": 13,
-   "drop_rate_out_pct": 22.7,
-   "drop_diff_pp": 46.6,
-   "drop_diff_ci_pp": [
-    21.4,
-    71.7
-   ],
-   "early_life_pct": 44.4,
-   "stage_known_in": 9,
-   "early_life_vs_all_pp": 18.3,
-   "salaried_share_pct": null,
-   "salaried_share_all_pct": 73.0,
-   "income_known_in": 0,
-   "age_25_35_share_pct": null,
-   "age_25_35_share_all_pct": 33.6,
-   "age_known_in": 0,
-   "fixable": "in_app",
-   "metric_lever": "Resisting the exit",
-   "high_confidence_pct": 91.4,
-   "sources": {
-    "appstore": 1,
-    "play": 26,
-    "reddit": 23,
-    "tqna": 3,
-    "youtube": 5
-   },
-   "evidence": "thin",
-   "score": 0.6,
-   "quotes": [
-    {
-     "quote": "I am planning to withdraw entire fund and transfer to Paytm money",
-     "source": "play",
-     "url": "https://play.google.com/store/apps/details?id=com.nextbillion.groww"
+     "url": "https://www.reddit.com/r/mutualfunds/comments/1icuxqr/_/m9v8kfb"
     },
     {
-     "quote": "once SIP payment is delayed by evening immediately they charged my bank charged NACH bounce charges of 350",
-     "source": "play",
-     "url": "https://play.google.com/store/apps/details?id=com.nextbillion.groww"
-    },
-    {
-     "quote": "Within just 2 days I've decided to close my account. Would not recommend to anyone looking for a transparent, user-friendly platform.",
-     "source": "play",
-     "url": "https://play.google.com/store/apps/details?id=com.nextbillion.groww"
+     "quote": "Eventually I just separated things: kept Zerodha for trading and moved my MF SIPs to Lemonn",
+     "source": "reddit",
+     "url": "https://www.reddit.com/r/IndiaInvestments/comments/bh5lv3/_/oiqzw26"
     }
    ],
    "second_pass_coverage_pct": 100.0
   },
   {
    "area": "Cash-crunch resilience (pause, not stop)",
-   "posts": 70,
-   "reach_pct": 1.6,
-   "drop_rate_in_pct": 80.4,
-   "status_known_in": 56,
-   "drop_rate_out_pct": 21.3,
-   "drop_diff_pp": 59.1,
+   "posts": 67,
+   "reach_pct": 1.5,
+   "drop_rate_in_pct": 79.2,
+   "status_known_in": 53,
+   "drop_rate_out_pct": 21.4,
+   "drop_diff_pp": 57.8,
    "drop_diff_ci_pp": [
-    48.5,
-    69.7
+    46.8,
+    68.9
    ],
-   "early_life_pct": 13.3,
-   "stage_known_in": 30,
-   "early_life_vs_all_pp": -12.8,
+   "early_life_pct": 10.3,
+   "stage_known_in": 29,
+   "early_life_vs_all_pp": -15.8,
    "salaried_share_pct": 86.4,
    "salaried_share_all_pct": 73.0,
    "income_known_in": 22,
@@ -440,16 +388,16 @@
    "age_known_in": 7,
    "fixable": "partly",
    "metric_lever": "Coming back after a pause",
-   "high_confidence_pct": 98.6,
+   "high_confidence_pct": 98.5,
    "sources": {
     "appstore": 1,
     "play": 6,
-    "reddit": 51,
+    "reddit": 48,
     "tqna": 2,
     "youtube": 10
    },
    "evidence": "firm",
-   "score": 0.55,
+   "score": 0.52,
    "quotes": [
     {
      "quote": "I'm planning to bring down my SIP from 15k to 12k due to some additional monthly expenses.",
@@ -462,7 +410,59 @@
      "url": "https://www.reddit.com/r/mutualfunds/comments/1v5y59p/_/ozn442o"
     },
     {
-     "quote": "I also applied for refund . but no refund occur even after a week",
+     "quote": "I tried a lot to skip my sips for a month and it shows it can be done 2 days before sip date, but even before 2 days it doesn't work.",
+     "source": "play",
+     "url": "https://play.google.com/store/apps/details?id=com.nextbillion.groww"
+    }
+   ],
+   "second_pass_coverage_pct": 100.0
+  },
+  {
+   "area": "Charges and fee transparency",
+   "posts": 64,
+   "reach_pct": 1.4,
+   "drop_rate_in_pct": 56.2,
+   "status_known_in": 16,
+   "drop_rate_out_pct": 22.7,
+   "drop_diff_pp": 33.5,
+   "drop_diff_ci_pp": [
+    9.2,
+    57.9
+   ],
+   "early_life_pct": 45.5,
+   "stage_known_in": 11,
+   "early_life_vs_all_pp": 19.3,
+   "salaried_share_pct": null,
+   "salaried_share_all_pct": 73.0,
+   "income_known_in": 0,
+   "age_25_35_share_pct": 50.0,
+   "age_25_35_share_all_pct": 33.6,
+   "age_known_in": 2,
+   "fixable": "in_app",
+   "metric_lever": "Resisting the exit",
+   "high_confidence_pct": 92.2,
+   "sources": {
+    "appstore": 1,
+    "play": 26,
+    "reddit": 29,
+    "tqna": 3,
+    "youtube": 5
+   },
+   "evidence": "thin",
+   "score": 0.48,
+   "quotes": [
+    {
+     "quote": "when doing gold ETF SIP via groww it is eating 5 rupees brokerage charges.",
+     "source": "reddit",
+     "url": "https://www.reddit.com/r/IndiaInvestments/comments/1nkgavc/_/nf8q96t"
+    },
+    {
+     "quote": "Within just 2 days I've decided to close my account. Would not recommend to anyone looking for a transparent, user-friendly platform.",
+     "source": "play",
+     "url": "https://play.google.com/store/apps/details?id=com.nextbillion.groww"
+    },
+    {
+     "quote": "once SIP payment is delayed by evening immediately they charged my bank charged NACH bounce charges of 350",
      "source": "play",
      "url": "https://play.google.com/store/apps/details?id=com.nextbillion.groww"
     }
@@ -471,51 +471,51 @@
   },
   {
    "area": "Expectation setting on returns and timing",
-   "posts": 110,
+   "posts": 111,
    "reach_pct": 2.5,
-   "drop_rate_in_pct": 42.3,
+   "drop_rate_in_pct": 40.4,
    "status_known_in": 52,
-   "drop_rate_out_pct": 22.4,
-   "drop_diff_pp": 19.9,
+   "drop_rate_out_pct": 22.5,
+   "drop_diff_pp": 17.9,
    "drop_diff_ci_pp": [
-    6.3,
-    33.4
+    4.4,
+    31.4
    ],
-   "early_life_pct": 29.2,
-   "stage_known_in": 72,
-   "early_life_vs_all_pp": 3.0,
-   "salaried_share_pct": 66.7,
+   "early_life_pct": 28.4,
+   "stage_known_in": 74,
+   "early_life_vs_all_pp": 2.3,
+   "salaried_share_pct": 77.8,
    "salaried_share_all_pct": 73.0,
    "income_known_in": 9,
-   "age_25_35_share_pct": 57.1,
+   "age_25_35_share_pct": 61.5,
    "age_25_35_share_all_pct": 33.6,
-   "age_known_in": 14,
+   "age_known_in": 13,
    "fixable": "partly",
    "metric_lever": "Surviving the first dip",
    "high_confidence_pct": 98.2,
    "sources": {
     "play": 8,
-    "reddit": 86,
+    "reddit": 87,
     "tqna": 3,
     "youtube": 13
    },
    "evidence": "firm",
-   "score": 0.29,
+   "score": 0.27,
    "quotes": [
-    {
-     "quote": "My portfolio is down by 7% shall i take out my funds or continue my sip",
-     "source": "reddit",
-     "url": "https://www.reddit.com/r/mutualfunds/comments/1jckfl9/19_yr_old_15k_per_month_sip/"
-    },
     {
      "quote": "jido mai order kita c result positive c , fund name UTI nifty 50 index fund (No exit load) , jido care ch gall kiti side muhh gall ni karde",
      "source": "play",
      "url": "https://play.google.com/store/apps/details?id=com.nextbillion.groww"
     },
     {
-     "quote": "Should I exit it slowly year wise or should I exit all the money.",
+     "quote": "me redem 1042 and after 2 Day my redeem money is the 1018 income verybad",
+     "source": "play",
+     "url": "https://play.google.com/store/apps/details?id=com.nextbillion.groww"
+    },
+    {
+     "quote": "It's disappointing to see negative returns after reaching 17% xirr last year. I am not able to decide to continue my investments or not.",
      "source": "reddit",
-     "url": "https://www.reddit.com/r/mutualfunds/comments/1n2ehgq/_/nb5c485"
+     "url": "https://www.reddit.com/r/mutualfunds/comments/1s8dfv0/my_2lac_per_month_sip_portfolio_of_2_years/"
     }
    ],
    "second_pass_coverage_pct": 100.0
@@ -549,17 +549,17 @@
    "score": 0.0,
    "quotes": [
     {
+     "quote": "can't generate capital gain reports, many bugs visible as we trade.",
+     "source": "play",
+     "url": "https://play.google.com/store/apps/details?id=com.nextbillion.groww"
+    },
+    {
      "quote": "Suddenly my grow app is not responding well, if I click on mutual funds or stocks charts it pushes me out",
      "source": "play",
      "url": "https://play.google.com/store/apps/details?id=com.nextbillion.groww"
     },
     {
-     "quote": "In the Groww mutual fund app, the 'Prime' icon and the search icon are touching each other, which has spoiled the UI experience.",
-     "source": "play",
-     "url": "https://play.google.com/store/apps/details?id=com.nextbillion.groww"
-    },
-    {
-     "quote": "all of sudden all my MF are gone I am seeing my old portfolio now about 2 months old one.",
+     "quote": "there's a message always shows me something went wrong please try again later",
      "source": "play",
      "url": "https://play.google.com/store/apps/details?id=com.nextbillion.groww"
     }
@@ -568,31 +568,31 @@
   },
   {
    "area": "Decision help for beginners",
-   "posts": 2657,
-   "reach_pct": 59.2,
-   "drop_rate_in_pct": 22.1,
-   "status_known_in": 1186,
-   "drop_rate_out_pct": 24.4,
-   "drop_diff_pp": -2.3,
+   "posts": 2651,
+   "reach_pct": 59.1,
+   "drop_rate_in_pct": 22.3,
+   "status_known_in": 1183,
+   "drop_rate_out_pct": 24.0,
+   "drop_diff_pp": -1.7,
    "drop_diff_ci_pp": [
-    -6.1,
-    1.6
+    -5.6,
+    2.2
    ],
-   "early_life_pct": 26.3,
-   "stage_known_in": 1480,
-   "early_life_vs_all_pp": 0.2,
-   "salaried_share_pct": 73.9,
+   "early_life_pct": 26.2,
+   "stage_known_in": 1478,
+   "early_life_vs_all_pp": 0.1,
+   "salaried_share_pct": 73.7,
    "salaried_share_all_pct": 73.0,
-   "income_known_in": 436,
+   "income_known_in": 434,
    "age_25_35_share_pct": 35.1,
    "age_25_35_share_all_pct": 33.6,
-   "age_known_in": 741,
+   "age_known_in": 740,
    "fixable": "outside",
    "metric_lever": "Starting well",
-   "high_confidence_pct": 96.5,
+   "high_confidence_pct": 96.4,
    "sources": {
     "play": 14,
-    "reddit": 2322,
+    "reddit": 2316,
     "tqna": 70,
     "youtube": 251
    },
@@ -600,19 +600,19 @@
    "score": 0.0,
    "quotes": [
     {
-     "quote": "Would love your thoughts on: The shift from Quant Active to SBI Contra",
+     "quote": "It's my first time doing stop SIP. So I'm just kinda asking feedback.",
      "source": "reddit",
-     "url": "https://www.reddit.com/r/mutualfunds/comments/1lkcotp/optimize_my_monthly_sip_plan_of_1l/"
+     "url": "https://www.reddit.com/r/mutualfunds/comments/1kxm1n4/_/muqizpq"
     },
     {
-     "quote": "ICICI Nasdaq 100 opens for fresh investment, so you have to keep on checking.",
+     "quote": "Any suggestions or criticism are more than welcome as I’m a fairly new investor.",
      "source": "reddit",
-     "url": "https://www.reddit.com/r/mutualfunds/comments/1ssob5c/_/ohyzaeb"
+     "url": "https://www.reddit.com/r/mutualfunds/comments/1ohgwby/mf_sip_portfolio_review/"
     },
     {
-     "quote": "I also saw that the payment for May was marked as \"rejected.\" Why isn't the amount being deducted every month as scheduled?",
+     "quote": "Dear Investor, the transaction submitted by you on19-Jan-2026 for Parag Parikh Flexi Cap - Dir Plan Growth is not in good order. We are therefore unable to process this transaction.",
      "source": "reddit",
-     "url": "https://www.reddit.com/r/mutualfunds/comments/1kuyvtu/sip_mutual_funds/"
+     "url": "https://www.reddit.com/r/mutualfunds/comments/1qi2zns/parag_parikh_flexi_cap_sip_is_not_in_good_order/"
     }
    ],
    "second_pass_coverage_pct": 100.0
