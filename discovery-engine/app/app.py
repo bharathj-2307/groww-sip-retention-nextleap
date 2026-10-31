@@ -52,7 +52,7 @@ def dist(d, col, title, drop_vals=("unknown", "none", "not_applicable"), top=12)
     said = s[~s.isin(drop_vals)]
     if total == 0 or len(said) == 0:
         st.caption(f"{title}: no posts say this in the current filter.")
-        return
+        return None
     vc = said.value_counts().head(top).rename_axis("value").reset_index(name="posts")
     vc["share"] = vc["posts"] / len(said)
     vc["value"] = vc["value"].str.replace("_", " ")
@@ -64,6 +64,28 @@ def dist(d, col, title, drop_vals=("unknown", "none", "not_applicable"), top=12)
     st.altair_chart(ch, width="stretch")
     if len(said) < 30:
         st.warning(f"Only {len(said)} posts: treat as a pointer, not a number.")
+    shares = (said.value_counts() / len(said)).to_dict()
+    return {"n": len(said), "total": total, "shares": shares}
+
+
+def pct(r, *labels):
+    """Share (0-100) of the listed values in a dist() result."""
+    return round(100 * sum(r["shares"].get(l, 0) for l in labels)) if r else 0
+
+
+def top_list(r, k=2, skip=()):
+    """'long term wealth (76%) and specific goal (11%)' from a dist() result."""
+    if not r:
+        return "nothing stated"
+    items = [(v, sh) for v, sh in sorted(r["shares"].items(), key=lambda x: -x[1]) if v not in skip][:k]
+    parts = [f"{v.replace('_', ' ').replace('xirr', 'XIRR').replace('sip ', 'SIP ')} ({round(100 * sh)}%)" for v, sh in items]
+    return " and ".join([", ".join(parts[:-1]), parts[-1]]) if len(parts) > 1 else (parts[0] if parts else "nothing else")
+
+
+def takeaway(text):
+    """The plain-language reading of the chart above, built from the numbers in view."""
+    with st.container(border=True):
+        st.markdown(f"**What this tells us.** {text[:1].upper()}{text[1:]}")
 
 
 def quotes(d, n=4, col="quote"):
@@ -139,10 +161,14 @@ with tab_q:
     if q == "q1":
         c1, c2 = st.columns(2)
         with c1:
-            dist(sp, "start_reason", "Why they started")
-            dist(sp, "influence_source", "Who or what got them started")
+            r_start = dist(sp, "start_reason", "Why they started")
+            r_inf = dist(sp, "influence_source", "Who or what got them started")
         with c2:
-            dist(sp, "expectation", "What they expected")
+            r_exp = dist(sp, "expectation", "What they expected")
+        if r_start and r_exp:
+            takeaway(f"Most people start for {top_list(r_start)} and expect {top_list(r_exp, 1)}; only "
+                     f"{pct(r_exp, 'quick_gains')}% say they wanted quick gains. {pct(r_inf, 'self')}% say they started on their "
+                     "own, so a first-time investor who hits a bad month usually has no advisor to lean on.")
         quotes(sp[sp.start_reason.notna() & ~sp.start_reason.isin(["unknown"])])
 
     elif q == "q2":
@@ -159,6 +185,12 @@ with tab_q:
             x=alt.X("Stage:N", sort=STAGES[:4]), y=alt.Y("Drop-off share:Q", axis=alt.Axis(format="%")),
             tooltip=["Stage", "Posts", "Status stated", alt.Tooltip("Drop-off share:Q", format=".0%")]), width="stretch")
         st.dataframe(t, hide_index=True, width="stretch")
+        ds = {r["Stage"]: r["Drop-off share"] for r in rows if r["Status stated"] >= 10}
+        if {"0-3 months", "3-12 months"} <= ds.keys():
+            later = f", and {round(100 * ds['12+ months'])}% after a year" if "12+ months" in ds else ""
+            takeaway(f"Drop-off grows with time: {round(100 * ds['0-3 months'])}% of posts in the first 3 months show "
+                     f"pausing, reducing, stopping or wavering, against {round(100 * ds['3-12 months'])}% in months 3-12{later}. "
+                     "The first year is where wobbles start, which is the window the 12-month continuation metric measures.")
         th = []
         for stg in STAGES[:4]:
             a = known[known.stage == stg]
@@ -174,21 +206,35 @@ with tab_q:
 
     elif q == "q3":
         dd = sp[sp.is_drop | sp.drop_reason.notna() & ~sp.drop_reason.isin(["not_applicable", "unknown"])]
-        dist(dd, "drop_reason", "Reason given for pausing, reducing, stopping or thinking of it")
+        r = dist(dd, "drop_reason", "Reason given for pausing, reducing, stopping or thinking of it")
+        if r:
+            takeaway(f"{top_list(r)} lead. Market-driven reasons (low returns and market fall) make up "
+                     f"{pct(r, 'low_returns', 'market_fall')}% and money needs (cash crunch, needing money) "
+                     f"{pct(r, 'cash_crunch_or_life_event', 'needs_money')}%. Reasons Groww controls directly (failed instalment, "
+                     f"app or support issue, lost trust) are {pct(r, 'failed_instalment_or_mandate', 'app_or_support_issue', 'lost_trust')}%. "
+                     "Groww cannot stop markets falling, but it can shape what people do when they waver.")
         quotes(dd[dd.drop_reason.notna() & ~dd.drop_reason.isin(["not_applicable", "unknown"])])
 
     elif q == "q4":
         c1, c2 = st.columns(2)
         with c1:
-            dist(sp, "what_checked", "What they look at")
+            r_what = dist(sp, "what_checked", "What they look at")
         with c2:
-            dist(sp, "check_frequency", "How often")
+            r_freq = dist(sp, "check_frequency", "How often")
+        if r_what:
+            freq = (f"Only {r_freq['n']} posts say how often they check, so frequency is a pointer at best."
+                    if r_freq else "Almost no posts say how often they check.")
+            takeaway(f"People mostly look at {top_list(r_what)}: numbers that move with the market, so a falling "
+                     f"market is the first thing they see when they open the app. {freq}")
         chk = df[df.theme_list.apply(lambda l: "T8" in l)]
         st.caption(f"{len(chk)} posts mention checking too often or anxiety from daily movement (theme T8).")
         quotes(chk)
 
     elif q == "q5":
-        dist(sp, "app_issue_area", "Area of the app or service people struggle with")
+        r = dist(sp, "app_issue_area", "Area of the app or service people struggle with")
+        if r:
+            takeaway(f"The most common trouble spots are {top_list(r, 3, skip=('other',))}. Unlike market moves, these "
+                     "happen inside the app, so they are the problems Groww can fix directly.")
         c = st.columns(3)
         for col, code in zip(c, ("T3", "T4", "T11")):
             a = df[df.theme_list.apply(lambda l: code in l)]
@@ -196,7 +242,11 @@ with tab_q:
         quotes(sp[sp.app_issue_area.notna() & ~sp.app_issue_area.isin(["none", "other"])])
 
     elif q == "q6":
-        dist(sp, "outside_action", "What they do outside the app when unsure")
+        r = dist(sp, "outside_action", "What they do outside the app when unsure")
+        if r:
+            takeaway(f"{pct(r, 'ask_online_community')}% ask an online community, which mostly reflects that Reddit is "
+                     f"a place for asking. Beyond that, people turn to {top_list(r, 3, skip=('ask_online_community',))}. "
+                     "The survey suggests friends and influencers matter more than these posts can show.")
         st.caption("Reddit and TradingQ&A are places where people ask others, so this is inflated by where the posts come from.")
         quotes(sp[sp.outside_action.notna() & ~sp.outside_action.isin(["none", "unknown"])])
 
@@ -215,6 +265,15 @@ with tab_q:
             y=alt.Y("Theme:N", sort=None), x=alt.X("Share of group:Q", axis=alt.Axis(format="%")),
             color="Group:N", yOffset="Group:N", tooltip=["Theme", "Group", alt.Tooltip("Share of group:Q", format=".0%")]).properties(height=420),
             width="stretch")
+        g = pd.DataFrame(rows).pivot(index="Theme", columns="Group", values="Share of group")
+        if g.shape[1] == 2:
+            g["gap"] = 100 * (g.iloc[:, 1] - g.iloc[:, 0]) if g.columns[1] == "Dropping (paused, reduced, stopped, wavering)" else 100 * (g.iloc[:, 0] - g.iloc[:, 1])
+            up = g.sort_values("gap", ascending=False).head(3)
+            down = g.sort_values("gap").head(1)
+            takeaway("Compared with people who keep going, people who drop off talk far more about "
+                     + ", ".join(f"{t.lower()} (+{round(v)} pts)" for t, v in list(up["gap"].items())[:-1])
+                     + f" and {up.index[-1].lower()} (+{round(up['gap'].iloc[-1])} pts)"
+                     + f". Continuers talk more about {down.index[0].lower()}. The gaps point at where the wobble begins.")
         st.caption("T6 (pause, reduce, stop) is left out because it is the outcome itself. Quiet drop-offs rarely post, so the dropping group is under-represented; read gaps as direction, not size.")
         dist(sp[sp.status != "unknown"].assign(g=lambda x: x.is_drop.map({True: "dropping", False: "continuing"})), "g", "Split in the second-pass sample")
 
@@ -233,12 +292,24 @@ with tab_q:
                              "Top themes": ", ".join(THEMES[t] for t, _ in pd.Series([t for l in g.theme_list for t in l if t not in ("T0", "T6")]).value_counts().head(3).items())})
             t = pd.DataFrame(rows)
             st.dataframe(t.style.format({"Drop-off share": "{:.0%}"}, na_rep="n/a"), hide_index=True, width="stretch")
+            big = t[t["Status stated"] >= 30].dropna(subset=["Drop-off share"])
+            if len(big) >= 2:
+                hi, lo = big.loc[big["Drop-off share"].idxmax()], big.loc[big["Drop-off share"].idxmin()]
+                takeaway(f"Among groups with at least 30 posts that say what they did with their SIP, {hi['Group']} shows the "
+                         f"most drop-off ({hi['Drop-off share']:.0%}) and {lo['Group']} the least ({lo['Drop-off share']:.0%}). "
+                         "Few posts state these details, so use this to choose who to interview, not as a final answer.")
+            else:
+                takeaway("Too few posts state this detail to compare groups. The interviews and survey have to answer this one.")
             small = t[t["Posts"] < 30]["Group"].tolist()
             if small:
                 st.warning(f"Small groups (under 30 posts): {', '.join(small)}. Treat as a pointer only.")
 
     elif q == "q9":
-        dist(sp, "need_category", "Kind of unmet need")
+        r = dist(sp, "need_category", "Kind of unmet need")
+        if r:
+            takeaway(f"{pct(r, 'fund_guidance')}% of stated needs are fund guidance, mostly people asking Reddit to review "
+                     "their portfolio, which says more about the platform than about Groww. The needs that point at the app are "
+                     f"{top_list(r, 3, skip=('fund_guidance', 'learning_education', 'other', 'tax_help'))}.")
         needs = sp[sp.unmet_need.fillna("").str.len() > 3]
         st.markdown(f"**In their own words** ({len(needs)} posts state a need)")
         vc = needs["unmet_need"].str.lower().str.strip(" .").value_counts().head(12)
