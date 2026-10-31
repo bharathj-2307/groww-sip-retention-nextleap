@@ -82,9 +82,12 @@ def top_list(r, k=2, skip=()):
     return " and ".join([", ".join(parts[:-1]), parts[-1]]) if len(parts) > 1 else (parts[0] if parts else "nothing else")
 
 
+SLOT = {"box": None}  # set per question so the takeaway renders above its charts
+
+
 def takeaway(text):
-    """The plain-language reading of the chart above, built from the numbers in view."""
-    with st.container(border=True):
+    """The plain-language reading of the charts, built from the numbers in view, shown above them."""
+    with (SLOT["box"] or st).container(border=True):
         st.markdown(f"**What this tells us.** {text[:1].upper()}{text[1:]}")
 
 
@@ -153,6 +156,7 @@ QUESTIONS = {
 }
 with tab_q:
     q = QUESTIONS[st.selectbox("Pick a question", list(QUESTIONS))]
+    SLOT["box"] = st.container()
     sp = df[df.second_pass]
     if q != "q2" and q != "q7" and q != "q8" and len(sp) < len(df):
         st.info(f"This answer uses the second AI pass, which covers {len(sp):,} of the {len(df):,} posts in view "
