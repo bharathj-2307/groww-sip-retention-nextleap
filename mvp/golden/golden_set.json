@@ -422,6 +422,68 @@
    "sip": "B",
    "text": "You can skip December. Your SIP continues on 9 January. The 9 November payment still goes ahead.",
    "should_pass": true
+  },
+  {
+   "id": "G16",
+   "sip": "A",
+   "text": "You can pay less in December. It goes back to ₹3,000 in January by itself.",
+   "should_pass": true,
+   "from": "GH01 (holdout, added after the holdout run)"
+  },
+  {
+   "id": "G17",
+   "sip": "A",
+   "text": "Groww cancels your SIP after 2 missed payments.",
+   "should_pass": false,
+   "why": "wrong rule, worded without 'in a row'",
+   "from": "GH02 (holdout, added after the holdout run)"
+  },
+  {
+   "id": "G18",
+   "sip": "A",
+   "text": "Markets always recover, so keep going.",
+   "should_pass": false,
+   "why": "forecast and advice in new words",
+   "from": "GH03 (holdout, added after the holdout run)"
+  },
+  {
+   "id": "G19",
+   "sip": "A",
+   "text": "Your money is protected.",
+   "should_pass": false,
+   "why": "calls the money protected",
+   "from": "GH04 (holdout, added after the holdout run)"
+  },
+  {
+   "id": "G20",
+   "sip": "B",
+   "text": "You can skip the 9 November payment.",
+   "should_pass": false,
+   "why": "offers to skip the locked payment",
+   "from": "GH05 (holdout, added after the holdout run)"
+  },
+  {
+   "id": "G21",
+   "sip": "A",
+   "text": "Act fast before it is too late.",
+   "should_pass": false,
+   "why": "pressure",
+   "from": "GH06 (holdout, added after the holdout run)"
+  },
+  {
+   "id": "G22",
+   "sip": "D",
+   "text": "You have missed 2 in a row. One more miss will cancel the SIP.",
+   "should_pass": true,
+   "from": "GH07 (holdout, added after the holdout run)"
+  },
+  {
+   "id": "G23",
+   "sip": "A",
+   "text": "Your next payment is on 15 December.",
+   "should_pass": false,
+   "why": "wrong date",
+   "from": "GH08 (holdout, added after the holdout run)"
   }
  ]
 }

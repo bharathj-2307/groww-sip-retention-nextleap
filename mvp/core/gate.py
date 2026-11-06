@@ -15,6 +15,8 @@ import re
 from .ai import GROUPS, CONFIDENCE_MIN
 from .sip import MONTHS, CHANGE_CUTOFF_WORKDAYS, CANCEL_NOTICE_DAYS, PAYDAY_GAP_DAYS, PAY_LESS_LIMIT, FUND_NAME
 
+SIP_DAY_MAX = 28  # a SIP date can be any day from 1 to 28
+
 HINDI_MONTHS = ["जनवरी", "फ़रवरी", "फरवरी", "मार्च", "अप्रैल", "मई", "जून", "जुलाई",
                 "अगस्त", "सितंबर", "सितम्बर", "अक्टूबर", "नवंबर", "नवम्बर", "दिसंबर", "दिसम्बर"]
 HINDI_MONTH_INDEX = {"जनवरी": 1, "फ़रवरी": 2, "फरवरी": 2, "मार्च": 3, "अप्रैल": 4, "मई": 5,
@@ -39,6 +41,8 @@ ADVICE = [
     r"\b(?:buy|sell) (?:more|now|units)\b", r"\bredeem now\b",
     r"\b(?:market|returns?|nav|fund) (?:will|is going to) (?:grow|rise|go up|fall|go down|recover|increase|drop)\b",
     r"\bguarantee", r"\bassured returns?\b", r"\bsure to (?:grow|gain)\b",
+    r"\b(?:markets?|returns?|navs?|funds?|prices?) (?:always|usually|surely|will surely) (?:recover|bounce back|go up|grow|rise)\b",
+    r"\balways (?:recover|bounce back)\b", r"\bkeep (?:going|investing)\b", r"\bdon'?t stop\b",
     r"चाहिए", r"सलाह देत", r"\bkarna chahiye\b",
 ]
 FEAR = [
@@ -73,7 +77,8 @@ def _known_dates(f: dict) -> list:
 def _allowed_numbers(f: dict, extra_text: str = "") -> set[int]:
     nums = {f["amount"], f["invested"], f["months_old"], f["misses_in_row"], f["miss_limit"],
             f["misses_left"], f["fund_min"], f["today"].year, f["pay_less_used"], f["pay_less_left"],
-            CHANGE_CUTOFF_WORKDAYS, CANCEL_NOTICE_DAYS, PAYDAY_GAP_DAYS, PAY_LESS_LIMIT, 0, 1, 12}
+            CHANGE_CUTOFF_WORKDAYS, CANCEL_NOTICE_DAYS, PAYDAY_GAP_DAYS, PAY_LESS_LIMIT, 0, 1, 12,
+            SIP_DAY_MAX}
     for d in _known_dates(f):
         nums.update({d.day, d.year})
     # Numbers the user wrote may be repeated if they look like an amount or a day, not an ID.
@@ -149,6 +154,12 @@ def check_text(text: str, f: dict, *, group: str, confidence: float = 1.0,
         n = int(word) if n is None else n
         if n not in (f["misses_in_row"], f["miss_limit"], f["misses_left"]):
             hits.append(m.group(0))
+    # "cancels after 2 missed payments" must use the real limit too
+    for m in re.finditer(r"after\s+(\d+|one|two|three|four|five)\s+(?:\w+\s+){0,2}?(?:missed|skipped|failed)", low):
+        w = m.group(1)
+        n = {"one": 1, "two": 2, "three": 3, "four": 4, "five": 5}.get(w) or int(w)
+        if n != f["miss_limit"]:
+            hits.append(m.group(0))
     for m in re.finditer(r"(\d+|one|two|three|four)\s+times?\s+in\s+(?:any\s+|the\s+last\s+)?12\s+months", low):
         w = m.group(1)
         n = {"one": 1, "two": 2, "three": 3, "four": 4}.get(w) or int(w)
@@ -186,14 +197,23 @@ def check_text(text: str, f: dict, *, group: str, confidence: float = 1.0,
     for opt, ok_key, words in (("skip", "skip_ok", r"\bskip(?:ping)?\b|स्किप"),
                                ("pay less", "pay_less_ok", r"\bpay less|कम (?:पैसे|राशि|रकम)")):
         if not f[ok_key]:
+            denied = False
             for m in re.finditer(words, low):
-                window = low[max(0, m.start() - 40):m.end() + 80]
-                if not NEGATION.search(window):
+                near = low[max(0, m.start() - 25):m.end() + 25]
+                # "you can skip", "you may pay less", "with one tap": a clear offer, whatever came before
+                if re.search(r"\b(?:can|may|could)\s+(?:still\s+)?(?:skip|pay less)|with one tap|\btap to\b", near):
                     problems.append(f"offers {opt}, which is not available")
                     break
+                if NEGATION.search(low[max(0, m.start() - 40):m.end() + 80]):
+                    denied = True
+                    continue
+                if denied:
+                    continue  # a later mention after the answer already said it is not available
+                problems.append(f"offers {opt}, which is not available")
+                break
     if f.get("too_close"):
         # The locked instalment itself cannot be skipped, only the one after it.
-        locked = r"\bskip(?:ping)?\s+(?:this month|this instalment|this installment|the next (?:one|instalment)|" + \
+        locked = r"\bskip(?:ping)?\s+(?:the\s+)?(?:this month|this (?:instalment|installment|payment)|next (?:one|instalment|payment)|" + \
                  re.escape(f["next_date_text"].lower()) + "|" + MONTHS[f["next_date"].month - 1].lower() + r")\b"
         m = re.search(locked, low)
         if m and not NEGATION.search(low[max(0, m.start() - 40):m.end() + 20]):

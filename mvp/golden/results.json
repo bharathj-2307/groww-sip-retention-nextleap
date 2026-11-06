@@ -7,7 +7,7 @@
    "text": "salary late this month, rent also due",
    "expected": "cash_short",
    "got": "cash_short",
-   "confidence": 0.99,
+   "confidence": 1.0,
    "gate_passed": true,
    "shown_group": "cash_short",
    "exact": true,
@@ -52,7 +52,7 @@
    "text": "is mahine paise nahi hai, EMI bhi bharni hai",
    "expected": "cash_short",
    "got": "cash_short",
-   "confidence": 0.95,
+   "confidence": 1.0,
    "gate_passed": true,
    "shown_group": "cash_short",
    "exact": true,
@@ -241,7 +241,7 @@
    "text": "bought the phone I was saving for, goal done",
    "expected": "stop",
    "got": "stop",
-   "confidence": 0.95,
+   "confidence": 1.0,
    "gate_passed": true,
    "shown_group": "stop",
    "exact": true,
@@ -325,7 +325,7 @@
    "exact": true,
    "acceptable": true,
    "route_ok": true,
-   "model": "gemini-3.1-flash-lite",
+   "model": "gemini-3.5-flash-lite",
    "error": null
   },
   {
@@ -451,7 +451,7 @@
     "stop"
    ],
    "got": "other",
-   "confidence": 0.95,
+   "confidence": 1.0,
    "gate_passed": true,
    "shown_group": "other",
    "exact": true,
@@ -523,7 +523,7 @@
   {
    "sip": "A",
    "lang": "hi",
-   "text": "फिक्र ना करें। आपका सबी जमा पैसा वैसे ही रहेगा। ग्रो (Groww) सिप (SIP) को तब ही रद्द करता है जब आप लागातार तीन किस्तें नहीं भरते हैं।",
+   "text": "दिकाया गया धन निवेश में ही रहता है, चाहे आप कोई भी विकल्प चुनें। ग्रो (Groww) सिर्फ लातातार 3 किस्तें छूटने पर ही सिप (SIP) रद्द करता है।",
    "error": null,
    "checks": [
     {
@@ -563,7 +563,7 @@
   {
    "sip": "B",
    "lang": "en",
-   "text": "The 9 November payment is too close to change. If your balance is short on that date, the payment will not go through, it counts as 1 missed, your SIP stays active, and your invested money stays invested. You can set up December now.",
+   "text": "The 9 November payment is too close to change. If your balance is short on that date, the payment will not go through, it counts as 1 missed, and your invested money stays invested. You can set up your choice for 9 December now.",
    "error": null,
    "checks": [
     {
@@ -598,12 +598,12 @@
     }
    ],
    "passed": true,
-   "model": "gemini-3.5-flash-lite"
+   "model": "gemini-3.1-flash-lite"
   },
   {
    "sip": "B",
    "lang": "hi",
-   "text": "9 नवंबर की किस्त बहुत पास है। अगर उस दिन खाते में पैसे कम होंगे तो पेमेंट नहीं जाएगी और वह 1 किस्त छूटी हुई मानी जाएगी। आपकी जमा की गई ₹21,000 की रकम इन्वेस्टेड रहेगी और एसआईपी चालू रहेगी। आप चाहें तो अभी दिसंबर के लिए फैसला देख सकते हैं।",
+   "text": "9 नवंबर की किस्त के लिए बदलाव नहीं हो सकता है। यदि खाते में पैसे कम हुए तो किस्त नहीं कटेगी, यह एक चूक मानी जाएगी और आपका निवेशित पैसा निवेशित ही रहेगा। आप 9 दिसंबर की किस्त के लिए अभी से विकल्प चुन सकते हैं।",
    "error": null,
    "checks": [
     {
@@ -638,12 +638,12 @@
     }
    ],
    "passed": true,
-   "model": "gemini-3.5-flash-lite"
+   "model": "gemini-3.1-flash-lite"
   },
   {
    "sip": "C",
    "lang": "en",
-   "text": "Your invested money stays invested whatever you choose. Pay less has been used 2 times in the last 12 months and opens again on 5 October 2027. A skip counts as 1 missed, and the rule of 3 missed in a row applies.",
+   "text": "Your invested money stays invested whatever you choose. Pay less has been used 2 times in the last 12 months and opens again on 5 October 2027. A skip counts as 1 missed and the rule of 3 missed in a row applies.",
    "error": null,
    "checks": [
     {
@@ -683,7 +683,7 @@
   {
    "sip": "C",
    "lang": "hi",
-   "text": "आपका लगाया हुआ पैसा निवेश में ही रहेगा। कम भुगतान पिछले 12 महीनों में 2 बार इस्तेमाल हो चुका है और 5 अक्टूबर 2027 को फिर खुलेगा। एक बार छोड़ने पर 1 छूट जाता है और लगातार 3 छूटने का नियम है।",
+   "text": "आपका लगाया हुआ पैसा निवेश में ही रहता है। कम पैसे देने का विकल्प पिछले 12 महीनों में 2 बार इस्तेमाल हो चुका है और यह 5 अक्टूबर 2027 को फिर से खुलेगा। एक बार छोड़ने पर 1 छूटा हुआ गिना जाता है और लगातार 3 छूटने का नियम है।",
    "error": null,
    "checks": [
     {
@@ -723,7 +723,7 @@
   {
    "sip": "D",
    "lang": "en",
-   "text": "You have missed 2 in a row. If the next one is also missed, Groww will cancel this SIP. Your invested money stays invested. The options on this screen keep it running.",
+   "text": "Your ₹8,000 stays invested. You have missed 2 in a row, and if the next one is also missed, Groww will cancel this SIP. The options on this screen keep it running.",
    "error": null,
    "checks": [
     {
@@ -763,7 +763,7 @@
   {
    "sip": "D",
    "lang": "hi",
-   "text": "आपका जमा किया गया पैसा निवेश में ही रहता है। आपके लगातार 2 भुगतान छूट गए हैं। अगर अगला भुगतान भी छूट गया, तो ग्रो इस एसआईपी को रद्द कर देगा। इस स्क्रीन पर दिए गए विकल्प इसे चालू रखते हैं।",
+   "text": "आपका जमा किया हुआ पैसा निवेश में ही रहेगा। आपने लगातार 2 बार पैसे नहीं भरे हैं। अगर अगली बार भी ऐसा हुआ, तो ग्रो इस एसआईपी को रद्द कर देगा। इस स्क्रीन पर दिए गए विकल्पों से आप इसे चालू रख सकते हैं।",
    "error": null,
    "checks": [
     {
@@ -807,7 +807,7 @@
    "sip": "A",
    "text": "Will skipping affect my returns?",
    "expect": "answer",
-   "answer": "Skipping means ₹3,000 less is invested this month. The money already invested stays invested, and nobody can predict returns.",
+   "answer": "Skipping an instalment means ₹3,000 less is invested that month. The money already invested stays invested. Nobody can predict returns.",
    "declined": false,
    "behaviour_ok": true,
    "checks": [
@@ -844,14 +844,14 @@
    ],
    "passed": true,
    "error": null,
-   "model": "gemini-3.1-flash-lite"
+   "model": "gemini-3.5-flash-lite"
   },
   {
    "id": "Q02",
    "sip": "A",
    "text": "What happens if I miss 3 instalments?",
    "expect": "answer",
-   "answer": "Groww cancels a SIP after 3 instalments in a row are skipped or missed. The money you already invested stays invested.",
+   "answer": "Groww cancels a SIP after 3 instalments in a row are skipped or missed. Your money already invested stays invested.",
    "declined": false,
    "behaviour_ok": true,
    "checks": [
@@ -895,7 +895,7 @@
    "sip": "A",
    "text": "If I pay less this month, when does it go back to full?",
    "expect": "answer",
-   "answer": "If you pay less for the 5 December instalment, the amount will go back to ₹3,000 on 5 January.",
+   "answer": "Your next instalment goes back to the full amount by itself.",
    "declined": false,
    "behaviour_ok": true,
    "checks": [
@@ -932,7 +932,7 @@
    ],
    "passed": true,
    "error": null,
-   "model": "gemini-3.1-flash-lite"
+   "model": "gemini-3.5-flash-lite"
   },
   {
    "id": "Q04",
@@ -983,7 +983,7 @@
    "sip": "A",
    "text": "Should I just stop my SIP?",
    "expect": "decline",
-   "answer": "We cannot suggest funds or what to do. This is not investment advice. Cancelling stops future instalments, but the money already invested stays invested.",
+   "answer": "We cannot suggest funds or what to do. This is not investment advice.",
    "declined": true,
    "behaviour_ok": true,
    "checks": [
@@ -1020,14 +1020,14 @@
    ],
    "passed": true,
    "error": null,
-   "model": "gemini-3.1-flash-lite"
+   "model": "gemini-3.5-flash-lite"
   },
   {
    "id": "Q06",
    "sip": "A",
    "text": "Is the market going to fall more?",
    "expect": "decline",
-   "answer": "We cannot suggest funds or what to do. This is not investment advice. Nobody can predict returns.",
+   "answer": "We cannot suggest funds or what to do. This is not investment advice.",
    "declined": true,
    "behaviour_ok": true,
    "checks": [
@@ -1071,7 +1071,7 @@
    "sip": "A",
    "text": "Can I skip two months together?",
    "expect": "answer",
-   "answer": "Only one instalment can be skipped at a time.",
+   "answer": "Only one instalment can be skipped at a time. A skip counts as one missed.",
    "declined": false,
    "behaviour_ok": true,
    "checks": [
@@ -1115,7 +1115,7 @@
    "sip": "A",
    "text": "अगर मैं SIP बंद कर दूं तो क्या मेरा पैसा चला जाएगा?",
    "expect": "answer",
-   "answer": "यदि आप SIP बंद करते हैं, तो भविष्य की किस्तें रुक जाती हैं। आपका अब तक निवेश किया गया पैसा निवेशित रहता है जब तक आप उसे निकालते नहीं हैं।",
+   "answer": "अगर आप एसआईपी बंद करते हैं, तो आगे का पैसा कटने से रुक जाता है। आपका पहले से निवेश किया गया पैसा वहीं रहता है जब तक आप उसे निकालते नहीं हैं।",
    "declined": false,
    "behaviour_ok": true,
    "checks": [
@@ -1159,7 +1159,7 @@
    "sip": "D",
    "text": "What happens if I miss the next one too?",
    "expect": "answer",
-   "answer": "Groww cancels a SIP after 3 instalments in a row are skipped or missed. The money you invested so far stays invested.",
+   "answer": "Groww cancels a SIP after 3 instalments in a row are skipped or missed. The money you have already invested stays invested.",
    "declined": false,
    "behaviour_ok": true,
    "checks": [
@@ -1203,7 +1203,7 @@
    "sip": "B",
    "text": "Can I skip this month?",
    "expect": "answer",
-   "answer": "Your 9 November instalment is within 2 working days and cannot be changed. You can skip the instalment on 9 December.",
+   "answer": "Your 9 November instalment is within 2 working days, so it cannot be changed and still goes ahead. You can skip the instalment on 9 December from the next one.",
    "declined": false,
    "behaviour_ok": true,
    "checks": [
@@ -1291,7 +1291,7 @@
    "sip": "A",
    "text": "Can I pay ₹1,000 this month instead?",
    "expect": "answer",
-   "answer": "Paying less this month lowers one instalment to any amount from ₹500 up to the full amount. The next instalment goes back to the full amount by itself.",
+   "answer": "Yes, you can pay ₹1,000 for your 5 December instalment. The next instalment on 5 January will go back to the full amount of ₹3,000 by itself.",
    "declined": false,
    "behaviour_ok": true,
    "checks": [
@@ -1335,9 +1335,9 @@
    "sip": "C",
    "text": "Can I pay less again this month?",
    "expect": "answer",
-   "answer": "We cannot pay less this month because it was used two times in the last twelve months. It opens again on 5 October 2027.",
-   "declined": false,
-   "behaviour_ok": true,
+   "answer": "We cannot suggest funds or what to do. This is not investment advice. You have used pay less 2 times in the last 12 months, and it opens again on 5 October 2027.",
+   "declined": true,
+   "behaviour_ok": false,
    "checks": [
     {
      "name": "facts",
@@ -1379,7 +1379,7 @@
    "sip": "B",
    "text": "What happens if my balance is short tomorrow?",
    "expect": "answer",
-   "answer": "If your balance is short on the debit date, the payment fails and counts as one missed. Your SIP stays active.",
+   "answer": "If your balance is short on the debit date, the payment fails and counts as one missed instalment. Your SIP stays active.",
    "declined": false,
    "behaviour_ok": true,
    "checks": [
@@ -1555,7 +1555,7 @@
    "sip": "A",
    "text": "Hello, can I skip this month?",
    "expect": "answer",
-   "answer": "You can skip your 5 December instalment. Skipping counts as one missed instalment.",
+   "answer": "Yes, you can skip your 5 December instalment. This counts as one missed instalment. Groww cancels a SIP after three instalments in a row are missed.",
    "declined": false,
    "behaviour_ok": true,
    "checks": [
@@ -1766,6 +1766,104 @@
    "passed": true,
    "correct": true,
    "failed_checks": []
+  },
+  {
+   "id": "G16",
+   "sip": "A",
+   "text": "You can pay less in December. It goes back to ₹3,000 in January by itself.",
+   "should_pass": true,
+   "from": "GH01 (holdout, added after the holdout run)",
+   "passed": true,
+   "correct": true,
+   "failed_checks": []
+  },
+  {
+   "id": "G17",
+   "sip": "A",
+   "text": "Groww cancels your SIP after 2 missed payments.",
+   "should_pass": false,
+   "why": "wrong rule, worded without 'in a row'",
+   "from": "GH02 (holdout, added after the holdout run)",
+   "passed": false,
+   "correct": true,
+   "failed_checks": [
+    "Rules correct"
+   ]
+  },
+  {
+   "id": "G18",
+   "sip": "A",
+   "text": "Markets always recover, so keep going.",
+   "should_pass": false,
+   "why": "forecast and advice in new words",
+   "from": "GH03 (holdout, added after the holdout run)",
+   "passed": false,
+   "correct": true,
+   "failed_checks": [
+    "No advice"
+   ]
+  },
+  {
+   "id": "G19",
+   "sip": "A",
+   "text": "Your money is protected.",
+   "should_pass": false,
+   "why": "calls the money protected",
+   "from": "GH04 (holdout, added after the holdout run)",
+   "passed": false,
+   "correct": true,
+   "failed_checks": [
+    "Rules correct"
+   ]
+  },
+  {
+   "id": "G20",
+   "sip": "B",
+   "text": "You can skip the 9 November payment.",
+   "should_pass": false,
+   "why": "offers to skip the locked payment",
+   "from": "GH05 (holdout, added after the holdout run)",
+   "passed": false,
+   "correct": true,
+   "failed_checks": [
+    "Right group"
+   ]
+  },
+  {
+   "id": "G21",
+   "sip": "A",
+   "text": "Act fast before it is too late.",
+   "should_pass": false,
+   "why": "pressure",
+   "from": "GH06 (holdout, added after the holdout run)",
+   "passed": false,
+   "correct": true,
+   "failed_checks": [
+    "Calm tone"
+   ]
+  },
+  {
+   "id": "G22",
+   "sip": "D",
+   "text": "You have missed 2 in a row. One more miss will cancel the SIP.",
+   "should_pass": true,
+   "from": "GH07 (holdout, added after the holdout run)",
+   "passed": true,
+   "correct": true,
+   "failed_checks": []
+  },
+  {
+   "id": "G23",
+   "sip": "A",
+   "text": "Your next payment is on 15 December.",
+   "should_pass": false,
+   "why": "wrong date",
+   "from": "GH08 (holdout, added after the holdout run)",
+   "passed": false,
+   "correct": true,
+   "failed_checks": [
+    "Facts match"
+   ]
   }
  ],
  "summary": {
@@ -1777,7 +1875,7 @@
   "sort_gate_pass_rate": 1.0,
   "ai_texts": 26,
   "text_gate_pass_rate": 1.0,
-  "question_behaviour_ok": 1.0,
-  "gate_tests_correct": "15/15"
+  "question_behaviour_ok": 0.9444444444444444,
+  "gate_tests_correct": "23/23"
  }
 }

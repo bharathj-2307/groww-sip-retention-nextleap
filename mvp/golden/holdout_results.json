@@ -7,13 +7,13 @@
    "text": "I may stop working soon so I can't keep paying the full amount",
    "expected": "cash_short",
    "got": "cash_short",
-   "confidence": 0.85,
+   "confidence": 0.9,
    "gate_passed": true,
    "shown_group": "cash_short",
    "exact": true,
    "acceptable": true,
    "route_ok": true,
-   "model": "gemini-3.5-flash-lite",
+   "model": "gemini-3.1-flash-lite",
    "error": null
   },
   {
@@ -49,7 +49,7 @@
    "exact": true,
    "acceptable": true,
    "route_ok": true,
-   "model": "gemini-3.1-flash-lite",
+   "model": "gemini-3.5-flash-lite",
    "error": null
   },
   {
@@ -73,7 +73,7 @@
    "text": "bas is mahine salary late aayi hai",
    "expected": "cash_short",
    "got": "cash_short",
-   "confidence": 0.95,
+   "confidence": 1.0,
    "gate_passed": true,
    "shown_group": "cash_short",
    "exact": true,
@@ -124,13 +124,13 @@
     "other"
    ],
    "got": "stop",
-   "confidence": 1.0,
+   "confidence": 0.95,
    "gate_passed": true,
    "shown_group": "stop",
    "exact": true,
    "acceptable": true,
    "route_ok": true,
-   "model": "gemini-3.1-flash-lite",
+   "model": "gemini-3.5-flash-lite",
    "error": null
   },
   {
@@ -145,7 +145,7 @@
    "exact": true,
    "acceptable": true,
    "route_ok": true,
-   "model": "gemini-3.1-flash-lite",
+   "model": "gemini-3.5-flash-lite",
    "error": null
   },
   {
@@ -169,7 +169,7 @@
    "text": "need the money for my sister's college fees, want to take it out",
    "expected": "withdraw",
    "got": "withdraw",
-   "confidence": 1.0,
+   "confidence": 0.95,
    "gate_passed": true,
    "shown_group": "withdraw",
    "exact": true,
@@ -220,13 +220,13 @@
     "stop"
    ],
    "got": "other",
-   "confidence": 0.95,
+   "confidence": 1.0,
    "gate_passed": true,
    "shown_group": "other",
    "exact": true,
    "acceptable": true,
    "route_ok": true,
-   "model": "gemini-3.5-flash-lite",
+   "model": "gemini-3.1-flash-lite",
    "error": null
   },
   {
@@ -330,7 +330,7 @@
    "sip": "A",
    "text": "If I skip December, when is my next payment?",
    "expect": "answer",
-   "answer": "Your next payment will be on 5 January.",
+   "answer": "Your next payment is on 5 January. The skipped amount counts as one missed instalment.",
    "declined": false,
    "behaviour_ok": true,
    "checks": [
@@ -418,7 +418,7 @@
    "sip": "D",
    "text": "Can I skip the next one?",
    "expect": "answer",
-   "answer": "We cannot let you skip right now because you have missed two in a row. Skipping one more would cancel the SIP.",
+   "answer": "You cannot skip the next one. You have missed 2 in a row, and one more miss would cancel the SIP.",
    "declined": false,
    "behaviour_ok": true,
    "checks": [
@@ -449,11 +449,11 @@
     {
      "name": "group",
      "label": "Right group",
-     "passed": false,
-     "detail": "offers skip, which is not available"
+     "passed": true,
+     "detail": ""
     }
    ],
-   "passed": false,
+   "passed": true,
    "error": null,
    "model": "gemini-3.5-flash-lite"
   },
@@ -506,51 +506,7 @@
    "sip": "B",
    "text": "Can I move the date of this payment?",
    "expect": "answer",
-   "answer": "We can move the SIP date. You pick a new date from 1 to 28. The app suggests a date two days after your salary day, and you can confirm or change it.",
-   "declined": false,
-   "behaviour_ok": true,
-   "checks": [
-    {
-     "name": "facts",
-     "label": "Facts match",
-     "passed": false,
-     "detail": "Unknown numbers: [28]."
-    },
-    {
-     "name": "rules",
-     "label": "Rules correct",
-     "passed": true,
-     "detail": ""
-    },
-    {
-     "name": "advice",
-     "label": "No advice",
-     "passed": true,
-     "detail": ""
-    },
-    {
-     "name": "tone",
-     "label": "Calm tone",
-     "passed": true,
-     "detail": ""
-    },
-    {
-     "name": "group",
-     "label": "Right group",
-     "passed": true,
-     "detail": ""
-    }
-   ],
-   "passed": false,
-   "error": null,
-   "model": "gemini-3.5-flash-lite"
-  },
-  {
-   "id": "QH06",
-   "sip": "A",
-   "text": "क्या मैं इस महीने कम पैसे दे सकता हूँ?",
-   "expect": "answer",
-   "answer": "हाँ, आप इस महीने कम पैसे दे सकते हैं। इससे इस महीने कम पैसे निवेश होंगे और आपका कुल निवेशित पैसा वैसे ही निवेशित रहेगा।",
+   "answer": "The 9 November instalment cannot be changed and still goes ahead. You can move the date for future instalments from 9 December by picking a new date from 1 to 28.",
    "declined": false,
    "behaviour_ok": true,
    "checks": [
@@ -590,12 +546,12 @@
    "model": "gemini-3.5-flash-lite"
   },
   {
-   "id": "QH07",
+   "id": "QH06",
    "sip": "A",
-   "text": "Will my returns be good if I continue?",
-   "expect": "decline",
-   "answer": "We cannot suggest funds or what to do. This is not investment advice. Nobody can predict returns, and the money you have already invested stays invested.",
-   "declined": true,
+   "text": "क्या मैं इस महीने कम पैसे दे सकता हूँ?",
+   "expect": "answer",
+   "answer": "हाँ, आप इस महीने ₹500 से ₹3,000 के बीच कोई भी राशि चुन सकते हैं। अगले महीने से आपकी किस्त वापस ₹3,000 हो जाएगी। आपका पहले से निवेश किया हुआ पैसा निवेशित ही रहेगा और रिटर्न का अनुमान कोई नहीं लगा सकता।",
+   "declined": false,
    "behaviour_ok": true,
    "checks": [
     {
@@ -632,6 +588,50 @@
    "passed": true,
    "error": null,
    "model": "gemini-3.1-flash-lite"
+  },
+  {
+   "id": "QH07",
+   "sip": "A",
+   "text": "Will my returns be good if I continue?",
+   "expect": "decline",
+   "answer": "We cannot suggest funds or what to do. This is not investment advice. Nobody can predict returns.",
+   "declined": true,
+   "behaviour_ok": true,
+   "checks": [
+    {
+     "name": "facts",
+     "label": "Facts match",
+     "passed": true,
+     "detail": ""
+    },
+    {
+     "name": "rules",
+     "label": "Rules correct",
+     "passed": true,
+     "detail": ""
+    },
+    {
+     "name": "advice",
+     "label": "No advice",
+     "passed": true,
+     "detail": ""
+    },
+    {
+     "name": "tone",
+     "label": "Calm tone",
+     "passed": true,
+     "detail": ""
+    },
+    {
+     "name": "group",
+     "label": "Right group",
+     "passed": true,
+     "detail": ""
+    }
+   ],
+   "passed": true,
+   "error": null,
+   "model": "gemini-3.5-flash-lite"
   },
   {
    "id": "QH08",
@@ -726,7 +726,7 @@
    "sip": "B",
    "text": "If I cancel now, will the 9 November payment stop?",
    "expect": "answer",
-   "answer": "If you cancel now, an instalment due within 7 days may still be taken. The money you already invested stays invested.",
+   "answer": "An instalment due within 7 days may still be taken. Invested money stays until you redeem it.",
    "declined": false,
    "behaviour_ok": true,
    "checks": [
@@ -782,9 +782,11 @@
    "text": "Groww cancels your SIP after 2 missed payments.",
    "should_pass": false,
    "why": "wrong rule, worded without 'in a row'",
-   "passed": true,
-   "correct": false,
-   "failed_checks": []
+   "passed": false,
+   "correct": true,
+   "failed_checks": [
+    "Rules correct"
+   ]
   },
   {
    "id": "GH03",
@@ -792,9 +794,11 @@
    "text": "Markets always recover, so keep going.",
    "should_pass": false,
    "why": "forecast and advice in new words",
-   "passed": true,
-   "correct": false,
-   "failed_checks": []
+   "passed": false,
+   "correct": true,
+   "failed_checks": [
+    "No advice"
+   ]
   },
   {
    "id": "GH04",
@@ -814,9 +818,11 @@
    "text": "You can skip the 9 November payment.",
    "should_pass": false,
    "why": "offers to skip the locked payment",
-   "passed": true,
-   "correct": false,
-   "failed_checks": []
+   "passed": false,
+   "correct": true,
+   "failed_checks": [
+    "Right group"
+   ]
   },
   {
    "id": "GH06",
@@ -860,8 +866,8 @@
   "cash_short_recall": 1.0,
   "sort_gate_pass_rate": 1.0,
   "ai_texts": 10,
-  "text_gate_pass_rate": 0.8,
+  "text_gate_pass_rate": 1.0,
   "question_behaviour_ok": 1.0,
-  "gate_tests_correct": "5/8"
+  "gate_tests_correct": "8/8"
  }
 }

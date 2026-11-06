@@ -3,6 +3,7 @@
 Run from the mvp folder:  python3 -m golden.run_eval
 Writes golden/results.json and prints a summary.
 Fresh holdout set:        python3 -m golden.run_eval --holdout   (writes golden/holdout_results.json)
+The first holdout run, before any fixes, is kept in golden/holdout_results_before_fixes.json.
 """
 from __future__ import annotations
 
