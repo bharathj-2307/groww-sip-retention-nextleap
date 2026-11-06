@@ -19,7 +19,7 @@ If one check fails, the user sees Groww's current pop-up and a link to Groww's h
 | Sample | Shows |
 |---|---|
 | Normal month | Screen 3 with all three options |
-| Debit is very close | Screen 8: the next debit is less than 2 working days away, so pay less and move date apply from next month |
+| Debit is very close | Screen 8: the next debit is within 2 working days, so skip, pay less and move date apply from next month |
 | Pay less used twice | Screen 9: pay less is locked until a year after its first use |
 | Missed 2 in a row | Skip is hidden, because a third miss would cancel the SIP |
 
@@ -33,6 +33,13 @@ python3 -m golden.run_eval
 ```
 
 Results go to `golden/results.json`. The app shows the summary under "For reviewers".
+
+Date rules are checked for every day from today to the end of 2028, for all 4 cases and 13 salary days
+(month ends, year end and the leap February included):
+
+```
+python3 -m tests.test_dates
+```
 
 ## Run and deploy
 

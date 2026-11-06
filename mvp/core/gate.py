@@ -13,7 +13,7 @@ from __future__ import annotations
 import re
 
 from .ai import GROUPS, CONFIDENCE_MIN
-from .sip import MONTHS, CHANGE_CUTOFF_WORKDAYS, PAYDAY_GAP_DAYS, PAY_LESS_LIMIT, FUND_NAME
+from .sip import MONTHS, CHANGE_CUTOFF_WORKDAYS, CANCEL_NOTICE_DAYS, PAYDAY_GAP_DAYS, PAY_LESS_LIMIT, FUND_NAME
 
 HINDI_MONTHS = ["जनवरी", "फ़रवरी", "फरवरी", "मार्च", "अप्रैल", "मई", "जून", "जुलाई",
                 "अगस्त", "सितंबर", "सितम्बर", "अक्टूबर", "नवंबर", "नवम्बर", "दिसंबर", "दिसम्बर"]
@@ -73,7 +73,7 @@ def _known_dates(f: dict) -> list:
 def _allowed_numbers(f: dict, extra_text: str = "") -> set[int]:
     nums = {f["amount"], f["invested"], f["months_old"], f["misses_in_row"], f["miss_limit"],
             f["misses_left"], f["fund_min"], f["today"].year, f["pay_less_used"], f["pay_less_left"],
-            CHANGE_CUTOFF_WORKDAYS, PAYDAY_GAP_DAYS, PAY_LESS_LIMIT, 0, 1, 12}
+            CHANGE_CUTOFF_WORKDAYS, CANCEL_NOTICE_DAYS, PAYDAY_GAP_DAYS, PAY_LESS_LIMIT, 0, 1, 12}
     for d in _known_dates(f):
         nums.update({d.day, d.year})
     # Numbers the user wrote may be repeated if they look like an amount or a day, not an ID.
@@ -191,6 +191,13 @@ def check_text(text: str, f: dict, *, group: str, confidence: float = 1.0,
                 if not NEGATION.search(window):
                     problems.append(f"offers {opt}, which is not available")
                     break
+    if f.get("too_close"):
+        # The locked instalment itself cannot be skipped, only the one after it.
+        locked = r"\bskip(?:ping)?\s+(?:this month|this instalment|this installment|the next (?:one|instalment)|" + \
+                 re.escape(f["next_date_text"].lower()) + "|" + MONTHS[f["next_date"].month - 1].lower() + r")\b"
+        m = re.search(locked, low)
+        if m and not NEGATION.search(low[max(0, m.start() - 40):m.end() + 20]):
+            problems.append("offers to skip the locked instalment")
     checks.append(_check("group", "Right group", not problems, "; ".join(problems)))
     return checks
 
