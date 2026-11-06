@@ -5,6 +5,7 @@ No real user data is used anywhere in the MVP.
 """
 from __future__ import annotations
 
+import calendar
 from dataclasses import dataclass, field
 from datetime import date, timedelta
 
@@ -57,9 +58,10 @@ SIPS_BY_KEY = {s.key: s for s in SAMPLE_SIPS}
 
 
 def _month_add(d: date, n: int, day: int | None = None) -> date:
+    """Same day n months later. If that month is shorter, use its last day (30 Jan + 1 month = 28 Feb)."""
     m = d.month - 1 + n
-    y = d.year + m // 12
-    return date(y, m % 12 + 1, min(day or d.day, 28))
+    y, m = d.year + m // 12, m % 12 + 1
+    return date(y, m, min(day or d.day, calendar.monthrange(y, m)[1]))
 
 
 def _next_on_day(today: date, day: int) -> date:

@@ -34,6 +34,13 @@ python3 -m golden.run_eval
 
 Results go to `golden/results.json`. The app shows the summary under "For reviewers".
 
+Date rules are checked for every day from today to the end of 2028, for all 4 cases and 13 salary days
+(month ends, year end and the leap February included):
+
+```
+python3 -m tests.test_dates
+```
+
 ## Run and deploy
 
 ```
