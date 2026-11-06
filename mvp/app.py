@@ -572,13 +572,17 @@ def screen_done() -> None:
     elif k == "cancelled":
         title = "SIP cancelled"
         body = f"Future instalments are stopped. Your {F['invested_text']} stays invested until you redeem it."
+    elif k == "redeem":
+        title = "Redeem opens next"
+        body = ("In the Groww app, this button opens the Redeem page for this fund. "
+                "Redeem is not part of this prototype. Your SIP has not been cancelled.")
     else:
         title = "Your SIP continues"
         body = "Nothing has changed."
-    rows = "" if k == "cancelled" else (
+    rows = "" if k in ("cancelled", "redeem") else (
         f'<div class="ss-card" style="text-align:left"><div class="ss-row"><span class="k">Invested so far</span><span class="v">{F["invested_text"]}</span></div>'
         f'<div class="ss-row"><span class="k">Missed in a row</span><span class="v">{F["misses_in_row"] + (1 if k == "skip" else 0)} of {F["miss_limit"]}</span></div></div>')
-    H(f"""<div class="ss-done-ic"><span style="font-size:34px;color:{GREEN}">✓</span></div>
+    H(f"""<div class="ss-done-ic"><span style="font-size:34px;color:{GREEN}">{"↗" if k == "redeem" else "✓"}</span></div>
 <div class="ss-center"><div class="ss-h1">{esc(title)}</div><div class="ss-sub" style="font-size:15px;line-height:22px">{esc(body)}</div></div>{rows}""")
     with st.container(key="primary_done"):
         if btn("Done", key="donebtn"):
@@ -630,7 +634,7 @@ def act(what: str) -> None:
     elif what == "cancel_confirm":
         go("popup_cancel_confirm")
     elif what == "redeem":
-        S.result = {"kind": "cancelled"}; go("done")
+        S.result = {"kind": "redeem"}; go("done")
 
 
 def screen_popup_cancel() -> None:       # 10: same pop-up and text as Groww today
