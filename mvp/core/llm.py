@@ -14,7 +14,7 @@ import requests
 
 BASE_URL = "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions"
 MODELS = [m.strip() for m in os.environ.get(
-    "GEMINI_MODELS", "gemini-3.5-flash,gemini-3.5-flash-lite,gemini-3.1-flash-lite").split(",") if m.strip()]
+    "GEMINI_MODELS", "gemini-3.5-flash-lite,gemini-3.1-flash-lite,gemini-3.5-flash").split(",") if m.strip()]
 
 
 class LLMError(Exception):
@@ -72,8 +72,12 @@ def chat(system: str, user: str, *, json_mode: bool = False, temperature: float 
 
 
 def parse_json(text: str) -> dict:
+    """Read the first JSON object in the reply, ignoring anything after it."""
     text = text.strip()
-    m = re.search(r"\{.*\}", text, re.S)
-    if not m:
+    start = text.find("{")
+    if start < 0:
         raise ValueError("no JSON object in reply")
-    return json.loads(m.group(0))
+    obj, _ = json.JSONDecoder().raw_decode(text[start:])
+    if not isinstance(obj, dict):
+        raise ValueError("reply is not a JSON object")
+    return obj

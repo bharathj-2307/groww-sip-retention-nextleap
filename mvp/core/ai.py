@@ -33,6 +33,8 @@ other: anything else. App problems, autopay or mandate trouble, forgot to pay, d
 Rules:
 - If money is short now AND they also mention returns, choose cash_short.
 - If they need money now and ask to take out invested money, choose withdraw.
+- Wanting to close, stop or band karna the SIP with no reason, or for private reasons, is stop. It is never break.
+- break needs a clear wish to pause for a time and then continue.
 - Give confidence from 0 to 1. Use below 0.7 when the text fits two groups about equally.
 - Never repeat numbers or personal details from the text.
 Reply with JSON only: {"group": "...", "confidence": 0.0, "language": "en|hi|mixed"}"""
