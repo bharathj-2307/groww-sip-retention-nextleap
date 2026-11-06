@@ -13,7 +13,7 @@ from __future__ import annotations
 import re
 
 from .ai import GROUPS, CONFIDENCE_MIN
-from .sip import MONTHS, SKIP_CUTOFF_DAYS, PAYDAY_GAP_DAYS, FUND_NAME
+from .sip import MONTHS, CHANGE_CUTOFF_WORKDAYS, PAYDAY_GAP_DAYS, PAY_LESS_LIMIT, FUND_NAME
 
 HINDI_MONTHS = ["जनवरी", "फ़रवरी", "फरवरी", "मार्च", "अप्रैल", "मई", "जून", "जुलाई",
                 "अगस्त", "सितंबर", "सितम्बर", "अक्टूबर", "नवंबर", "नवम्बर", "दिसंबर", "दिसम्बर"]
@@ -55,17 +55,27 @@ WRONG_RULES = [
     # only one skip at a time
     r"\bskip (?:two|2|three|3|multiple|several) (?:months|instalments|installments)\b(?! (?:is|are) not)",
     r"\bpause (?:for )?(?:up to )?(?:\d+|three|six|twelve) months\b",
+    # invested money is not "safe": it stays invested and its value can go up or down
+    r"\bsafe(?:ly)?\b", r"\bsecure(?:d|ly)?\b", r"\bprotected\b", r"सुरक्षित",
     # Groww does not charge a penalty
     r"\bgroww (?:will )?charges? (?:a )?(?:penalty|fine|fee)\b",
 ]
-NEGATION = re.compile(r"\b(?:not|cannot|can't|can not|isn't|unavailable|already|too close)\b|नहीं|संभव नहीं", re.I)
+NEGATION = re.compile(r"\b(?:not|cannot|can't|can not|isn't|unavailable|already|too close|used|locked|opens again|again on)\b|नहीं|संभव नहीं|इस्तेमाल", re.I)
+
+
+def _known_dates(f: dict) -> list:
+    ds = [f["next_date"], f["after_next_date"], f["third_date"], f["target_date"], f["target_after_date"]]
+    if f.get("pay_less_reopen"):
+        ds.append(f["pay_less_reopen"])
+    return ds
 
 
 def _allowed_numbers(f: dict, extra_text: str = "") -> set[int]:
-    nd, an = f["next_date"], f["after_next_date"]
     nums = {f["amount"], f["invested"], f["months_old"], f["misses_in_row"], f["miss_limit"],
-            f["misses_left"], f["fund_min"], nd.day, an.day, nd.year, an.year, f["today"].year,
-            SKIP_CUTOFF_DAYS, PAYDAY_GAP_DAYS, 0, 1, 30}
+            f["misses_left"], f["fund_min"], f["today"].year, f["pay_less_used"], f["pay_less_left"],
+            CHANGE_CUTOFF_WORKDAYS, PAYDAY_GAP_DAYS, PAY_LESS_LIMIT, 0, 1, 12}
+    for d in _known_dates(f):
+        nums.update({d.day, d.year})
     # Numbers the user wrote may be repeated if they look like an amount or a day, not an ID.
     for n in _numbers(extra_text):
         if n <= 31 or (f["fund_min"] <= n <= f["amount"] * 12):
@@ -108,10 +118,11 @@ def check_text(text: str, f: dict, *, group: str, confidence: float = 1.0,
     # 1 Facts match
     allowed = _allowed_numbers(f, user_text)
     bad_nums = [n for n in _numbers(text) if n not in allowed]
-    ok_months = {f["next_date"].month, f["after_next_date"].month, f["today"].month}
+    ok_months = {d.month for d in _known_dates(f)} | {f["today"].month} | {
+        MONTHS.index(m) + 1 for M in f.get("pay_less_use_months", []) for m in MONTHS if m.startswith(M)}
     bad_months = [MONTHS[m - 1] for m in _months(text) if m not in ok_months]
     # Each date written must be a real SIP date, not just a known number.
-    ok_dates = {(f["next_date"].day, f["next_date"].month), (f["after_next_date"].day, f["after_next_date"].month)}
+    ok_dates = {(d.day, d.month) for d in _known_dates(f)}
     t = text.translate(DEV_DIGITS)
     month_alt = "|".join([m for m in MONTHS] + [m[:3] for m in MONTHS] + list(HINDI_MONTH_INDEX))
     for m in re.finditer(r"(\d{1,2})(?:st|nd|rd|th)?\s+(?:of\s+)?(" + month_alt + r")\b", t, re.I):
@@ -133,6 +144,11 @@ def check_text(text: str, f: dict, *, group: str, confidence: float = 1.0,
         n = {"zero": 0, "one": 1, "two": 2, "three": 3, "four": 4, "five": 5}.get(word, None)
         n = int(word) if n is None else n
         if n not in (f["misses_in_row"], f["miss_limit"], f["misses_left"]):
+            hits.append(m.group(0))
+    for m in re.finditer(r"(\d+|one|two|three|four)\s+times?\s+in\s+(?:any\s+|the\s+last\s+)?12\s+months", low):
+        w = m.group(1)
+        n = {"one": 1, "two": 2, "three": 3, "four": 4}.get(w) or int(w)
+        if n not in (PAY_LESS_LIMIT, f["pay_less_used"], f["pay_less_left"]):
             hits.append(m.group(0))
     for p in WRONG_RULES:
         m = re.search(p, low)

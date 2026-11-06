@@ -61,7 +61,8 @@ No exclamation marks. No fear or urgency words.
 Use only the facts given. Do not add any other number, date or rule.
 Write amounts like ₹3,000 and dates like 5 December.
 Never name or suggest any fund, stock or product. Never say whether returns will be good or bad.
-Never tell the user what they should do. Only explain what each choice means."""
+Never tell the user what they should do. Only explain what each choice means.
+Never call the money safe, secure or protected. Say it stays invested."""
 
 
 def explain(f: dict, language: str = "en", group: str = "cash_short") -> dict:
@@ -69,12 +70,25 @@ def explain(f: dict, language: str = "en", group: str = "cash_short") -> dict:
     lang = "Hindi (Devanagari script, but keep digits like 3,000)" if language in ("hi", "mixed") else "English"
     situation = ("The user is short of money for now." if group == "cash_short"
                  else "The user wants a short break.")
+    if f.get("too_close"):
+        focus = (f"The {f['next_date_text']} instalment is too close to change. Say calmly: if the balance is short on that date "
+                 "the payment will not go through, it counts as 1 missed, the SIP stays active and the invested money stays invested. "
+                 f"Then say the user can set up {f['target_month_text']} now.")
+    elif f.get("pay_less_left") == 0:
+        focus = ("Say that the invested money stays invested whatever they choose. Say pay less has been used "
+                 f"{f['pay_less_used']} times in the last 12 months and opens again on {f['pay_less_reopen_text']}. "
+                 "Say that a skip counts as 1 missed and the rule of 3 missed in a row.")
+    elif f.get("misses_in_row", 0) >= 2:
+        focus = ("Say that the invested money stays invested. Say calmly that they have missed 2 in a row and that "
+                 "if the next one is also missed, Groww will cancel this SIP. Say the options on this screen keep it running.")
+    else:
+        focus = ("Say that the invested money stays invested whatever they choose, and that Groww cancels a SIP only "
+                 f"after {f['miss_limit']} missed instalments in a row.")
     system = f"""You explain a user's own SIP facts before they choose what to do. {situation}
 {STYLE}
-Write 3 or 4 sentences in {lang}. Cover: what they have invested and that it stays invested,
-the next instalment and its date, how many are missed in a row now and the rule of {f['miss_limit']} in a row.
-If they have missed 2 in a row, say calmly that missing the next one would cancel the SIP.
-Do not list the options. The screen shows them.
+Write 2 or 3 short sentences in {lang}. The screen already shows a table with the amounts and dates.
+{focus}
+Do not list or describe the options. The screen shows them.
 Reply with JSON only: {{"text": "..."}}"""
     try:
         raw, model = chat(system, "Facts:\n" + facts_for_prompt(f), json_mode=True)

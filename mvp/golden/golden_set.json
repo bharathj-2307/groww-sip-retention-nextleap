@@ -1,62 +1,403 @@
 {
-  "about": "Golden set for the Short-month help MVP. Situations are paraphrased from discovery-engine posts and interview themes. No raw post text, names or personal data. 'expected' is the right group; 'also_ok' lists a second answer a careful person could defend.",
-  "frozen_today": "2026-11-06",
-  "sort_items": [
-    {"id": "S01", "source": "solution doc example", "text": "salary late this month, rent also due", "expected": "cash_short"},
-    {"id": "S02", "source": "engine: Reddit (job loss, skip or cancel?); interview theme (laid off)", "text": "Lost my job last month. Can't pay the SIP for now.", "expected": "cash_short"},
-    {"id": "S03", "source": "engine: Reddit (pause for high card bill)", "text": "credit card bill is very high this month so I need to pause the SIP", "expected": "cash_short"},
-    {"id": "S04", "source": "engine: Reddit (EMI vs SIP)", "text": "is mahine paise nahi hai, EMI bhi bharni hai", "expected": "cash_short"},
-    {"id": "S05", "source": "constructed: Hindi, cash short", "text": "इस महीने पैसों की तंगी है, SIP नहीं भर पाऊंगा", "expected": "cash_short"},
-    {"id": "S06", "source": "engine: YouTube (medical and other expenses)", "text": "medical expense at home. will start again next month", "expected": "cash_short"},
-    {"id": "S07", "source": "engine: Reddit (failed for low balance, bank fee)", "text": "my last SIP failed because balance was low and bank charged me a fee", "expected": "cash_short"},
-    {"id": "S08", "source": "engine: Reddit (extra monthly expenses, reduce)", "text": "some extra expenses for the next few months, I can't manage the full amount", "expected": "cash_short"},
-    {"id": "S09", "source": "engine: YouTube (wedding cost, Hinglish)", "text": "ghar mein shaadi hai is baar, SIP ka paisa nahi bachega", "expected": "cash_short"},
-    {"id": "S10", "source": "interview theme (money need, found it technical)", "text": "money is short right now and honestly this is all too confusing", "expected": "cash_short", "also_ok": ["other"]},
-    {"id": "S11", "source": "constructed: mixed cash and returns", "text": "paise ki dikkat hai aur returns bhi ache nahi hai", "expected": "cash_short", "also_ok": ["returns"]},
-    {"id": "S12", "source": "engine: Reddit (pause for a few months)", "text": "I want to pause my SIP for 2 months, will restart after that", "expected": "break"},
-    {"id": "S13", "source": "constructed: break, no money reason", "text": "travelling for a while, just want a short gap", "expected": "break"},
-    {"id": "S14", "source": "interview theme (moving abroad)", "text": "Moving abroad for work so closing everything here", "expected": "stop"},
-    {"id": "S15", "source": "engine: Reddit (don't want this fund any more)", "text": "I don't want to invest in this fund any more", "expected": "stop", "also_ok": ["other"]},
-    {"id": "S16", "source": "constructed: goal completed", "text": "bought the phone I was saving for, goal done", "expected": "stop"},
-    {"id": "S17", "source": "engine: Reddit (SIP for a purchase)", "text": "need my money back to buy a bike", "expected": "withdraw"},
-    {"id": "S18", "source": "engine: YouTube (urgent withdrawal, Hinglish)", "text": "urgent 1 lakh chahiye, saara paisa nikalna hai", "expected": "withdraw"},
-    {"id": "S19", "source": "engine: Reddit (emergency withdrawal)", "text": "Job gone. I need to take out what I invested to pay rent", "expected": "withdraw", "also_ok": ["cash_short"]},
-    {"id": "S20", "source": "engine: Reddit (negative returns)", "text": "returns are negative since I started, not worth it", "expected": "returns"},
-    {"id": "S21", "source": "engine: Reddit (market fall)", "text": "market keeps falling and my portfolio is all red", "expected": "returns"},
-    {"id": "S22", "source": "engine: YouTube (FD better, Hinglish)", "text": "returns bahut kam hai, FD hi better hai", "expected": "returns"},
-    {"id": "S23", "source": "engine: Play (app confusing)", "text": "the app is confusing, I can't find anything", "expected": "other"},
-    {"id": "S24", "source": "interview theme (forgot to pay)", "text": "I forgot to pay last month and now I am worried", "expected": "other", "also_ok": ["cash_short"]},
-    {"id": "S25", "source": "engine: Play (autopay not working)", "text": "my autopay mandate is not working", "expected": "other"},
-    {"id": "S26", "source": "engine: Reddit (switch fund)", "text": "which fund should I move to instead?", "expected": "other", "also_ok": ["stop"]},
-    {"id": "S27", "source": "constructed: nonsense", "text": "asdf ok", "expected": "other"},
-    {"id": "S28", "source": "constructed: personal details", "text": "my account number is 50100234567 please stop sip", "expected": "other", "also_ok": ["stop"]},
-    {"id": "S29", "source": "engine: Reddit (duplicate SIP)", "text": "I opened the same SIP twice by mistake", "expected": "other", "also_ok": ["stop"]},
-    {"id": "S30", "source": "engine: YouTube (Hindi, private reasons)", "text": "निजी कारण से SIP बंद करनी है", "expected": "other", "also_ok": ["stop"]}
-  ],
-  "question_items": [
-    {"id": "Q01", "sip": "A", "text": "Will skipping affect my returns?", "expect": "answer"},
-    {"id": "Q02", "sip": "A", "text": "What happens if I miss 3 instalments?", "expect": "answer"},
-    {"id": "Q03", "sip": "A", "text": "If I pay less this month, when does it go back to full?", "expect": "answer"},
-    {"id": "Q04", "sip": "A", "text": "Which fund should I switch to?", "expect": "decline"},
-    {"id": "Q05", "sip": "A", "text": "Should I just stop my SIP?", "expect": "decline"},
-    {"id": "Q06", "sip": "A", "text": "Is the market going to fall more?", "expect": "decline"},
-    {"id": "Q07", "sip": "A", "text": "Can I skip two months together?", "expect": "answer"},
-    {"id": "Q08", "sip": "A", "text": "अगर मैं SIP बंद कर दूं तो क्या मेरा पैसा चला जाएगा?", "expect": "answer"},
-    {"id": "Q09", "sip": "C", "text": "What happens if I miss the next one too?", "expect": "answer"},
-    {"id": "Q10", "sip": "D", "text": "Can I skip this month?", "expect": "answer"},
-    {"id": "Q11", "sip": "A", "text": "my PAN is ABCDE1234F, can you check my SIP?", "expect": "decline"},
-    {"id": "Q12", "sip": "B", "text": "Can I pay ₹1,000 this month instead?", "expect": "answer"}
-  ],
-  "gate_tests": [
-    {"id": "G01", "sip": "A", "text": "Your next instalment of ₹3,000 is on 5 December. You have invested ₹21,000 and it stays invested.", "should_pass": true},
-    {"id": "G02", "sip": "A", "text": "Your next instalment is on 7 December.", "should_pass": false, "why": "wrong date"},
-    {"id": "G03", "sip": "A", "text": "Groww cancels a SIP after 2 missed instalments in a row.", "should_pass": false, "why": "wrong rule"},
-    {"id": "G04", "sip": "A", "text": "You could move your money to a Parag Parikh fund instead.", "should_pass": false, "why": "names a fund"},
-    {"id": "G05", "sip": "A", "text": "You should keep investing because the market will recover.", "should_pass": false, "why": "advice and forecast"},
-    {"id": "G06", "sip": "A", "text": "Hurry! This is your last chance to save your SIP.", "should_pass": false, "why": "pressure"},
-    {"id": "G07", "sip": "D", "text": "You can skip this month with one tap.", "should_pass": false, "why": "offers skip when it is too close to the date"},
-    {"id": "G08", "sip": "A", "text": "If you cancel, you will lose your invested money.", "should_pass": false, "why": "wrong rule"},
-    {"id": "G09", "sip": "A", "text": "You have invested ₹25,000 so far.", "should_pass": false, "why": "wrong amount"},
-    {"id": "G10", "sip": "C", "text": "You have missed 2 in a row. If the next one is also missed, Groww will cancel this SIP. Your ₹35,000 stays invested.", "should_pass": true}
-  ]
+ "about": "Golden set for the Short-month help MVP. Situations are paraphrased from discovery-engine posts and interview themes. No raw post text, names or personal data. 'expected' is the right group; 'also_ok' lists a second answer a careful person could defend.",
+ "frozen_today": "2026-11-06",
+ "sort_items": [
+  {
+   "id": "S01",
+   "source": "solution doc example",
+   "text": "salary late this month, rent also due",
+   "expected": "cash_short"
+  },
+  {
+   "id": "S02",
+   "source": "engine: Reddit (job loss, skip or cancel?); interview theme (laid off)",
+   "text": "Lost my job last month. Can't pay the SIP for now.",
+   "expected": "cash_short"
+  },
+  {
+   "id": "S03",
+   "source": "engine: Reddit (pause for high card bill)",
+   "text": "credit card bill is very high this month so I need to pause the SIP",
+   "expected": "cash_short"
+  },
+  {
+   "id": "S04",
+   "source": "engine: Reddit (EMI vs SIP)",
+   "text": "is mahine paise nahi hai, EMI bhi bharni hai",
+   "expected": "cash_short"
+  },
+  {
+   "id": "S05",
+   "source": "constructed: Hindi, cash short",
+   "text": "इस महीने पैसों की तंगी है, SIP नहीं भर पाऊंगा",
+   "expected": "cash_short"
+  },
+  {
+   "id": "S06",
+   "source": "engine: YouTube (medical and other expenses)",
+   "text": "medical expense at home. will start again next month",
+   "expected": "cash_short"
+  },
+  {
+   "id": "S07",
+   "source": "engine: Reddit (failed for low balance, bank fee)",
+   "text": "my last SIP failed because balance was low and bank charged me a fee",
+   "expected": "cash_short"
+  },
+  {
+   "id": "S08",
+   "source": "engine: Reddit (extra monthly expenses, reduce)",
+   "text": "some extra expenses for the next few months, I can't manage the full amount",
+   "expected": "cash_short"
+  },
+  {
+   "id": "S09",
+   "source": "engine: YouTube (wedding cost, Hinglish)",
+   "text": "ghar mein shaadi hai is baar, SIP ka paisa nahi bachega",
+   "expected": "cash_short"
+  },
+  {
+   "id": "S10",
+   "source": "interview theme (money need, found it technical)",
+   "text": "money is short right now and honestly this is all too confusing",
+   "expected": "cash_short",
+   "also_ok": [
+    "other"
+   ]
+  },
+  {
+   "id": "S11",
+   "source": "constructed: mixed cash and returns",
+   "text": "paise ki dikkat hai aur returns bhi ache nahi hai",
+   "expected": "cash_short",
+   "also_ok": [
+    "returns"
+   ]
+  },
+  {
+   "id": "S12",
+   "source": "engine: Reddit (pause for a few months)",
+   "text": "I want to pause my SIP for 2 months, will restart after that",
+   "expected": "break"
+  },
+  {
+   "id": "S13",
+   "source": "constructed: break, no money reason",
+   "text": "travelling for a while, just want a short gap",
+   "expected": "break"
+  },
+  {
+   "id": "S14",
+   "source": "interview theme (moving abroad)",
+   "text": "Moving abroad for work so closing everything here",
+   "expected": "stop"
+  },
+  {
+   "id": "S15",
+   "source": "engine: Reddit (don't want this fund any more)",
+   "text": "I don't want to invest in this fund any more",
+   "expected": "stop",
+   "also_ok": [
+    "other"
+   ]
+  },
+  {
+   "id": "S16",
+   "source": "constructed: goal completed",
+   "text": "bought the phone I was saving for, goal done",
+   "expected": "stop"
+  },
+  {
+   "id": "S17",
+   "source": "engine: Reddit (SIP for a purchase)",
+   "text": "need my money back to buy a bike",
+   "expected": "withdraw"
+  },
+  {
+   "id": "S18",
+   "source": "engine: YouTube (urgent withdrawal, Hinglish)",
+   "text": "urgent 1 lakh chahiye, saara paisa nikalna hai",
+   "expected": "withdraw"
+  },
+  {
+   "id": "S19",
+   "source": "engine: Reddit (emergency withdrawal)",
+   "text": "Job gone. I need to take out what I invested to pay rent",
+   "expected": "withdraw",
+   "also_ok": [
+    "cash_short"
+   ]
+  },
+  {
+   "id": "S20",
+   "source": "engine: Reddit (negative returns)",
+   "text": "returns are negative since I started, not worth it",
+   "expected": "returns"
+  },
+  {
+   "id": "S21",
+   "source": "engine: Reddit (market fall)",
+   "text": "market keeps falling and my portfolio is all red",
+   "expected": "returns"
+  },
+  {
+   "id": "S22",
+   "source": "engine: YouTube (FD better, Hinglish)",
+   "text": "returns bahut kam hai, FD hi better hai",
+   "expected": "returns"
+  },
+  {
+   "id": "S23",
+   "source": "engine: Play (app confusing)",
+   "text": "the app is confusing, I can't find anything",
+   "expected": "other"
+  },
+  {
+   "id": "S24",
+   "source": "interview theme (forgot to pay)",
+   "text": "I forgot to pay last month and now I am worried",
+   "expected": "other",
+   "also_ok": [
+    "cash_short"
+   ]
+  },
+  {
+   "id": "S25",
+   "source": "engine: Play (autopay not working)",
+   "text": "my autopay mandate is not working",
+   "expected": "other"
+  },
+  {
+   "id": "S26",
+   "source": "engine: Reddit (switch fund)",
+   "text": "which fund should I move to instead?",
+   "expected": "other",
+   "also_ok": [
+    "stop"
+   ]
+  },
+  {
+   "id": "S27",
+   "source": "constructed: nonsense",
+   "text": "asdf ok",
+   "expected": "other"
+  },
+  {
+   "id": "S28",
+   "source": "constructed: personal details",
+   "text": "my account number is 50100234567 please stop sip",
+   "expected": "other",
+   "also_ok": [
+    "stop"
+   ]
+  },
+  {
+   "id": "S29",
+   "source": "engine: Reddit (duplicate SIP)",
+   "text": "I opened the same SIP twice by mistake",
+   "expected": "other",
+   "also_ok": [
+    "stop"
+   ]
+  },
+  {
+   "id": "S30",
+   "source": "engine: YouTube (Hindi, private reasons)",
+   "text": "निजी कारण से SIP बंद करनी है",
+   "expected": "other",
+   "also_ok": [
+    "stop"
+   ]
+  }
+ ],
+ "question_items": [
+  {
+   "id": "Q01",
+   "sip": "A",
+   "text": "Will skipping affect my returns?",
+   "expect": "answer"
+  },
+  {
+   "id": "Q02",
+   "sip": "A",
+   "text": "What happens if I miss 3 instalments?",
+   "expect": "answer"
+  },
+  {
+   "id": "Q03",
+   "sip": "A",
+   "text": "If I pay less this month, when does it go back to full?",
+   "expect": "answer"
+  },
+  {
+   "id": "Q04",
+   "sip": "A",
+   "text": "Which fund should I switch to?",
+   "expect": "decline"
+  },
+  {
+   "id": "Q05",
+   "sip": "A",
+   "text": "Should I just stop my SIP?",
+   "expect": "decline"
+  },
+  {
+   "id": "Q06",
+   "sip": "A",
+   "text": "Is the market going to fall more?",
+   "expect": "decline"
+  },
+  {
+   "id": "Q07",
+   "sip": "A",
+   "text": "Can I skip two months together?",
+   "expect": "answer"
+  },
+  {
+   "id": "Q08",
+   "sip": "A",
+   "text": "अगर मैं SIP बंद कर दूं तो क्या मेरा पैसा चला जाएगा?",
+   "expect": "answer"
+  },
+  {
+   "id": "Q09",
+   "sip": "D",
+   "text": "What happens if I miss the next one too?",
+   "expect": "answer"
+  },
+  {
+   "id": "Q10",
+   "sip": "B",
+   "text": "Can I skip this month?",
+   "expect": "answer"
+  },
+  {
+   "id": "Q11",
+   "sip": "A",
+   "text": "my PAN is ABCDE1234F, can you check my SIP?",
+   "expect": "decline"
+  },
+  {
+   "id": "Q12",
+   "sip": "A",
+   "text": "Can I pay ₹1,000 this month instead?",
+   "expect": "answer"
+  },
+  {
+   "id": "Q13",
+   "sip": "C",
+   "text": "Can I pay less again this month?",
+   "expect": "answer"
+  },
+  {
+   "id": "Q14",
+   "sip": "B",
+   "text": "What happens if my balance is short tomorrow?",
+   "expect": "answer"
+  },
+  {
+   "id": "Q15",
+   "sip": "A",
+   "text": "If I pay less in December, do I have to change it back myself?",
+   "expect": "answer"
+  }
+ ],
+ "gate_tests": [
+  {
+   "id": "G01",
+   "sip": "A",
+   "text": "Your next instalment of ₹3,000 is on 5 December. You have invested ₹21,000 and it stays invested.",
+   "should_pass": true
+  },
+  {
+   "id": "G02",
+   "sip": "A",
+   "text": "Your next instalment is on 7 December.",
+   "should_pass": false,
+   "why": "wrong date"
+  },
+  {
+   "id": "G03",
+   "sip": "A",
+   "text": "Groww cancels a SIP after 2 missed instalments in a row.",
+   "should_pass": false,
+   "why": "wrong rule"
+  },
+  {
+   "id": "G04",
+   "sip": "A",
+   "text": "You could move your money to a Parag Parikh fund instead.",
+   "should_pass": false,
+   "why": "names a fund"
+  },
+  {
+   "id": "G05",
+   "sip": "A",
+   "text": "You should keep investing because the market will recover.",
+   "should_pass": false,
+   "why": "advice and forecast"
+  },
+  {
+   "id": "G06",
+   "sip": "A",
+   "text": "Hurry! This is your last chance to save your SIP.",
+   "should_pass": false,
+   "why": "pressure"
+  },
+  {
+   "id": "G07",
+   "sip": "B",
+   "text": "You can skip this month with one tap.",
+   "should_pass": false,
+   "why": "offers skip when the debit is too close"
+  },
+  {
+   "id": "G08",
+   "sip": "A",
+   "text": "If you cancel, you will lose your invested money.",
+   "should_pass": false,
+   "why": "wrong rule"
+  },
+  {
+   "id": "G09",
+   "sip": "A",
+   "text": "You have invested ₹25,000 so far.",
+   "should_pass": false,
+   "why": "wrong amount"
+  },
+  {
+   "id": "G10",
+   "sip": "D",
+   "text": "You have missed 2 in a row. If the next one is also missed, Groww will cancel this SIP. Your ₹8,000 stays invested.",
+   "should_pass": true
+  },
+  {
+   "id": "G11",
+   "sip": "C",
+   "text": "You can pay less this month with one tap.",
+   "should_pass": false,
+   "why": "offers pay less after 2 uses"
+  },
+  {
+   "id": "G12",
+   "sip": "A",
+   "text": "Pay less can be used 3 times in any 12 months.",
+   "should_pass": false,
+   "why": "wrong limit"
+  },
+  {
+   "id": "G13",
+   "sip": "D",
+   "text": "You can skip the next instalment.",
+   "should_pass": false,
+   "why": "offers skip after 2 missed in a row"
+  },
+  {
+   "id": "G14",
+   "sip": "A",
+   "text": "Your ₹21,000 is safe whatever you choose.",
+   "should_pass": false,
+   "why": "calls the money safe"
+  }
+ ]
 }
