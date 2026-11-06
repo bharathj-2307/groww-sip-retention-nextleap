@@ -68,6 +68,7 @@ header[data-testid="stHeader"] {{ background: transparent; }}
 .ss-row .k {{ color:{MUTED} !important; }} .ss-row .v {{ font-weight:600; text-align:right; }}
 .ss-badge {{ display:inline-flex; align-items:center; gap:6px; background:{GREEN_BG}; border-radius:999px; padding:5px 12px;
   font-size:12px; font-weight:500; color:{GREEN_DARK} !important; }}
+.ss-info {{ background:#EEF3FF; border:1px solid #D3DEFA; border-radius:10px; padding:8px 12px; font-size:13px; line-height:19px; color:{INK}; margin:8px 0 4px; }}
 .ss-green {{ background:{GREEN_BG}; border-radius:12px; padding:12px 14px; font-size:14px; line-height:20px; color:{GREEN_DARK} !important; margin: 8px 0; }}
 .ss-green * {{ color:{GREEN_DARK} !important; }}
 .ss-grey {{ background:#F3F5F7; border-radius:12px; padding:12px 14px; font-size:14px; line-height:20px; margin: 8px 0; }}
@@ -416,12 +417,18 @@ def pick_grid(values: list, fmt, prefix: str, other: bool = True) -> None:
                     st.rerun()
 
 
+def min_note() -> str:
+    return (f'<div class="ss-info">ⓘ <b>Why {F["fund_min_text"]}?</b> It is the lowest SIP amount this fund allows. '
+            f'Each fund sets its own minimum.</div>')
+
+
 def screen_pay_less() -> None:
     top("Pay less this month", back_to=F["screen"])
     t, ta = F["target_text"], F["target_after_text"]
     m = F["target_month_text"]
     H(f'<div class="ss-h1" style="font-size:21px;line-height:28px">How much can you pay on {t}?</div>'
-      f'<div class="ss-sub">Pick any amount from {F["fund_min_text"]} to {F["amount_text"]}. {F["fund_min_text"]} is this fund\'s minimum.</div>')
+      f'<div class="ss-sub">Pick any amount from {F["fund_min_text"]} to {F["amount_text"]}.</div>'
+      + min_note())
     left_after = F["pay_less_left"] - 1
     nth = "first" if F["pay_less_used"] == 0 else "second"
     more = (f"If {F['target_after_month_text']} is also tight, you can ask once more. " if left_after > 0 else "")
@@ -487,7 +494,8 @@ def screen_move_date() -> None:
 def screen_lower() -> None:
     top("Lower your monthly amount", back_to=F["screen"])
     H(f'<div class="ss-h1" style="font-size:21px;line-height:28px">Pick a new monthly amount</div>'
-      f'<div class="ss-sub">From {F["fund_min_text"]}. It stays until you change it. You can raise it any time.</div>')
+      f'<div class="ss-sub">From {F["fund_min_text"]}. It stays until you change it. You can raise it any time.</div>'
+      + min_note())
     choices = pay_less_choices(F)
     if S.pick is None or S.pick not in choices + ["other"]:
         S.pick = choices[-1]
