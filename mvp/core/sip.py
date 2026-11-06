@@ -11,7 +11,8 @@ from datetime import date, timedelta
 
 # Groww's published rules (help pages checked 1 Nov 2026) and Steady SIP rules (agreed 6 Nov 2026).
 MISS_LIMIT = 3             # Groww cancels a SIP after 3 skipped or missed in a row
-CHANGE_CUTOFF_WORKDAYS = 2  # less than 2 working days before the debit: no skip, no amount or date change
+CHANGE_CUTOFF_WORKDAYS = 2  # instalment within 2 working days: skip and amount or date changes apply only from the next one
+CANCEL_NOTICE_DAYS = 7      # instalment within 7 days: it may still be taken after a cancel (Groww pages say 3 working or 7 days)
 PAYDAY_GAP_DAYS = 2        # new SIP date = 2 days after payday
 PAY_LESS_LIMIT = 2         # pay less can be used 2 times in any 12 months
 
@@ -115,7 +116,8 @@ def facts(sip: SampleSip, today: date | None = None) -> dict:
     next_date = _next_workday(today) if sip.next_workday else _next_on_day(today, sip.day)
     after_next = _month_add(next_date, 1)
     third = _month_add(next_date, 2)
-    too_close = workdays_until(today, next_date) < CHANGE_CUTOFF_WORKDAYS
+    too_close = workdays_until(today, next_date) <= CHANGE_CUTOFF_WORKDAYS
+    cancel_may_debit = (next_date - today).days <= CANCEL_NOTICE_DAYS
 
     # Pay less history. Each use was on an instalment date some months ago.
     uses = sorted(_month_add(next_date, -m) for m in sip.pay_less_months_ago)
@@ -130,7 +132,7 @@ def facts(sip: SampleSip, today: date | None = None) -> dict:
     target_after = third if too_close else after_next
 
     if too_close:
-        skip_ok, skip_why = False, "The debit is less than 2 working days away, so it cannot be skipped."
+        skip_ok, skip_why = False, f"This instalment is within {CHANGE_CUTOFF_WORKDAYS} working days, so it cannot be skipped."
     elif sip.misses_in_row >= MISS_LIMIT - 1:
         skip_ok, skip_why = False, f"You have missed {sip.misses_in_row} in a row. One more miss would cancel the SIP."
     else:
@@ -172,6 +174,7 @@ def facts(sip: SampleSip, today: date | None = None) -> dict:
         "after_next_month_text": MONTHS[after_next.month - 1],
         "third_date": third,
         "too_close": too_close,
+        "cancel_may_debit": cancel_may_debit,
         "target_date": target,
         "target_text": fmt_date(target),
         "target_month_text": MONTHS[target.month - 1],
@@ -207,7 +210,7 @@ def next_on_new_day(f: dict, new_day: int) -> date:
     """First instalment on the new day, in the month the options act on."""
     t = f["target_date"]
     d = date(t.year, t.month, new_day)
-    if d <= f["today"] + timedelta(days=2) or (f["too_close"] and d <= f["next_date"]):
+    if workdays_until(f["today"], d) <= CHANGE_CUTOFF_WORKDAYS or (f["too_close"] and d <= f["next_date"]):
         d = _month_add(d, 1, new_day)
     return d
 
@@ -232,15 +235,15 @@ def facts_for_prompt(f: dict) -> str:
         f"Missed in a row right now: {f['misses_in_row']}",
         f"Rule: Groww cancels a SIP after {f['miss_limit']} instalments in a row are skipped or missed.",
         "Rule: only one instalment can be skipped at a time. A skip counts as 1 missed.",
-        f"Rule: within {CHANGE_CUTOFF_WORKDAYS} working days of the debit, the instalment cannot be skipped, lowered or moved.",
+        f"Rule: if an instalment is within {CHANGE_CUTOFF_WORKDAYS} working days, a skip or change does not apply to it. It applies from the next instalment.",
         "Rule: if the balance is short on the debit date, the payment fails and counts as 1 missed. The SIP stays active.",
         f"Fund minimum instalment: {f['fund_min_text']}",
         f"Rule: pay less this month lowers ONE instalment to any amount from the fund minimum up to the full amount. The next instalment goes back to the full amount by itself. It can be used {PAY_LESS_LIMIT} times in any 12 months.",
-        "Rule: cancelling stops future instalments only. Invested money stays until the user redeems it.",
+        f"Rule: cancelling stops future instalments only. Invested money stays until the user redeems it. An instalment due within {CANCEL_NOTICE_DAYS} days may still be taken.",
         "Rule: nobody can predict returns.",
     ]
     if f["too_close"]:
-        lines.append(f"Situation: the {f['next_date_text']} instalment is less than {CHANGE_CUTOFF_WORKDAYS} working days away. It cannot be changed. Options apply from {f['target_text']}.")
+        lines.append(f"Situation: the {f['next_date_text']} instalment is within {CHANGE_CUTOFF_WORKDAYS} working days. It cannot be changed. Options apply from {f['target_text']}.")
     lines += [
         f"Option skip: {'available for ' + f['target_text'] if f['skip_ok'] else 'NOT available. ' + f['skip_why']}",
         f"Option pay less: {'available for the ' + f['target_text'] + ' instalment. Full amount returns on ' + f['target_after_text'] + '. Uses left in 12 months: ' + str(f['pay_less_left']) if f['pay_less_ok'] else 'NOT available. ' + f['pay_less_why'] + (' It opens again on ' + f['pay_less_reopen_text'] + '.' if f['pay_less_reopen_text'] else '')}",

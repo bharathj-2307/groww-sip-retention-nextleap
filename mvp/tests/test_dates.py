@@ -8,7 +8,7 @@ import calendar
 from datetime import date, timedelta
 
 from core.sip import (SAMPLE_SIPS, MONTHS, facts, workdays_until, new_day_after_payday, next_on_new_day,
-                      CHANGE_CUTOFF_WORKDAYS, PAY_LESS_LIMIT)
+                      CHANGE_CUTOFF_WORKDAYS, CANCEL_NOTICE_DAYS, PAY_LESS_LIMIT)
 
 PAYDAYS = [1, 5, 7, 10, 15, 20, 25, 26, 27, 28, 29, 30, 31]
 
@@ -39,7 +39,11 @@ def check_day(today: date) -> list[str]:
             errs.append(f"{tag}: after-next {an} should be {same_day_months_later(nd, 1, sip_day)}")
         if th != same_day_months_later(nd, 2, sip_day):
             errs.append(f"{tag}: third {th} should be {same_day_months_later(nd, 2, sip_day)}")
-        close = workdays_until(today, nd) < CHANGE_CUTOFF_WORKDAYS
+        close = workdays_until(today, nd) <= CHANGE_CUTOFF_WORKDAYS
+        if f["cancel_may_debit"] != ((nd - today).days <= CANCEL_NOTICE_DAYS):
+            errs.append(f"{tag}: cancel notice wrong")
+        if sip.next_workday and not close:
+            errs.append(f"{tag}: case 2 should always be too close")
         if f["too_close"] != close:
             errs.append(f"{tag}: too_close wrong")
         t, ta = f["target_date"], f["target_after_date"]
@@ -68,7 +72,7 @@ def check_day(today: date) -> list[str]:
             first = next_on_new_day(f, new)
             if first.day != new:
                 errs.append(f"{tag}: move to {new} starts {first}")
-            if first <= today + timedelta(days=2):
+            if workdays_until(today, first) <= CHANGE_CUTOFF_WORKDAYS:
                 errs.append(f"{tag}: move to {new} starts {first}, too soon")
             if close and first <= nd:
                 errs.append(f"{tag}: move to {new} starts {first}, before the locked {nd} payment")

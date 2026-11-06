@@ -15,7 +15,7 @@ from pathlib import Path
 import streamlit as st
 
 from core import ai, gate
-from core.sip import (SAMPLE_SIPS, SIPS_BY_KEY, MONTHS, facts, fmt_inr, fmt_short, fmt_date,
+from core.sip import (CANCEL_NOTICE_DAYS, SAMPLE_SIPS, SIPS_BY_KEY, MONTHS, facts, fmt_inr, fmt_short, fmt_date,
                       new_day_after_payday, next_on_new_day, pay_less_choices)
 
 HELP_URL = "https://groww.in/help/mutual-funds/mf-sip"
@@ -363,7 +363,7 @@ def screen_options() -> None:      # 3
 def screen_too_close() -> None:    # 8
     top("Your SIP options")
     checks_badge(S.explain["checks"])
-    H(f'<div class="ss-grey">🕑 Your {F["amount_text"]} instalment is on {F["next_date_text"]}. That is less than 2 working days away, '
+    H(f'<div class="ss-grey">🕑 Your {F["amount_text"]} instalment is on {F["next_date_text"]}. It is within 2 working days, '
       f'so it can no longer be lowered, skipped or moved.</div>')
     nm = F["misses_in_row"] + 1
     facts_card([("Missed in a row after that", f"{nm} of {F['miss_limit']}")], S.explain["text"],
@@ -582,7 +582,8 @@ def screen_done() -> None:
         body = "It stays at this amount until you change it. You can raise it any time from your SIP page."
     elif k == "cancelled":
         title = "SIP cancelled"
-        body = f"Future instalments are stopped. Your {F['invested_text']} stays invested until you redeem it."
+        body = (f"Your {F['amount_text']} instalment on {F['next_date_text']} may still be taken. Later instalments will stop. "
+                if F["cancel_may_debit"] else "Future instalments are stopped. ") + f"Your {F['invested_text']} stays invested until you redeem it."
     elif k == "redeem":
         title = "Redeem opens next"
         body = ("In the Groww app, this button opens the Redeem page for this fund. "
@@ -619,6 +620,9 @@ def sheet(icon: str, title: str, sub: str, primary: tuple[str, str], secondary: 
     with st.container(key="sheet"):
         if note:
             H(note)
+        if primary[1] == "cancel" and F["cancel_may_debit"]:
+            sub += (f'<div class="ss-info" style="text-align:left">ⓘ Your {F["amount_text"]} instalment on {F["next_date_text"]} '
+                    f'is due within {CANCEL_NOTICE_DAYS} days. It may still be taken before the SIP stops.</div>')
         H(f'{icon}<div class="ss-sheet-title">{esc(title)}</div>' + (f'<div class="ss-sheet-sub">{sub}</div>' if sub else ""))
         if extra_link:
             with st.container(key="link_money_tight"):
@@ -707,7 +711,10 @@ with st.expander("For reviewers: how the AI is checked"):
     H('<div class="ss-small">AI (Gemini) does three jobs: it sorts typed words into a reason group, '
       'writes the facts in plain words, and answers questions. Fixed rules supply every number and date. '
       'Every AI text passes 5 checks before it is shown: facts match, rules correct, no advice, calm tone, right group. '
-      'If one fails, the user sees Groww\'s current pop-up and a help link.</div>')
+      'If one fails, the user sees Groww\'s current pop-up and a help link.<br><br>'
+      '<b>Time limits.</b> Skip and changes use Groww\'s rule: not for an instalment within 2 working days. '
+      'For cancel, Groww\'s help pages say 3 working days or 7 days. So an instalment due within 7 days "may still be taken". '
+      'Real limits vary by fund house. A launch would read each fund\'s own limit.</div>')
     if S.ai_sort:
         a = S.ai_sort
         H(f'<div class="ss-small" style="margin-top:6px">Last typed reply: group <b>{esc(a["group"])}</b>, '
