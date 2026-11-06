@@ -81,6 +81,12 @@ a {{ color:{GREEN} !important; }}
 [class*="st-key-opt_"] .stButton > button p {{ font-size:13px; color:{MUTED}; }}
 [class*="st-key-opt_"] .stButton > button p strong {{ font-size:15px; color:{INK}; font-weight:600; }}
 .st-key-opt_payless .stButton > button {{ border:2px solid {GREEN}; }}
+[class*="st-key-opt_"] .stButton > button code {{ background:#FFF1DC; color:#8A4B00; font-family: inherit; font-size:11px;
+  font-weight:700; border-radius:6px; padding:2px 7px; margin-left:4px; vertical-align: 2px; }}
+/* hide Streamlit's "Press Enter to submit" hint and counter, which overlap the typed text */
+[data-testid="InputInstructions"] {{ display:none !important; }}
+/* green, not red, focus border on text boxes */
+.stTextInput div:focus-within, .stTextArea div:focus-within, .stNumberInput div:focus-within {{ border-color:{GREEN} !important; }}
 /* primary */
 [class*="st-key-primary"] .stButton > button {{ background:{GREEN}; border:none; justify-content:center; min-height:52px; }}
 [class*="st-key-primary"] .stButton > button p {{ color:#FFFFFF; font-weight:600; font-size:16px; text-align:center; }}
@@ -286,7 +292,7 @@ def facts_card(rows: list[tuple[str, str]], para: str, title: str = "Where your 
 
 
 def option(key: str, title: str, desc: str, new: bool = False) -> bool:
-    label = f"**{title}**{'  ·  New' if new else ''}\n{desc}"
+    label = f"**{title}**{'  `New`' if new else ''}\n{desc}"
     with st.container(key=f"opt_{key}"):
         return btn(label, key=f"optbtn_{key}")
 
