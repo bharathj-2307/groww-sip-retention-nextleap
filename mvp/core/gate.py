@@ -1,0 +1,186 @@
+"""The 5-check quality gate. Plain rules, so every pass or fail can be explained.
+
+1. Facts match     every number and month in the text is a known fact
+2. Rules correct   no wrong statement of Groww's rules
+3. No advice       no fund names, no buy/sell/switch/stop advice, no return forecasts
+4. Calm tone       no fear or urgency words, no exclamation marks
+5. Right group     the group is clear, and only options that apply are offered
+
+If any check fails the user sees Groww's current pop-up and a help link.
+"""
+from __future__ import annotations
+
+import re
+
+from .ai import GROUPS, CONFIDENCE_MIN
+from .sip import MONTHS, SKIP_CUTOFF_DAYS, PAYDAY_GAP_DAYS, FUND_NAME
+
+HINDI_MONTHS = ["जनवरी", "फ़रवरी", "फरवरी", "मार्च", "अप्रैल", "मई", "जून", "जुलाई",
+                "अगस्त", "सितंबर", "सितम्बर", "अक्टूबर", "नवंबर", "नवम्बर", "दिसंबर", "दिसम्बर"]
+HINDI_MONTH_INDEX = {"जनवरी": 1, "फ़रवरी": 2, "फरवरी": 2, "मार्च": 3, "अप्रैल": 4, "मई": 5,
+                     "जून": 6, "जुलाई": 7, "अगस्त": 8, "सितंबर": 9, "सितम्बर": 9, "अक्टूबर": 10,
+                     "नवंबर": 11, "नवम्बर": 11, "दिसंबर": 12, "दिसम्बर": 12}
+DEV_DIGITS = str.maketrans("०१२३४५६७८९", "0123456789")
+
+# Fund houses and brands sold in India. Any mention means the text names a fund.
+FUND_BRANDS = [
+    "hdfc", "icici", "sbi", "axis", "nippon", "kotak", "parag parikh", "ppfas", "quant", "mirae",
+    "uti", "tata", "aditya birla", "absl", "dsp", "motilal", "navi", "edelweiss", "franklin",
+    "canara", "bandhan", "invesco", "hsbc", "pgim", "sundaram", "baroda", "lic mf", "mahindra",
+    "whiteoak", "bajaj finserv", "jm financial", "union mf", "groww nifty", "zerodha", "nifty 50",
+    "nifty50", "sensex", "small cap", "smallcap", "mid cap", "midcap", "large cap", "flexi cap",
+    "flexicap", "index fund", "liquid fund", "debt fund", "elss", "gold", "fixed deposit", " fd ",
+    "bitcoin", "crypto",
+]
+ADVICE = [
+    r"\byou should\b", r"\byou must\b", r"\bi (?:would )?(?:recommend|suggest|advise)\b",
+    r"\bbetter to\b", r"\bbest (?:fund|option|choice)\b", r"\bswitch to\b",
+    r"\bconsider (?:investing|buying|switching|selling|redeeming)\b",
+    r"\b(?:buy|sell) (?:more|now|units)\b", r"\bredeem now\b",
+    r"\b(?:market|returns?|nav|fund) (?:will|is going to) (?:grow|rise|go up|fall|go down|recover|increase|drop)\b",
+    r"\bguarantee", r"\bassured returns?\b", r"\bsure to (?:grow|gain)\b",
+    r"चाहिए", r"सलाह देत", r"\bkarna chahiye\b",
+]
+FEAR = [
+    r"\bhurry\b", r"\burgent", r"\bimmediately\b", r"\blast chance\b", r"\bact now\b",
+    r"\bdon'?t miss\b", r"\btoo late\b", r"\blose everything\b", r"\blose all\b", r"\bwarning\b",
+    r"\bdanger", r"\bpanic", r"\bregret", r"\brisk losing\b", r"\bdisaster\b", r"\bterrible\b",
+    r"\bfomo\b", r"\bjaldi\b", r"\bturant\b", r"जल्दी", r"तुरंत", r"आखिरी मौका", r"खतरा", r"पछता",
+]
+WRONG_RULES = [
+    # cancelling or skipping does not take away or withdraw invested money
+    r"\b(?:lose|lost|forfeit)\b[^.]{0,30}\b(?:invest|money|amount|savings)",
+    r"\bcancel\w*\b[^.]{0,40}\b(?:withdraw|refund|return)s? (?:your|the) (?:money|investment|amount)",
+    r"\bmoney will be (?:withdrawn|refunded|lost)\b",
+    # only one skip at a time
+    r"\bskip (?:two|2|three|3|multiple|several) (?:months|instalments|installments)\b(?! (?:is|are) not)",
+    r"\bpause (?:for )?(?:up to )?(?:\d+|three|six|twelve) months\b",
+    # Groww does not charge a penalty
+    r"\bgroww (?:will )?charges? (?:a )?(?:penalty|fine|fee)\b",
+]
+NEGATION = re.compile(r"\b(?:not|cannot|can't|can not|isn't|unavailable|already|too close)\b|नहीं|संभव नहीं", re.I)
+
+
+def _allowed_numbers(f: dict, extra_text: str = "") -> set[int]:
+    nd, an = f["next_date"], f["after_next_date"]
+    nums = {f["amount"], f["invested"], f["months_old"], f["misses_in_row"], f["miss_limit"],
+            f["misses_left"], f["fund_min"], nd.day, an.day, nd.year, an.year, f["today"].year,
+            SKIP_CUTOFF_DAYS, PAYDAY_GAP_DAYS, 0, 1, 30}
+    # Numbers the user wrote may be repeated if they look like an amount or a day, not an ID.
+    for n in _numbers(extra_text):
+        if n <= 31 or (f["fund_min"] <= n <= f["amount"] * 12):
+            nums.add(n)
+    return nums
+
+
+def _numbers(text: str) -> list[int]:
+    t = text.translate(DEV_DIGITS)
+    out = []
+    for m in re.finditer(r"\d[\d,]*", t):
+        s = m.group(0).rstrip(",").replace(",", "")
+        if s:
+            out.append(int(s))
+    return out
+
+
+def _months(text: str) -> set[int]:
+    found = set()
+    low = text.lower()
+    for i, name in enumerate(MONTHS, 1):
+        if re.search(r"\b" + name.lower() + r"\b", low) or re.search(r"\b" + name[:3].lower() + r"\b", low):
+            found.add(i)
+    for name, i in HINDI_MONTH_INDEX.items():
+        if name in text:
+            found.add(i)
+    return found
+
+
+def _check(name: str, label: str, passed: bool, detail: str = "") -> dict:
+    return {"name": name, "label": label, "passed": passed, "detail": detail}
+
+
+def check_text(text: str, f: dict, *, group: str, confidence: float = 1.0,
+               user_text: str = "") -> list[dict]:
+    """Run all five checks on an AI text shown to the user."""
+    low = " " + text.lower() + " "
+    checks = []
+
+    # 1 Facts match
+    allowed = _allowed_numbers(f, user_text)
+    bad_nums = [n for n in _numbers(text) if n not in allowed]
+    ok_months = {f["next_date"].month, f["after_next_date"].month, f["today"].month}
+    bad_months = [MONTHS[m - 1] for m in _months(text) if m not in ok_months]
+    # Each date written must be a real SIP date, not just a known number.
+    ok_dates = {(f["next_date"].day, f["next_date"].month), (f["after_next_date"].day, f["after_next_date"].month)}
+    t = text.translate(DEV_DIGITS)
+    month_alt = "|".join([m for m in MONTHS] + [m[:3] for m in MONTHS] + list(HINDI_MONTH_INDEX))
+    for m in re.finditer(r"(\d{1,2})(?:st|nd|rd|th)?\s+(?:of\s+)?(" + month_alt + r")\b", t, re.I):
+        day, name = int(m.group(1)), m.group(2)
+        mon = HINDI_MONTH_INDEX.get(name) or next(i for i, x in enumerate(MONTHS, 1) if x.lower().startswith(name.lower()[:3]))
+        if (day, mon) not in ok_dates:
+            bad_nums.append(f"{day} {MONTHS[mon - 1]}")
+    detail = ""
+    if bad_nums:
+        detail += f"Unknown numbers: {bad_nums[:4]}. "
+    if bad_months:
+        detail += f"Unknown months: {bad_months}."
+    checks.append(_check("facts", "Facts match", not bad_nums and not bad_months, detail.strip()))
+
+    # 2 Rules correct
+    hits = []
+    for m in re.finditer(r"(\d+|zero|one|two|three|four|five)\s+(?:\w+\s+){0,3}?in a row", low):
+        word = m.group(1)
+        n = {"zero": 0, "one": 1, "two": 2, "three": 3, "four": 4, "five": 5}.get(word, None)
+        n = int(word) if n is None else n
+        if n not in (f["misses_in_row"], f["miss_limit"], f["misses_left"]):
+            hits.append(m.group(0))
+    for p in WRONG_RULES:
+        m = re.search(p, low)
+        if m and not NEGATION.search(low[max(0, m.start() - 25):m.end() + 15]):
+            hits.append(m.group(0))
+    checks.append(_check("rules", "Rules correct", not hits, ("Wrong rule: " + "; ".join(hits[:3])) if hits else ""))
+
+    # 3 No advice
+    scrub = low.replace(FUND_NAME.lower(), " ")
+    brands = [b.strip() for b in FUND_BRANDS if b in scrub]
+    advice = [re.search(p, scrub).group(0) for p in ADVICE if re.search(p, scrub)]
+    det = ""
+    if brands:
+        det += f"Names a fund or product: {brands[:3]}. "
+    if advice:
+        det += f"Advice words: {advice[:3]}."
+    checks.append(_check("advice", "No advice", not brands and not advice, det.strip()))
+
+    # 4 Calm tone
+    fear = [re.search(p, low).group(0) for p in FEAR if re.search(p, low)]
+    if "!" in text:
+        fear.append("!")
+    checks.append(_check("tone", "Calm tone", not fear, ("Pressure words: " + ", ".join(fear[:3])) if fear else ""))
+
+    # 5 Right group
+    problems = []
+    if group not in GROUPS:
+        problems.append(f"unknown group '{group}'")
+    if confidence < CONFIDENCE_MIN:
+        problems.append(f"AI not sure ({confidence:.2f})")
+    for opt, ok_key, words in (("skip", "skip_ok", r"\bskip(?:ping)?\b|स्किप"),
+                               ("pay less", "pay_less_ok", r"\bpay less|कम (?:पैसे|राशि|रकम)")):
+        if not f[ok_key]:
+            for m in re.finditer(words, low):
+                window = low[max(0, m.start() - 40):m.end() + 40]
+                if not NEGATION.search(window):
+                    problems.append(f"offers {opt}, which is not available")
+                    break
+    checks.append(_check("group", "Right group", not problems, "; ".join(problems)))
+    return checks
+
+
+def check_group(group: str, confidence: float) -> dict:
+    """The gate on the sorting step alone. Unsure goes to the general pop-up."""
+    ok = group in GROUPS and confidence >= CONFIDENCE_MIN
+    detail = "" if ok else (f"AI not sure ({confidence:.2f})" if group in GROUPS else f"unknown group '{group}'")
+    return _check("group", "Right group", ok, detail)
+
+
+def passed(checks: list[dict]) -> bool:
+    return all(c["passed"] for c in checks)
