@@ -35,13 +35,13 @@ class SampleSip:
 
 
 SAMPLE_SIPS = [
-    SampleSip("A", "Case 1: Normal month", "A ₹3,000 SIP on the 5th. Nothing missed so far. Start here.",
+    SampleSip("A", "Normal month", "₹3,000 SIP on the 5th. Nothing missed so far.",
               3000, 5, 7, 0, 500),
-    SampleSip("B", "Case 2: Debit date is very close", "The next debit is less than 2 working days away. This instalment can no longer be changed.",
+    SampleSip("B", "Debit date is very close", "The next debit is less than 2 working days away. It can no longer be changed.",
               3000, 0, 7, 0, 500, next_workday=True),
-    SampleSip("C", "Case 3: Pay less used twice", "This user already paid less in each of the last 2 months. Pay less is used up for now.",
+    SampleSip("C", "Pay less used twice", "Pay less was used in each of the last 2 months. It is used up for now.",
               3000, 5, 9, 0, 500, pay_less_months_ago=(2, 1)),
-    SampleSip("D", "Case 4: Missed 2 in a row", "A ₹2,000 SIP on the 15th. The last 2 instalments were missed. One more miss cancels it.",
+    SampleSip("D", "Missed 2 in a row", "₹2,000 SIP on the 15th. The last 2 instalments were missed. One more miss cancels the SIP.",
               2000, 15, 6, 2, 500),
 ]
 SIPS_BY_KEY = {s.key: s for s in SAMPLE_SIPS}
@@ -121,7 +121,7 @@ def facts(sip: SampleSip, today: date | None = None) -> dict:
     if too_close:
         skip_ok, skip_why = False, "The debit is less than 2 working days away, so it cannot be skipped."
     elif sip.misses_in_row >= MISS_LIMIT - 1:
-        skip_ok, skip_why = False, f"You have missed {sip.misses_in_row} in a row. A skip now would be the 3rd and would cancel the SIP."
+        skip_ok, skip_why = False, f"You have missed {sip.misses_in_row} in a row. One more miss would cancel the SIP."
     else:
         skip_ok, skip_why = True, ""
 

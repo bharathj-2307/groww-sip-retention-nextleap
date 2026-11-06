@@ -40,9 +40,19 @@ header[data-testid="stHeader"] {{ background: transparent; }}
 .ss-guide {{ background:#E8F5EF; border:1px solid #BFE3D3; border-radius:12px; padding:12px 16px; margin:4px 0 14px; font-size:14px; line-height:21px; color:{INK}; }}
 .ss-guide ol {{ margin:6px 0 0 0; padding-left:20px; }}
 .ss-guide li {{ margin:2px 0; }}
-.ss-case {{ background:#FFFFFF; border-left:3px solid {GREEN}; border-radius:6px; padding:8px 12px; margin:-4px 0 14px; font-size:14px; line-height:20px; color:{INK}; }}
-.st-key-sip_radio [data-testid="stWidgetLabel"] p {{ font-size:14px; font-weight:600; color:{INK}; }}
-.ss-step2 {{ font-size:14px; font-weight:600; color:{INK}; margin:0 0 8px; }}
+.ss-case {{ background:#FFFFFF; border-left:3px solid {GREEN}; border-radius:6px; padding:8px 12px; margin:2px 0 16px; font-size:14px; line-height:20px; color:{INK}; }}
+.ss-step {{ font-size:14px; font-weight:600; color:{INK}; margin:0 0 8px; }}
+.st-key-cases [data-testid="stHorizontalBlock"] {{ flex-wrap: nowrap !important; gap: 10px; }}
+.st-key-cases [data-testid="stColumn"] {{ min-width: 0 !important; flex: 1 1 0 !important; width: auto !important; }}
+.st-key-cases .stButton > button {{ width:100%; height:64px; justify-content:flex-start; text-align:left; border:1px solid #C9CDD2;
+  border-radius:12px; background:#FFFFFF; padding:8px 12px; }}
+.st-key-cases .stButton > button:hover {{ border-color:{GREEN}; color:{INK}; }}
+.st-key-cases .stButton > button > div, .st-key-cases .stButton > button span[data-has-shortcut],
+.st-key-cases .stButton > button [data-testid="stMarkdownContainer"] {{ width:100%; }}
+.st-key-cases .stButton > button p {{ font-size:14px; line-height:19px; white-space: pre-line; text-align:left; color:{INK}; }}
+.st-key-cases .stButton > button strong {{ font-size:12px; color:{MUTED}; font-weight:600; }}
+.st-key-cases [class*="st-key-case_on"] .stButton > button {{ border:2px solid {GREEN}; background:{GREEN_BG}; }}
+.st-key-cases [class*="st-key-case_on"] .stButton > button strong {{ color:{GREEN_DARK}; }}
 .st-key-phone {{ background: #FFFFFF; border: 1px solid {LINE}; border-radius: 28px; padding: 18px 18px 20px;
   box-shadow: 0 6px 24px rgba(0,0,0,.06); color: {INK}; min-height: 760px; }}
 .st-key-phone p, .st-key-phone span, .st-key-phone div {{ color: {INK}; }}
@@ -185,23 +195,26 @@ F = facts(SIPS_BY_KEY[S.sip_key], date.today())
 # ---------- outside the phone: what this is ----------
 H(f"""<div style="margin-bottom:6px"><span style="font-size:22px;font-weight:700;color:{INK}">Steady SIP</span>
 <span style="color:{MUTED};font-size:15px"> · Short on Cash, Not on Plans</span></div>
-<div class="ss-small" style="margin-bottom:8px">A concept prototype of Groww's SIP cancel flow for a NextLeap case study.
-Not a Groww product. It uses sample SIPs only. Do not enter real account details.</div>""")
+<div class="ss-small" style="margin-bottom:8px">A concept prototype for a NextLeap case study. It is not a Groww product.
+It uses sample SIPs only. Do not enter real account details.</div>""")
 
 H(f"""<div class="ss-guide"><b>How to use this demo</b>
-<ol><li>Pick a test case below. Each case is a different user situation. Start with Case 1.</li>
-<li>In the phone screen, imagine you are this user. Your salary is late and you have just tapped Cancel SIP in Groww.</li>
-<li>Tell the app what is happening and see what it offers you.</li></ol></div>""")
+<ol><li>Pick a test case. Each case is a different user situation. Start with Case 1.</li>
+<li>Imagine you are this user. Money is short this month and you have just tapped Cancel SIP.</li>
+<li>Tell the app what is happening. Then see what it offers.</li></ol></div>""")
 
-labels = {s.key: f"{s.label}" for s in SAMPLE_SIPS}
-pick = st.radio("Step 1. Pick a test case", list(labels), format_func=lambda k: labels[k], horizontal=True,
-                index=list(labels).index(S.sip_key), key="sip_radio")
-if pick != S.sip_key:
-    S.sip_key = pick
-    reset()
-    st.rerun()
+H('<div class="ss-step">Step 1. Pick a test case</div>')
+with st.container(key="cases"):
+    for row in (SAMPLE_SIPS[:2], SAMPLE_SIPS[2:]):
+        for col, sip in zip(st.columns(2), row):
+            n = SAMPLE_SIPS.index(sip) + 1
+            with col, st.container(key=f"{'case_on' if sip.key == S.sip_key else 'case'}_{sip.key}"):
+                if st.button(f"**Case {n}**\n{sip.label}", key=f"casebtn_{sip.key}", width="stretch") and sip.key != S.sip_key:
+                    S.sip_key = sip.key
+                    reset()
+                    st.rerun()
 H(f'<div class="ss-case"><b>In this case:</b> {esc(SIPS_BY_KEY[S.sip_key].hint)}</div>'
-  f'<div class="ss-step2">Step 2. Use the phone screen below</div>')
+  f'<div class="ss-step">Step 2. Use the phone screen below</div>')
 
 
 # ---------- shared pieces ----------
@@ -278,10 +291,10 @@ def screen_start() -> None:
                             height=90, max_chars=400)
         with st.container(key="primary_continue"):
             sent = st.form_submit_button("Continue", width="stretch")
-    H('<div class="ss-small">🎤 Voice comes in a later version. Please type for now.</div>')
+    H('<div class="ss-small">🎤 Voice input will come in a later version.</div>')
     if sent:
         if not text.strip():
-            st.info("Tap a reason above, or type a few words first.")
+            st.info("Tap a reason above or type a few words first.")
         else:
             with st.spinner("AI is reading your reply"):
                 r = ai.classify(text.strip())
@@ -329,7 +342,7 @@ def screen_options() -> None:      # 3
     H('<div class="ss-h2">If money is tight this month, you can:</div>')
     m, m2 = F["target_month_text"], F["target_after_month_text"]
     if F["pay_less_ok"] and option("payless", "Pay less this month",
-                                   f"Pay from {F['fund_min_text']} in {m}. Back to {F['amount_text']} from {m2} by itself.", new=True):
+                                   f"Pay any amount from {F['fund_min_text']} in {m}. It goes back to {F['amount_text']} in {m2} by itself.", new=True):
         go("payless"); st.rerun()
     if F["skip_ok"]:
         if option("skip", f"Skip {m}", f"Your SIP continues on {F['target_after_text']}."):
@@ -337,7 +350,7 @@ def screen_options() -> None:      # 3
     else:
         H(f'<div class="ss-locked"><div style="font-weight:600;font-size:15px;color:{MUTED}">Skip {m}</div>'
           f'<div class="ss-muted">{esc(F["skip_why"])}</div></div>')
-    if option("move", "Move the date to after payday", "Tell us your salary day. We move the SIP 2 days after it."):
+    if option("move", "Move the date to after payday", "Tell us your salary day. We will move the SIP to 2 days after it."):
         go("movedate"); st.rerun()
     ask_and_cancel()
     footer()
@@ -355,9 +368,9 @@ def screen_too_close() -> None:    # 8
     m, m2 = F["target_month_text"], F["target_after_month_text"]
     H(f'<div class="ss-h2">You can set up {m} now:</div>')
     if F["pay_less_ok"] and option("payless", f"Pay less in {m}",
-                                   f"Pay from {F['fund_min_text']} on {F['target_text']}. Back to {F['amount_text']} from {m2} by itself."):
+                                   f"Pay any amount from {F['fund_min_text']} on {F['target_text']}. It goes back to {F['amount_text']} in {m2} by itself."):
         go("payless"); st.rerun()
-    if option("move", "Move the date to after payday", f"Starts from {m}. We move the SIP 2 days after your salary day."):
+    if option("move", "Move the date to after payday", f"Starts in {m}. We will move the SIP to 2 days after your salary day."):
         go("movedate"); st.rerun()
     ask_and_cancel()
     footer()
@@ -381,7 +394,7 @@ def screen_pay_less_used() -> None:  # 9
     if option("lower", "Lower your monthly amount",
               f"Set a new amount from {F['fund_min_text']}. It stays until you change it. You can raise it any time."):
         go("lower"); st.rerun()
-    if option("move", "Move the date to after payday", "Tell us your salary day. We move the SIP 2 days after it."):
+    if option("move", "Move the date to after payday", "Tell us your salary day. We will move the SIP to 2 days after it."):
         go("movedate"); st.rerun()
     ask_and_cancel()
     footer()
@@ -441,7 +454,7 @@ def screen_pay_less() -> None:
 def screen_move_date() -> None:
     top("Move the SIP date", back_to=F["screen"])
     H('<div class="ss-h1" style="font-size:21px;line-height:28px">When does your salary usually come?</div>'
-      '<div class="ss-sub">We move your SIP to 2 days after it, so the money is there.</div>')
+      '<div class="ss-sub">We will move your SIP to 2 days after it. Then the money is in your account on the SIP date.</div>')
     days = [1, 5, 7, 10, 31]
     if S.pick is None or (S.pick not in days and S.pick != "other"):
         S.pick = 7
@@ -511,7 +524,7 @@ def screen_ask() -> None:
         elif gate.passed(t["checks"]):
             H(f'<div class="ss-bubble-a">{esc(t["a"])}</div>')
             if t["declined"]:
-                H(f'<div class="ss-check-grey">ⓘ Not answered, as designed. <a href="{HELP_URL}" target="_blank">Groww\'s help page</a></div>')
+                H(f'<div class="ss-check-grey">ⓘ Not answered by design. See <a href="{HELP_URL}" target="_blank">Groww\'s help page</a>.</div>')
             else:
                 H('<div class="ss-check">🛡️ Checked: facts match · rules correct · no advice · calm</div>')
         else:
@@ -621,23 +634,23 @@ def act(what: str) -> None:
 
 
 def screen_popup_cancel() -> None:       # 10: same pop-up and text as Groww today
-    sheet(ICON_STOP, "Future instalments will be stopped", "Your invested amount stays in this fund until you redeem",
+    sheet(ICON_STOP, "Future instalments will be stopped", "Your invested amount stays in this fund until you redeem it.",
           ("Cancel SIP", "cancel"), ("Continue investing", "continue"))
 
 
 def screen_popup_withdraw() -> None:     # 10, withdraw version
     sheet(ICON_STOP, "Your money won't be withdrawn by cancelling",
-          "Only your future instalments will be stopped. 'Redeem' separately to withdraw invested amount.",
+          "Only future instalments will be stopped. To withdraw your invested amount, redeem it separately.",
           ("Cancel SIP", "cancel"), ("Redeem investments", "redeem"))
 
 
 def screen_popup_general() -> None:      # 11
-    sheet(ICON_STOP, "Future instalments will be stopped", "Your invested amount stays in this fund until you redeem",
+    sheet(ICON_STOP, "Future instalments will be stopped", "Your invested amount stays in this fund until you redeem it.",
           ("Cancel SIP", "cancel"), ("Continue investing", "continue"), extra_link=True)
 
 
 def screen_popup_cancel_confirm() -> None:
-    sheet(ICON_STOP, "Future instalments will be stopped", "Your invested amount stays in this fund until you redeem",
+    sheet(ICON_STOP, "Future instalments will be stopped", "Your invested amount stays in this fund until you redeem it.",
           ("Cancel SIP", "cancel"), ("Continue investing", "continue"))
 
 
@@ -646,20 +659,20 @@ def groww_date(d: date) -> str:
 
 
 def screen_popup_skip() -> None:         # Groww's skip pop-up
-    sheet(ICON_WARN, f"Are you sure you want to skip {groww_date(F['target_date'])} instalment?",
+    sheet(ICON_WARN, f"Are you sure you want to skip the {groww_date(F['target_date'])} instalment?",
           f'<span style="background:#FFF6DA;border-radius:10px;padding:8px 12px;display:inline-block">ⓘ Your next due date will be {groww_date(F["target_after_date"])}</span>',
           ("Skip instalment", "skip"), ("Cancel SIP anyway", "cancel_confirm"))
 
 
 def screen_fallback() -> None:           # 12
     note = (f'<div class="ss-warn">We could not explain this clearly right now. Here are your basic options. '
-            f'<a href="{HELP_URL}" target="_blank">Read Groww\'s help page on SIPs</a></div>')
+            f'<a href="{HELP_URL}" target="_blank">Read Groww\'s help page on SIPs</a>.</div>')
     if F["skip_ok"]:
         sheet(ICON_WARN, f"Are you sure you want to skip the {groww_date(F['target_date'])} instalment?",
               f'<span style="background:#FFF6DA;border-radius:10px;padding:8px 12px;display:inline-block">ⓘ Your next due date will be {groww_date(F["target_after_date"])}</span>',
               ("Skip instalment", "skip"), ("Cancel SIP anyway", "cancel_confirm"), note=note)
     else:  # skip is not allowed here, so show Groww's general pop-up instead
-        sheet(ICON_STOP, "Future instalments will be stopped", "Your invested amount stays in this fund until you redeem",
+        sheet(ICON_STOP, "Future instalments will be stopped", "Your invested amount stays in this fund until you redeem it.",
               ("Cancel SIP", "cancel"), ("Continue investing", "continue"), note=note)
 
 
