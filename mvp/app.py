@@ -101,7 +101,7 @@ a {{ color:{GREEN} !important; }}
 /* locked option */
 .ss-locked {{ border:1px dashed #C9CDD2; border-radius:12px; padding:12px 14px; background:#FAFAFB; margin: 0 0 8px; }}
 /* back button */
-[class*="st-key-back"] .stButton > button {{ border:none; min-height:40px; width:auto; padding: 0 6px; font-size:20px; }}
+[class*="st-key-back_"] .stButton > button {{ border:none; min-height:40px; width:auto; padding: 0 6px; font-size:20px; }}
 /* suggested questions */
 [class*="st-key-sugg_"] .stButton > button {{ border-radius:999px; min-height:38px; padding: 4px 12px; }}
 [class*="st-key-sugg_"] .stButton > button p {{ font-size:13px; }}
@@ -112,12 +112,12 @@ a {{ color:{GREEN} !important; }}
 
 .st-key-phone [data-testid="stHorizontalBlock"] {{ flex-wrap: nowrap !important; gap: 10px; }}
 .st-key-phone [data-testid="stColumn"] {{ min-width: 0 !important; flex: 1 1 0 !important; width: auto !important; }}
-.stButton[class*="st-key-back"] > button, [class*="st-key-back"] button {{ border:none !important; min-height:40px; width:auto; padding: 0 8px 0 0; font-size:22px; justify-content:flex-start; }}
+.stButton[class*="st-key-back_"] > button, [class*="st-key-back_"] button {{ border:none !important; min-height:40px; width:auto; padding: 0 8px 0 0; font-size:22px; justify-content:flex-start; }}
 .st-key-topbar .ss-top {{ margin:0; }}
 .st-key-phone .stButton > button > div, .st-key-phone .stButton > button span[data-has-shortcut],
 .st-key-phone .stButton > button [data-testid="stMarkdownContainer"] {{ width:100%; }}
-[class*="st-key-back"] button {{ background: transparent !important; color: {INK} !important; }}
-[class*="st-key-back"] button p {{ color: {INK} !important; font-size: 22px !important; }}
+[class*="st-key-back_"] button {{ background: transparent !important; color: {INK} !important; }}
+[class*="st-key-back_"] button p {{ color: {INK} !important; font-size: 22px !important; }}
 .st-key-topbar {{ margin-bottom: 4px; }}
 .st-key-sheet [class*="st-key-primary"] .stButton > button {{ background:#4FB28B; }}
 </style>
@@ -509,8 +509,8 @@ def screen_ask() -> None:
             sent = st.form_submit_button("Send", width="stretch")
     if sent and q.strip():
         ask(q.strip()); st.rerun()
-    with st.container(key="link_back_opts"):
-        if btn("Back to my options", key="back_opts"):
+    with st.container(key="link_return_opts"):
+        if btn("Back to my options", key="return_opts"):
             go(F["screen"]); st.rerun()
     footer()
 
