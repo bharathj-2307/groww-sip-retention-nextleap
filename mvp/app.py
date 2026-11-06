@@ -81,6 +81,12 @@ a {{ color:{GREEN} !important; }}
 [class*="st-key-opt_"] .stButton > button p {{ font-size:13px; color:{MUTED}; }}
 [class*="st-key-opt_"] .stButton > button p strong {{ font-size:15px; color:{INK}; font-weight:600; }}
 .st-key-opt_payless .stButton > button {{ border:2px solid {GREEN}; }}
+[class*="st-key-opt_"] .stButton > button code {{ background:#FFF1DC; color:#8A4B00; font-family: inherit; font-size:11px;
+  font-weight:700; border-radius:6px; padding:2px 7px; margin-left:4px; vertical-align: 2px; }}
+/* hide Streamlit's "Press Enter to submit" hint and counter, which overlap the typed text */
+[data-testid="InputInstructions"] {{ display:none !important; }}
+/* green, not red, focus border on text boxes */
+.stTextInput div:focus-within, .stTextArea div:focus-within, .stNumberInput div:focus-within {{ border-color:{GREEN} !important; }}
 /* primary */
 [class*="st-key-primary"] .stButton > button {{ background:{GREEN}; border:none; justify-content:center; min-height:52px; }}
 [class*="st-key-primary"] .stButton > button p {{ color:#FFFFFF; font-weight:600; font-size:16px; text-align:center; }}
@@ -101,7 +107,7 @@ a {{ color:{GREEN} !important; }}
 /* locked option */
 .ss-locked {{ border:1px dashed #C9CDD2; border-radius:12px; padding:12px 14px; background:#FAFAFB; margin: 0 0 8px; }}
 /* back button */
-[class*="st-key-back"] .stButton > button {{ border:none; min-height:40px; width:auto; padding: 0 6px; font-size:20px; }}
+[class*="st-key-back_"] .stButton > button {{ border:none; min-height:40px; width:auto; padding: 0 6px; font-size:20px; }}
 /* suggested questions */
 [class*="st-key-sugg_"] .stButton > button {{ border-radius:999px; min-height:38px; padding: 4px 12px; }}
 [class*="st-key-sugg_"] .stButton > button p {{ font-size:13px; }}
@@ -112,12 +118,12 @@ a {{ color:{GREEN} !important; }}
 
 .st-key-phone [data-testid="stHorizontalBlock"] {{ flex-wrap: nowrap !important; gap: 10px; }}
 .st-key-phone [data-testid="stColumn"] {{ min-width: 0 !important; flex: 1 1 0 !important; width: auto !important; }}
-.stButton[class*="st-key-back"] > button, [class*="st-key-back"] button {{ border:none !important; min-height:40px; width:auto; padding: 0 8px 0 0; font-size:22px; justify-content:flex-start; }}
+.stButton[class*="st-key-back_"] > button, [class*="st-key-back_"] button {{ border:none !important; min-height:40px; width:auto; padding: 0 8px 0 0; font-size:22px; justify-content:flex-start; }}
 .st-key-topbar .ss-top {{ margin:0; }}
 .st-key-phone .stButton > button > div, .st-key-phone .stButton > button span[data-has-shortcut],
 .st-key-phone .stButton > button [data-testid="stMarkdownContainer"] {{ width:100%; }}
-[class*="st-key-back"] button {{ background: transparent !important; color: {INK} !important; }}
-[class*="st-key-back"] button p {{ color: {INK} !important; font-size: 22px !important; }}
+[class*="st-key-back_"] button {{ background: transparent !important; color: {INK} !important; }}
+[class*="st-key-back_"] button p {{ color: {INK} !important; font-size: 22px !important; }}
 .st-key-topbar {{ margin-bottom: 4px; }}
 .st-key-sheet [class*="st-key-primary"] .stButton > button {{ background:#4FB28B; }}
 </style>
@@ -286,7 +292,7 @@ def facts_card(rows: list[tuple[str, str]], para: str, title: str = "Where your 
 
 
 def option(key: str, title: str, desc: str, new: bool = False) -> bool:
-    label = f"**{title}**{'  ·  New' if new else ''}\n{desc}"
+    label = f"**{title}**{'  `New`' if new else ''}\n{desc}"
     with st.container(key=f"opt_{key}"):
         return btn(label, key=f"optbtn_{key}")
 
@@ -478,7 +484,8 @@ def ask(q: str) -> None:
         checks = [{"name": "facts", "label": "Facts match", "passed": False, "detail": "No answer in time."}]
     if S.force_fail:
         checks[0] = {**checks[0], "passed": False, "detail": "Failed on purpose by the reviewer switch."}
-    S.chat.append({"q": q, "a": r.get("text", ""), "declined": r.get("declined", False), "checks": checks})
+    S.chat.append({"q": q, "a": r.get("text", ""), "declined": r.get("declined", False), "checks": checks,
+                   "small_talk": r.get("small_talk", False)})
 
 
 def screen_ask() -> None:
@@ -487,7 +494,9 @@ def screen_ask() -> None:
         H('<div class="ss-muted">Ask anything about this SIP and your options. Answers use only Groww\'s SIP rules and this SIP.</div>')
     for t in S.chat:
         H(f'<div class="ss-bubble-u">{esc(t["q"])}</div>')
-        if gate.passed(t["checks"]):
+        if t.get("small_talk"):
+            H(f'<div class="ss-bubble-a">{esc(t["a"])}</div><div style="height:8px"></div>')
+        elif gate.passed(t["checks"]):
             H(f'<div class="ss-bubble-a">{esc(t["a"])}</div>')
             if t["declined"]:
                 H(f'<div class="ss-check-grey">ⓘ Not answered, as designed. <a href="{HELP_URL}" target="_blank">Groww\'s help page</a></div>')
@@ -509,8 +518,8 @@ def screen_ask() -> None:
             sent = st.form_submit_button("Send", width="stretch")
     if sent and q.strip():
         ask(q.strip()); st.rerun()
-    with st.container(key="link_back_opts"):
-        if btn("Back to my options", key="back_opts"):
+    with st.container(key="link_return_opts"):
+        if btn("Back to my options", key="return_opts"):
             go(F["screen"]); st.rerun()
     footer()
 

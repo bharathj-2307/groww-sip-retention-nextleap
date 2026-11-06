@@ -97,7 +97,11 @@ def _months(text: str) -> set[int]:
     found = set()
     low = text.lower()
     for i, name in enumerate(MONTHS, 1):
-        if re.search(r"\b" + name.lower() + r"\b", low) or re.search(r"\b" + name[:3].lower() + r"\b", low):
+        if name == "May":
+            # "may" is also a common word, so count it only next to a number: "5 May", "May 5"
+            if re.search(r"\d\s+may\b|\bmay\s+\d", low):
+                found.add(i)
+        elif re.search(r"\b" + name.lower() + r"\b", low) or re.search(r"\b" + name[:3] + r"\b", text):
             found.add(i)
     for name, i in HINDI_MONTH_INDEX.items():
         if name in text:
@@ -183,7 +187,7 @@ def check_text(text: str, f: dict, *, group: str, confidence: float = 1.0,
                                ("pay less", "pay_less_ok", r"\bpay less|कम (?:पैसे|राशि|रकम)")):
         if not f[ok_key]:
             for m in re.finditer(words, low):
-                window = low[max(0, m.start() - 40):m.end() + 40]
+                window = low[max(0, m.start() - 40):m.end() + 80]
                 if not NEGATION.search(window):
                     problems.append(f"offers {opt}, which is not available")
                     break
