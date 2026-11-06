@@ -40,7 +40,7 @@ SAMPLE_SIPS = [
               "₹3,000 SIP on the 5th. Never missed a payment.",
               3000, 5, 7, 0, 500,
               check="Are the choices before cancelling clear?"),
-    SampleSip("B", "Payment in 1 or 2 days",
+    SampleSip("B", "Payment is 1 or 2 days away",
               "The next ₹3,000 payment is in 1 or 2 days. It is too late to change it.",
               3000, 0, 7, 0, 500, next_workday=True,
               check="Is it clear what happens if your balance is low?"),

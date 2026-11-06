@@ -46,7 +46,7 @@ header[data-testid="stHeader"] {{ background: transparent; }}
 .ss-step {{ font-size:14px; font-weight:600; color:{INK}; margin:0 0 8px; }}
 .st-key-cases [data-testid="stHorizontalBlock"] {{ flex-wrap: nowrap !important; gap: 10px; }}
 .st-key-cases [data-testid="stColumn"] {{ min-width: 0 !important; flex: 1 1 0 !important; width: auto !important; }}
-.st-key-cases .stButton > button {{ width:100%; height:58px; justify-content:flex-start; text-align:left; border:1px solid #C9CDD2;
+.st-key-cases .stButton > button {{ width:100%; height:64px; justify-content:flex-start; text-align:left; border:1px solid #C9CDD2;
   border-radius:12px; background:#FFFFFF; padding:8px 12px; }}
 .st-key-cases .stButton > button:hover {{ border-color:{GREEN}; color:{INK}; }}
 .st-key-cases .stButton > button > div, .st-key-cases .stButton > button span[data-has-shortcut],
