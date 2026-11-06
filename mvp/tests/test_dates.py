@@ -63,7 +63,13 @@ def check_day(today: date) -> list[str]:
                     errs.append(f"{tag}: reopen {f['pay_less_reopen']} wrong")
                 if not f["pay_less_reopen"] > today:
                     errs.append(f"{tag}: reopen {f['pay_less_reopen']} is not in the future")
-        # move date: first instalment on the new day
+        # move date: any SIP day the user picks from 1 to 28 must start on a valid date
+        for new in range(1, 29):
+            first = next_on_new_day(f, new)
+            if first.day != new or workdays_until(today, first) <= CHANGE_CUTOFF_WORKDAYS or (close and first <= nd) \
+                    or (first - today).days > 70:
+                errs.append(f"{tag}: picked day {new} starts {first}")
+        # move date: suggested day from the salary day
         for payday in PAYDAYS:
             new = new_day_after_payday(payday)
             if not 1 <= new <= 28:
@@ -90,7 +96,7 @@ def main() -> None:
         errs += check_day(d)
         days += 1
         d += timedelta(days=1)
-    print(f"Checked {days} days x {len(SAMPLE_SIPS)} cases x {len(PAYDAYS)} paydays.")
+    print(f"Checked {days} days x {len(SAMPLE_SIPS)} cases x {len(PAYDAYS)} salary days and 28 picked SIP days.")
     print(f"Problems: {len(errs)}")
     for e in errs[:25]:
         print(" ", e)

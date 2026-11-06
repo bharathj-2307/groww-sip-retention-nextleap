@@ -354,7 +354,7 @@ def screen_options() -> None:      # 3
     else:
         H(f'<div class="ss-locked"><div style="font-weight:600;font-size:15px;color:{MUTED}">Skip {m}</div>'
           f'<div class="ss-muted">{esc(F["skip_why"])}</div></div>')
-    if option("move", "Move the date to after payday", "Tell us your salary day. We will move the SIP to 2 days after it."):
+    if option("move", "Move the date to after payday", "Pick a new date, such as a few days after your salary."):
         go("movedate"); st.rerun()
     ask_and_cancel()
     footer()
@@ -378,7 +378,7 @@ def screen_too_close() -> None:    # 8
                                f"Your SIP continues on {F['target_after_text']}. This counts as 1 missed of {F['miss_limit']}. "
                                f"If the {F['next_date_text']} payment also fails, it will be 2 missed in a row."):
         go("popup_skip"); st.rerun()
-    if option("move", "Move the date to after payday", f"Starts in {m}. We will move the SIP to 2 days after your salary day."):
+    if option("move", "Move the date to after payday", f"Pick a new date, such as a few days after your salary. Starts in {m}."):
         go("movedate"); st.rerun()
     ask_and_cancel()
     footer()
@@ -402,7 +402,7 @@ def screen_pay_less_used() -> None:  # 9
     if option("lower", "Lower your monthly amount",
               f"Set a new amount from {F['fund_min_text']}. It stays until you change it. You can raise it any time."):
         go("lower"); st.rerun()
-    if option("move", "Move the date to after payday", "Tell us your salary day. We will move the SIP to 2 days after it."):
+    if option("move", "Move the date to after payday", "Pick a new date, such as a few days after your salary."):
         go("movedate"); st.rerun()
     ask_and_cancel()
     footer()
@@ -465,28 +465,37 @@ def screen_pay_less() -> None:
 
 
 # ---------- 5: move date ----------
+def ordinal(n: int) -> str:
+    return f"{n}{'th' if 11 <= n % 100 <= 13 else {1: 'st', 2: 'nd', 3: 'rd'}.get(n % 10, 'th')}"
+
+
 def screen_move_date() -> None:
     top("Move the SIP date", back_to=F["screen"])
-    H('<div class="ss-h1" style="font-size:21px;line-height:28px">When does your salary usually come?</div>'
-      '<div class="ss-sub">We will move your SIP to 2 days after it. Then the money is in your account on the SIP date.</div>')
+    H('<div class="ss-h1" style="font-size:21px;line-height:28px">Pick a new SIP date</div>'
+      '<div class="ss-sub">Choose a day when the money is in your account.</div>'
+      '<div class="ss-step" style="margin-top:12px">1. When does your salary usually come?</div>')
     days = [1, 5, 7, 10, 31]
     if S.pick is None or (S.pick not in days and S.pick != "other"):
         S.pick = 7
-    pick_grid(days, lambda d: "Month end" if d == 31 else f"{d}{'st' if d == 1 else 'th'}", "pay")
+    pick_grid(days, lambda d: "Month end" if d == 31 else ordinal(d), "pay")
     payday = S.pick
     if S.pick == "other":
         payday = st.number_input("Salary day (1 to 31)", min_value=1, max_value=31, value=15, step=1, key="pay_other")
-    new_day = new_day_after_payday(int(payday))
+    suggested = new_day_after_payday(int(payday))
+    H('<div class="ss-step" style="margin-top:8px">2. Your new SIP date</div>')
+    new_day = st.selectbox("New SIP date", list(range(1, 29)), index=suggested - 1, format_func=ordinal,
+                           key=f"sipday_{payday}", label_visibility="collapsed")
+    H(f'<div class="ss-muted" style="margin:-6px 0 4px">Suggested: the {ordinal(suggested)}, a little after your salary. '
+      f'You can pick any date from the 1st to the 28th.</div>')
     first = next_on_new_day(F, new_day)
-    suffix = "st" if new_day in (1, 21) else "nd" if new_day in (2, 22) else "rd" if new_day in (3, 23) else "th"
     H(f"""<div class="ss-card"><div style="font-size:15px;font-weight:600">What happens</div>
-<div class="ss-row"><span class="k">New SIP date</span><span class="v">{new_day}{suffix} of every month</span></div>
+<div class="ss-row"><span class="k">New SIP date</span><span class="v">{ordinal(new_day)} of every month</span></div>
 <div class="ss-row"><span class="k">Next instalment</span><span class="v">{F['amount_text']} on {fmt_short(first)}</span></div>
 <div class="ss-row"><span class="k">Amount</span><span class="v">Stays {F['amount_text']}</span></div>
-<div class="ss-muted" style="margin-top:6px">We only use the day you tap. We do not read your bank account.</div></div>""")
+<div class="ss-muted" style="margin-top:6px">We only use the days you pick. We do not read your bank account.</div></div>""")
     with st.container(key="primary_move"):
-        if btn(f"Move SIP to the {new_day}{suffix}", key="do_move"):
-            S.result = {"kind": "move", "day": f"{new_day}{suffix}", "first": first}
+        if btn(f"Move SIP to the {ordinal(new_day)}", key="do_move"):
+            S.result = {"kind": "move", "day": ordinal(new_day), "first": first}
             go("done"); st.rerun()
     with st.container(key="link_other_opts2"):
         if btn("See other options", key="other_opts2"):

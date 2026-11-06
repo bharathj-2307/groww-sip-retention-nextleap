@@ -251,7 +251,7 @@ def facts_for_prompt(f: dict) -> str:
     lines += [
         f"Option skip: {'available for ' + f['target_text'] + (' only. The ' + f['next_date_text'] + ' instalment cannot be skipped and still goes ahead' if f['too_close'] else '') if f['skip_ok'] else 'NOT available. ' + f['skip_why']}",
         f"Option pay less: {'available for the ' + f['target_text'] + ' instalment. Full amount returns on ' + f['target_after_text'] + '. Uses left in 12 months: ' + str(f['pay_less_left']) if f['pay_less_ok'] else 'NOT available. ' + f['pay_less_why'] + (' It opens again on ' + f['pay_less_reopen_text'] + '.' if f['pay_less_reopen_text'] else '')}",
-        "Option move date: available. The user picks their payday and the SIP moves to 2 days after it.",
+        "Option move date: available. The user picks a new SIP date from 1 to 28. The app suggests a date 2 days after their salary day, and the user confirms or changes it.",
     ]
     if not f["pay_less_ok"] and f["pay_less_left"] == 0:
         lines.append("Option lower the amount for good: available, from the fund minimum. It stays until the user changes it.")
