@@ -131,8 +131,12 @@ def facts(sip: SampleSip, today: date | None = None) -> dict:
     target = after_next if too_close else next_date
     target_after = third if too_close else after_next
 
-    if too_close:
-        skip_ok, skip_why = False, f"This instalment is within {CHANGE_CUTOFF_WORKDAYS} working days, so it cannot be skipped."
+    # Groww: a skip asked within 2 working days "will not apply to that installment but will apply to the ones after".
+    if too_close and sip.misses_in_row >= MISS_LIMIT - 2:
+        skip_ok, skip_why = False, (f"If the {fmt_date(next_date)} payment fails, a skip in {MONTHS[target.month - 1]} "
+                                    f"would make {MISS_LIMIT} in a row and cancel the SIP.")
+    elif too_close:
+        skip_ok, skip_why = True, ""
     elif sip.misses_in_row >= MISS_LIMIT - 1:
         skip_ok, skip_why = False, f"You have missed {sip.misses_in_row} in a row. One more miss would cancel the SIP."
     else:
@@ -245,7 +249,7 @@ def facts_for_prompt(f: dict) -> str:
     if f["too_close"]:
         lines.append(f"Situation: the {f['next_date_text']} instalment is within {CHANGE_CUTOFF_WORKDAYS} working days. It cannot be changed. Options apply from {f['target_text']}.")
     lines += [
-        f"Option skip: {'available for ' + f['target_text'] if f['skip_ok'] else 'NOT available. ' + f['skip_why']}",
+        f"Option skip: {'available for ' + f['target_text'] + (' only. The ' + f['next_date_text'] + ' instalment cannot be skipped and still goes ahead' if f['too_close'] else '') if f['skip_ok'] else 'NOT available. ' + f['skip_why']}",
         f"Option pay less: {'available for the ' + f['target_text'] + ' instalment. Full amount returns on ' + f['target_after_text'] + '. Uses left in 12 months: ' + str(f['pay_less_left']) if f['pay_less_ok'] else 'NOT available. ' + f['pay_less_why'] + (' It opens again on ' + f['pay_less_reopen_text'] + '.' if f['pay_less_reopen_text'] else '')}",
         "Option move date: available. The user picks their payday and the SIP moves to 2 days after it.",
     ]

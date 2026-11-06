@@ -416,6 +416,12 @@
    "text": "Your ₹21,000 is safe whatever you choose.",
    "should_pass": false,
    "why": "calls the money safe"
+  },
+  {
+   "id": "G15",
+   "sip": "B",
+   "text": "You can skip December. Your SIP continues on 9 January. The 9 November payment still goes ahead.",
+   "should_pass": true
   }
  ]
 }

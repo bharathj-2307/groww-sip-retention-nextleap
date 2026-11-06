@@ -364,7 +364,7 @@ def screen_too_close() -> None:    # 8
     top("Your SIP options")
     checks_badge(S.explain["checks"])
     H(f'<div class="ss-grey">🕑 Your {F["amount_text"]} instalment is on {F["next_date_text"]}. It is within 2 working days, '
-      f'so it can no longer be lowered, skipped or moved.</div>')
+      f'so it can no longer be lowered, skipped or moved. Changes you make now start from {F["target_month_text"]}.</div>')
     nm = F["misses_in_row"] + 1
     facts_card([("Missed in a row after that", f"{nm} of {F['miss_limit']}")], S.explain["text"],
                title=f"If your balance is short on {F['next_date_text']}")
@@ -374,6 +374,10 @@ def screen_too_close() -> None:    # 8
     if F["pay_less_ok"] and option("payless", f"Pay less in {m}",
                                    f"Pay any amount from {F['fund_min_text']} on {F['target_text']}. It goes back to {F['amount_text']} in {m2} by itself."):
         go("payless"); st.rerun()
+    if F["skip_ok"] and option("skip", f"Skip {m}",
+                               f"Your SIP continues on {F['target_after_text']}. This counts as 1 missed of {F['miss_limit']}. "
+                               f"If the {F['next_date_text']} payment also fails, it will be 2 missed in a row."):
+        go("popup_skip"); st.rerun()
     if option("move", "Move the date to after payday", f"Starts in {m}. We will move the SIP to 2 days after your salary day."):
         go("movedate"); st.rerun()
     ask_and_cancel()
@@ -576,7 +580,8 @@ def screen_done() -> None:
         body = f"Your next instalment is {F['amount_text']} on {fmt_date(r['first'])}. The amount stays the same."
     elif k == "skip":
         title = f"{m} is skipped"
-        body = f"Your SIP continues on {ta}. This counts as 1 missed in a row."
+        body = (f"The {F['next_date_text']} payment still goes ahead. " if F["too_close"] else "") + \
+               f"Your SIP continues on {ta}. This counts as 1 missed in a row."
     elif k == "lower":
         title = f"Your SIP is now {fmt_inr(r['amount'])} a month"
         body = "It stays at this amount until you change it. You can raise it any time from your SIP page."
@@ -714,7 +719,9 @@ with st.expander("For reviewers: how the AI is checked"):
       'If one fails, the user sees Groww\'s current pop-up and a help link.<br><br>'
       '<b>Time limits.</b> Skip and changes use Groww\'s rule: not for an instalment within 2 working days. '
       'For cancel, Groww\'s help pages say 3 working days or 7 days. So an instalment due within 7 days "may still be taken". '
-      'Real limits vary by fund house. A launch would read each fund\'s own limit.</div>')
+      'A skip asked within 2 working days applies to the next instalment, as on Groww. '
+      'Real limits vary by fund house, and Groww says some funds cannot be edited at all. '
+      'A launch would read each fund\'s own limits.</div>')
     if S.ai_sort:
         a = S.ai_sort
         H(f'<div class="ss-small" style="margin-top:6px">Last typed reply: group <b>{esc(a["group"])}</b>, '

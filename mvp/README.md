@@ -19,7 +19,7 @@ If one check fails, the user sees Groww's current pop-up and a link to Groww's h
 | Sample | Shows |
 |---|---|
 | Normal month | Screen 3 with all three options |
-| Debit is very close | Screen 8: the next debit is within 2 working days, so pay less and move date apply from next month |
+| Debit is very close | Screen 8: the next debit is within 2 working days, so skip, pay less and move date apply from next month |
 | Pay less used twice | Screen 9: pay less is locked until a year after its first use |
 | Missed 2 in a row | Skip is hidden, because a third miss would cancel the SIP |
 

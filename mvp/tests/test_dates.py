@@ -44,6 +44,8 @@ def check_day(today: date) -> list[str]:
             errs.append(f"{tag}: cancel notice wrong")
         if sip.next_workday and not close:
             errs.append(f"{tag}: case 2 should always be too close")
+        if close and sip.misses_in_row == 0 and not f["skip_ok"]:
+            errs.append(f"{tag}: skip of the next month should be offered")
         if f["too_close"] != close:
             errs.append(f"{tag}: too_close wrong")
         t, ta = f["target_date"], f["target_after_date"]
