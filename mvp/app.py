@@ -37,15 +37,16 @@ html, body, [class*="css"], .stApp, button, input, textarea {{ font-family: Inte
 .stApp textarea, .stApp input {{ background:#FFFFFF !important; color:{INK} !important; }}
 header[data-testid="stHeader"] {{ background: transparent; }}
 .block-container {{ max-width: 460px !important; padding-top: 1.2rem; padding-bottom: 3rem; }}
-.ss-about {{ font-size:14px; line-height:21px; color:{INK}; margin:0 0 12px; }}
+.ss-guide-in {{ font-size:14px; line-height:21px; color:{INK}; }}
+.ss-guide-in ol {{ margin:0 0 6px 0; padding-left:20px; }}
 .ss-guide {{ background:#E8F5EF; border:1px solid #BFE3D3; border-radius:12px; padding:12px 16px; margin:4px 0 14px; font-size:14px; line-height:21px; color:{INK}; }}
 .ss-guide ol {{ margin:6px 0 0 0; padding-left:20px; }}
 .ss-guide li {{ margin:2px 0; }}
-.ss-case {{ background:#FFFFFF; border-left:3px solid {GREEN}; border-radius:6px; padding:8px 12px; margin:2px 0 16px; font-size:14px; line-height:20px; color:{INK}; }}
+.ss-case {{ background:#FFFFFF; border-left:3px solid {GREEN}; border-radius:6px; padding:8px 12px; margin:2px 0 12px; font-size:14px; line-height:20px; color:{INK}; }}
 .ss-step {{ font-size:14px; font-weight:600; color:{INK}; margin:0 0 8px; }}
 .st-key-cases [data-testid="stHorizontalBlock"] {{ flex-wrap: nowrap !important; gap: 10px; }}
 .st-key-cases [data-testid="stColumn"] {{ min-width: 0 !important; flex: 1 1 0 !important; width: auto !important; }}
-.st-key-cases .stButton > button {{ width:100%; height:64px; justify-content:flex-start; text-align:left; border:1px solid #C9CDD2;
+.st-key-cases .stButton > button {{ width:100%; height:58px; justify-content:flex-start; text-align:left; border:1px solid #C9CDD2;
   border-radius:12px; background:#FFFFFF; padding:8px 12px; }}
 .st-key-cases .stButton > button:hover {{ border-color:{GREEN}; color:{INK}; }}
 .st-key-cases .stButton > button > div, .st-key-cases .stButton > button span[data-has-shortcut],
@@ -194,20 +195,17 @@ def reset() -> None:
 F = facts(SIPS_BY_KEY[S.sip_key], date.today())
 
 # ---------- outside the phone: what this is ----------
-H(f"""<div style="margin-bottom:6px"><span style="font-size:22px;font-weight:700;color:{INK}">Steady SIP</span>
+H(f"""<div style="margin-bottom:2px"><span style="font-size:22px;font-weight:700;color:{INK}">Steady SIP</span>
 <span style="color:{MUTED};font-size:15px"> · Short on Cash, Not on Plans</span></div>
-<div class="ss-about"><b>What is this?</b> Many people cancel their SIP when money is short for a month.
-Steady SIP shows them easier choices first, such as paying less for one month.
-This is a practice version of Groww's "Cancel SIP" screen, made for a student project.
-It is not the real Groww app. It uses made-up SIPs, so do not enter real account details.</div>""")
+<div class="ss-small" style="margin-bottom:6px">A student prototype of Groww's Cancel SIP screen. Made-up data only. Do not enter real details.</div>""")
+with st.expander("How to test (4 steps)"):
+    H("""<div class="ss-guide-in"><ol><li>Pick a case. Start with Case 1.</li>
+<li>Act as that person. Money is short and you just tapped Cancel SIP.</li>
+<li>Choose what you would really do.</li>
+<li>Try the other cases.</li></ol>
+<div class="ss-muted">Why: many people cancel their SIP when money is short for a month. Steady SIP shows easier choices first.</div></div>""")
 
-H(f"""<div class="ss-guide"><b>How to test</b>
-<ol><li>Pick a case below. Each case is a different person's situation. Start with Case 1.</li>
-<li>Read "Your situation" and "What to check" under the cases.</li>
-<li>On the phone screen, act as that person. You have just tapped "Cancel SIP" because money is short.</li>
-<li>Choose what you would really do. Then try the next case.</li></ol></div>""")
-
-H('<div class="ss-step">Step 1. Pick a case</div>')
+H('<div class="ss-step">1. Pick a case</div>')
 with st.container(key="cases"):
     for row in (SAMPLE_SIPS[:2], SAMPLE_SIPS[2:]):
         for col, sip in zip(st.columns(2), row):
@@ -218,9 +216,8 @@ with st.container(key="cases"):
                     reset()
                     st.rerun()
 _c = SIPS_BY_KEY[S.sip_key]
-H(f'<div class="ss-case"><div><b>Your situation:</b> {esc(_c.hint)}</div>'
-  f'<div style="margin-top:6px"><b>What to check:</b> {esc(_c.check)}</div></div>'
-  f'<div class="ss-step">Step 2. Use the phone screen below</div>')
+H(f'<div class="ss-case">{esc(_c.hint)}<br><span class="ss-muted"><b>Check:</b> {esc(_c.check)}</span></div>'
+  f'<div class="ss-step">2. Act as this person on the phone below</div>')
 
 
 # ---------- shared pieces ----------

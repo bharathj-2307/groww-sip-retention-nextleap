@@ -37,21 +37,21 @@ class SampleSip:
 
 SAMPLE_SIPS = [
     SampleSip("A", "Never missed a payment",
-              "You pay ₹3,000 every month on the 5th. You have never missed a payment. This month you are short of money.",
+              "₹3,000 SIP on the 5th. Never missed a payment.",
               3000, 5, 7, 0, 500,
-              check="Do you see easy choices before cancelling? Is each one clear?"),
-    SampleSip("B", "Payment is 1 or 2 days away",
-              "Your next ₹3,000 payment is in 1 or 2 days. It is too late to change this payment.",
+              check="Are the choices before cancelling clear?"),
+    SampleSip("B", "Payment in 1 or 2 days",
+              "The next ₹3,000 payment is in 1 or 2 days. It is too late to change it.",
               3000, 0, 7, 0, 500, next_workday=True,
-              check="Does the app explain what happens if your bank balance is low? Can you plan for next month?"),
+              check="Is it clear what happens if your balance is low?"),
     SampleSip("C", "Already paid less twice",
-              "You paid a smaller amount in each of the last 2 months. You cannot do this again for now.",
+              "Paid less in each of the last 2 months. Pay less is locked for now.",
               3000, 5, 9, 0, 500, pay_less_months_ago=(2, 1),
-              check="Does the app say why \"Pay less\" is locked? Are the other choices clear?"),
-    SampleSip("D", "Missed the last 2 payments",
-              "You pay ₹2,000 every month on the 15th. You missed the last 2 payments. One more miss will cancel your SIP.",
+              check="Is it clear why Pay less is locked?"),
+    SampleSip("D", "Missed last 2 payments",
+              "Missed the last 2 payments. One more miss cancels the SIP.",
               2000, 15, 6, 2, 500,
-              check="Does the app explain this calmly? \"Skip\" should not be offered, as it would cancel the SIP."),
+              check="Is the message calm? Skip should not be offered."),
 ]
 SIPS_BY_KEY = {s.key: s for s in SAMPLE_SIPS}
 
