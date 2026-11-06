@@ -300,6 +300,24 @@
    "sip": "A",
    "text": "If I pay less in December, do I have to change it back myself?",
    "expect": "answer"
+  },
+  {
+   "id": "Q16",
+   "sip": "A",
+   "text": "hello",
+   "expect": "answer"
+  },
+  {
+   "id": "Q17",
+   "sip": "A",
+   "text": "thank you so much, you were helpful",
+   "expect": "answer"
+  },
+  {
+   "id": "Q18",
+   "sip": "A",
+   "text": "Hello, can I skip this month?",
+   "expect": "answer"
   }
  ],
  "gate_tests": [

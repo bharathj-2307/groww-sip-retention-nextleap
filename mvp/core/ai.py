@@ -5,6 +5,8 @@ through gate.py before a user sees it.
 """
 from __future__ import annotations
 
+import re
+
 from .llm import chat, parse_json, LLMError
 from .sip import facts_for_prompt
 
@@ -98,8 +100,35 @@ Reply with JSON only: {{"text": "..."}}"""
     return {"text": text, "model": model}
 
 
+# Greetings, thanks and goodbyes get a fixed friendly reply. No AI call is needed.
+_SMALL_TALK = [
+    (re.compile(r"^(?:hi+|hello+|hey+|hii+|namaste|namaskar|good (?:morning|afternoon|evening)|नमस्ते|नमस्कार|हेलो|हाय)(?=[\s!.,?]|$)[\s!.,?]*(?:there|team|groww)?[\s!.,?]*$", re.I),
+     {"en": "Hello. Ask me anything about this SIP, such as what skipping or paying less means.",
+      "hi": "नमस्ते। इस SIP के बारे में कुछ भी पूछें, जैसे स्किप करने या कम पैसे भरने का क्या मतलब है।"}),
+    (re.compile(r"^(?:thanks?|thank you|thank u|thx|ty|ok(?:ay)? thanks?|thanks a lot|thank you so much|great,? thanks?|dhanyavaad|dhanyawad|shukriya|धन्यवाद|शुक्रिया)(?=[\s!.,]|$)[\s!.,]*(?:so much|a lot)?[\s!.,]*$", re.I),
+     {"en": "You are welcome. Ask another question any time, or go back to your options.",
+      "hi": "आपका स्वागत है। कोई और सवाल हो तो पूछें, या अपने विकल्पों पर वापस जाएं।"}),
+    (re.compile(r"^(?:ok(?:ay)?|okk+|fine|got it|cool|bye|goodbye|see you|theek hai|ठीक है|अलविदा)(?=[\s!.,]|$)[\s!.,]*$", re.I),
+     {"en": "Sure. Ask another question any time, or go back to your options.",
+      "hi": "ठीक है। कोई और सवाल हो तो पूछें, या अपने विकल्पों पर वापस जाएं।"}),
+]
+
+
+def small_talk(text: str) -> str | None:
+    """Fixed reply for greetings, thanks and goodbyes, in the user's script. None if it is a real question."""
+    t = text.strip()
+    hindi = bool(re.search(r"[\u0900-\u097F]", t))
+    for pat, replies in _SMALL_TALK:
+        if pat.match(t):
+            return replies["hi" if hindi else "en"]
+    return None
+
+
 def answer(question: str, f: dict, language: str = "en") -> dict:
     """Short factual answer to a follow-up question about this SIP."""
+    fixed = small_talk(question)
+    if fixed:
+        return {"text": fixed, "declined": False, "small_talk": True, "model": None}
     system = f"""You answer a Groww user's question about their own SIP. Speak as Groww ("we").
 {STYLE}
 Answer in 1 to 3 short sentences, in the same language and script as the question.
@@ -114,6 +143,8 @@ or returns will do, or to check account details. Then start with: "We cannot sug
 This is not investment advice." You may add one relevant fact from the list. Set declined to true.
 If the facts do not cover the question, say "We are not sure about this. Please see Groww's help pages."
 and set declined to true.
+If the message is only a greeting, thanks or small talk, reply in one friendly sentence and invite a
+question about this SIP. Set declined to false.
 If the question has an account number, PAN or other personal detail, do not repeat it or use it.
 Say we cannot look up account details here. Set declined to true.
 Reply with JSON only: {{"answer": "...", "declined": true|false}}"""

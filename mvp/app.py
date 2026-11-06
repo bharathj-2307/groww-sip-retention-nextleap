@@ -484,7 +484,8 @@ def ask(q: str) -> None:
         checks = [{"name": "facts", "label": "Facts match", "passed": False, "detail": "No answer in time."}]
     if S.force_fail:
         checks[0] = {**checks[0], "passed": False, "detail": "Failed on purpose by the reviewer switch."}
-    S.chat.append({"q": q, "a": r.get("text", ""), "declined": r.get("declined", False), "checks": checks})
+    S.chat.append({"q": q, "a": r.get("text", ""), "declined": r.get("declined", False), "checks": checks,
+                   "small_talk": r.get("small_talk", False)})
 
 
 def screen_ask() -> None:
@@ -493,7 +494,9 @@ def screen_ask() -> None:
         H('<div class="ss-muted">Ask anything about this SIP and your options. Answers use only Groww\'s SIP rules and this SIP.</div>')
     for t in S.chat:
         H(f'<div class="ss-bubble-u">{esc(t["q"])}</div>')
-        if gate.passed(t["checks"]):
+        if t.get("small_talk"):
+            H(f'<div class="ss-bubble-a">{esc(t["a"])}</div><div style="height:8px"></div>')
+        elif gate.passed(t["checks"]):
             H(f'<div class="ss-bubble-a">{esc(t["a"])}</div>')
             if t["declined"]:
                 H(f'<div class="ss-check-grey">ⓘ Not answered, as designed. <a href="{HELP_URL}" target="_blank">Groww\'s help page</a></div>')
