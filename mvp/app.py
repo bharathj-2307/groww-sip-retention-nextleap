@@ -37,6 +37,12 @@ html, body, [class*="css"], .stApp, button, input, textarea {{ font-family: Inte
 .stApp textarea, .stApp input {{ background:#FFFFFF !important; color:{INK} !important; }}
 header[data-testid="stHeader"] {{ background: transparent; }}
 .block-container {{ max-width: 460px !important; padding-top: 1.2rem; padding-bottom: 3rem; }}
+.ss-guide {{ background:#E8F5EF; border:1px solid #BFE3D3; border-radius:12px; padding:12px 16px; margin:4px 0 14px; font-size:14px; line-height:21px; color:{INK}; }}
+.ss-guide ol {{ margin:6px 0 0 0; padding-left:20px; }}
+.ss-guide li {{ margin:2px 0; }}
+.ss-case {{ background:#FFFFFF; border-left:3px solid {GREEN}; border-radius:6px; padding:8px 12px; margin:-4px 0 14px; font-size:14px; line-height:20px; color:{INK}; }}
+.st-key-sip_radio [data-testid="stWidgetLabel"] p {{ font-size:14px; font-weight:600; color:{INK}; }}
+.ss-step2 {{ font-size:14px; font-weight:600; color:{INK}; margin:0 0 8px; }}
 .st-key-phone {{ background: #FFFFFF; border: 1px solid {LINE}; border-radius: 28px; padding: 18px 18px 20px;
   box-shadow: 0 6px 24px rgba(0,0,0,.06); color: {INK}; min-height: 760px; }}
 .st-key-phone p, .st-key-phone span, .st-key-phone div {{ color: {INK}; }}
@@ -182,14 +188,20 @@ H(f"""<div style="margin-bottom:6px"><span style="font-size:22px;font-weight:700
 <div class="ss-small" style="margin-bottom:8px">A concept prototype of Groww's SIP cancel flow for a NextLeap case study.
 Not a Groww product. It uses sample SIPs only. Do not enter real account details.</div>""")
 
+H(f"""<div class="ss-guide"><b>How to use this demo</b>
+<ol><li>Pick a test case below. Each case is a different user situation. Start with Case 1.</li>
+<li>In the phone screen, imagine you are this user. Your salary is late and you have just tapped Cancel SIP in Groww.</li>
+<li>Tell the app what is happening and see what it offers you.</li></ol></div>""")
+
 labels = {s.key: f"{s.label}" for s in SAMPLE_SIPS}
-pick = st.radio("Sample SIP", list(labels), format_func=lambda k: labels[k], horizontal=True,
+pick = st.radio("Step 1. Pick a test case", list(labels), format_func=lambda k: labels[k], horizontal=True,
                 index=list(labels).index(S.sip_key), key="sip_radio")
 if pick != S.sip_key:
     S.sip_key = pick
     reset()
     st.rerun()
-H(f'<div class="ss-small" style="margin:-6px 0 10px">{esc(SIPS_BY_KEY[S.sip_key].hint)}</div>')
+H(f'<div class="ss-case"><b>In this case:</b> {esc(SIPS_BY_KEY[S.sip_key].hint)}</div>'
+  f'<div class="ss-step2">Step 2. Use the phone screen below</div>')
 
 
 # ---------- shared pieces ----------
