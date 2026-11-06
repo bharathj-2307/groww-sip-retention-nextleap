@@ -32,17 +32,26 @@ class SampleSip:
     fund_min: int
     pay_less_months_ago: tuple = field(default_factory=tuple)  # pay less used this many months ago
     next_workday: bool = False  # due date = next working day (debit too close to change)
+    check: str = ""             # what a tester should look for in this case
 
 
 SAMPLE_SIPS = [
-    SampleSip("A", "Normal month", "₹3,000 SIP on the 5th. Nothing missed so far.",
-              3000, 5, 7, 0, 500),
-    SampleSip("B", "Debit date is very close", "The next debit is less than 2 working days away. It can no longer be changed.",
-              3000, 0, 7, 0, 500, next_workday=True),
-    SampleSip("C", "Pay less used twice", "Pay less was used in each of the last 2 months. It is used up for now.",
-              3000, 5, 9, 0, 500, pay_less_months_ago=(2, 1)),
-    SampleSip("D", "Missed 2 in a row", "₹2,000 SIP on the 15th. The last 2 instalments were missed. One more miss cancels the SIP.",
-              2000, 15, 6, 2, 500),
+    SampleSip("A", "Never missed a payment",
+              "You pay ₹3,000 every month on the 5th. You have never missed a payment. This month you are short of money.",
+              3000, 5, 7, 0, 500,
+              check="Do you see easy choices before cancelling? Is each one clear?"),
+    SampleSip("B", "Payment is 1 or 2 days away",
+              "Your next ₹3,000 payment is in 1 or 2 days. It is too late to change this payment.",
+              3000, 0, 7, 0, 500, next_workday=True,
+              check="Does the app explain what happens if your bank balance is low? Can you plan for next month?"),
+    SampleSip("C", "Already paid less twice",
+              "You paid a smaller amount in each of the last 2 months. You cannot do this again for now.",
+              3000, 5, 9, 0, 500, pay_less_months_ago=(2, 1),
+              check="Does the app say why \"Pay less\" is locked? Are the other choices clear?"),
+    SampleSip("D", "Missed the last 2 payments",
+              "You pay ₹2,000 every month on the 15th. You missed the last 2 payments. One more miss will cancel your SIP.",
+              2000, 15, 6, 2, 500,
+              check="Does the app explain this calmly? \"Skip\" should not be offered, as it would cancel the SIP."),
 ]
 SIPS_BY_KEY = {s.key: s for s in SAMPLE_SIPS}
 

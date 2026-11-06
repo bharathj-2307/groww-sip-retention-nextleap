@@ -37,6 +37,7 @@ html, body, [class*="css"], .stApp, button, input, textarea {{ font-family: Inte
 .stApp textarea, .stApp input {{ background:#FFFFFF !important; color:{INK} !important; }}
 header[data-testid="stHeader"] {{ background: transparent; }}
 .block-container {{ max-width: 460px !important; padding-top: 1.2rem; padding-bottom: 3rem; }}
+.ss-about {{ font-size:14px; line-height:21px; color:{INK}; margin:0 0 12px; }}
 .ss-guide {{ background:#E8F5EF; border:1px solid #BFE3D3; border-radius:12px; padding:12px 16px; margin:4px 0 14px; font-size:14px; line-height:21px; color:{INK}; }}
 .ss-guide ol {{ margin:6px 0 0 0; padding-left:20px; }}
 .ss-guide li {{ margin:2px 0; }}
@@ -195,15 +196,18 @@ F = facts(SIPS_BY_KEY[S.sip_key], date.today())
 # ---------- outside the phone: what this is ----------
 H(f"""<div style="margin-bottom:6px"><span style="font-size:22px;font-weight:700;color:{INK}">Steady SIP</span>
 <span style="color:{MUTED};font-size:15px"> · Short on Cash, Not on Plans</span></div>
-<div class="ss-small" style="margin-bottom:8px">A concept prototype for a NextLeap case study. It is not a Groww product.
-It uses sample SIPs only. Do not enter real account details.</div>""")
+<div class="ss-about"><b>What is this?</b> Many people cancel their SIP when money is short for a month.
+Steady SIP shows them easier choices first, such as paying less for one month.
+This is a practice version of Groww's "Cancel SIP" screen, made for a student project.
+It is not the real Groww app. It uses made-up SIPs, so do not enter real account details.</div>""")
 
-H(f"""<div class="ss-guide"><b>How to use this demo</b>
-<ol><li>Pick a test case. Each case is a different user situation. Start with Case 1.</li>
-<li>Imagine you are this user. Money is short this month and you have just tapped Cancel SIP.</li>
-<li>Tell the app what is happening. Then see what it offers.</li></ol></div>""")
+H(f"""<div class="ss-guide"><b>How to test</b>
+<ol><li>Pick a case below. Each case is a different person's situation. Start with Case 1.</li>
+<li>Read "Your situation" and "What to check" under the cases.</li>
+<li>On the phone screen, act as that person. You have just tapped "Cancel SIP" because money is short.</li>
+<li>Choose what you would really do. Then try the next case.</li></ol></div>""")
 
-H('<div class="ss-step">Step 1. Pick a test case</div>')
+H('<div class="ss-step">Step 1. Pick a case</div>')
 with st.container(key="cases"):
     for row in (SAMPLE_SIPS[:2], SAMPLE_SIPS[2:]):
         for col, sip in zip(st.columns(2), row):
@@ -213,7 +217,9 @@ with st.container(key="cases"):
                     S.sip_key = sip.key
                     reset()
                     st.rerun()
-H(f'<div class="ss-case"><b>In this case:</b> {esc(SIPS_BY_KEY[S.sip_key].hint)}</div>'
+_c = SIPS_BY_KEY[S.sip_key]
+H(f'<div class="ss-case"><div><b>Your situation:</b> {esc(_c.hint)}</div>'
+  f'<div style="margin-top:6px"><b>What to check:</b> {esc(_c.check)}</div></div>'
   f'<div class="ss-step">Step 2. Use the phone screen below</div>')
 
 
