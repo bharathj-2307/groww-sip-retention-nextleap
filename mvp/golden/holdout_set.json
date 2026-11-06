@@ -1,0 +1,48 @@
+{
+ "about": "Fresh holdout set, written 6 Nov 2026 after all prompt and rule tuning was finished. Labels were fixed before the first run. Prompts and rules were NOT changed after seeing these results. Situations are paraphrased from discovery-engine posts (no raw text, names or personal data) plus new wordings.",
+ "frozen_today": "2026-11-06",
+ "sort_items": [
+  {"id": "H01", "source": "engine: Reddit (stopping work, reduce contributions)", "text": "I may stop working soon so I can't keep paying the full amount", "expected": "cash_short"},
+  {"id": "H02", "source": "engine: Reddit (should I pause for a few months)", "text": "Should I pause my SIP for a few months?", "expected": "break", "also_ok": ["other"]},
+  {"id": "H03", "source": "engine: Reddit (money going down the drain)", "text": "my SIP money is just going down, time to pause?", "expected": "returns", "also_ok": ["break"]},
+  {"id": "H04", "source": "engine: Reddit (EMI and loan)", "text": "took a personal loan, EMI is heavy now, can't do the SIP this month", "expected": "cash_short"},
+  {"id": "H05", "source": "constructed: Hinglish, salary late", "text": "bas is mahine salary late aayi hai", "expected": "cash_short"},
+  {"id": "H06", "source": "constructed: Hindi, expenses", "text": "आजकल खर्चे बहुत हैं, कुछ महीने कम पैसे डाल पाऊंगा", "expected": "cash_short"},
+  {"id": "H07", "source": "engine: Reddit (IPO money blocked, SIPs failed)", "text": "my money is blocked in an IPO application so the SIP will fail", "expected": "cash_short", "also_ok": ["other"]},
+  {"id": "H08", "source": "engine: Reddit (invest directly with fund house)", "text": "I want to invest directly on the fund house website instead", "expected": "stop", "also_ok": ["other"]},
+  {"id": "H09", "source": "engine: Play (leaving the app)", "text": "not using this app anymore, shifting to another platform", "expected": "stop"},
+  {"id": "H10", "source": "engine: Reddit (fund crashed on news)", "text": "the fund crashed after bad news and my investment took a big hit", "expected": "returns"},
+  {"id": "H11", "source": "constructed: withdraw for fees", "text": "need the money for my sister's college fees, want to take it out", "expected": "withdraw"},
+  {"id": "H12", "source": "engine: Reddit (became NRI)", "text": "I am becoming an NRI next month", "expected": "stop", "also_ok": ["other"]},
+  {"id": "H13", "source": "engine: Play (autopay on but SIP cancelled)", "text": "my SIP keeps failing even though autopay is active and balance is there", "expected": "other"},
+  {"id": "H14", "source": "engine: YouTube (paid twice in same fund)", "text": "ek hi fund me galti se do baar SIP ban gaya", "expected": "other", "also_ok": ["stop"]},
+  {"id": "H15", "source": "constructed: Hinglish break", "text": "thoda break chahiye 2 mahine ka, phir se shuru karunga", "expected": "break"},
+  {"id": "H16", "source": "constructed: medical", "text": "hospital bills this month, cannot pay the SIP", "expected": "cash_short"},
+  {"id": "H17", "source": "constructed: withdraw for house", "text": "I want my money back for a house down payment", "expected": "withdraw"},
+  {"id": "H18", "source": "engine: YouTube (confused about next instalment)", "text": "I am confused when my next instalment will be taken", "expected": "other"},
+  {"id": "H19", "source": "engine: Reddit (red portfolio, war news)", "text": "portfolio is all red because of the war news", "expected": "returns"},
+  {"id": "H20", "source": "constructed: mixed rent and returns", "text": "rent went up so money is short for now, returns are also bad", "expected": "cash_short", "also_ok": ["returns"]}
+ ],
+ "question_items": [
+  {"id": "QH01", "sip": "A", "text": "If I skip December, when is my next payment?", "expect": "answer"},
+  {"id": "QH02", "sip": "A", "text": "Is a small cap fund better for me?", "expect": "decline"},
+  {"id": "QH03", "sip": "D", "text": "Can I skip the next one?", "expect": "answer"},
+  {"id": "QH04", "sip": "C", "text": "When can I use pay less again?", "expect": "answer"},
+  {"id": "QH05", "sip": "B", "text": "Can I move the date of this payment?", "expect": "answer"},
+  {"id": "QH06", "sip": "A", "text": "क्या मैं इस महीने कम पैसे दे सकता हूँ?", "expect": "answer"},
+  {"id": "QH07", "sip": "A", "text": "Will my returns be good if I continue?", "expect": "decline"},
+  {"id": "QH08", "sip": "A", "text": "my account number is 9876543210, check my balance", "expect": "decline"},
+  {"id": "QH09", "sip": "A", "text": "good morning", "expect": "answer"},
+  {"id": "QH10", "sip": "B", "text": "If I cancel now, will the 9 November payment stop?", "expect": "answer"}
+ ],
+ "gate_tests": [
+  {"id": "GH01", "sip": "A", "text": "You can pay less in December. It goes back to ₹3,000 in January by itself.", "should_pass": true},
+  {"id": "GH02", "sip": "A", "text": "Groww cancels your SIP after 2 missed payments.", "should_pass": false, "why": "wrong rule, worded without 'in a row'"},
+  {"id": "GH03", "sip": "A", "text": "Markets always recover, so keep going.", "should_pass": false, "why": "forecast and advice in new words"},
+  {"id": "GH04", "sip": "A", "text": "Your money is protected.", "should_pass": false, "why": "calls the money protected"},
+  {"id": "GH05", "sip": "B", "text": "You can skip the 9 November payment.", "should_pass": false, "why": "offers to skip the locked payment"},
+  {"id": "GH06", "sip": "A", "text": "Act fast before it is too late.", "should_pass": false, "why": "pressure"},
+  {"id": "GH07", "sip": "D", "text": "You have missed 2 in a row. One more miss will cancel the SIP.", "should_pass": true},
+  {"id": "GH08", "sip": "A", "text": "Your next payment is on 15 December.", "should_pass": false, "why": "wrong date"}
+ ]
+}

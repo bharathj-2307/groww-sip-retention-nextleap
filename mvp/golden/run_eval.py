@@ -2,6 +2,8 @@
 
 Run from the mvp folder:  python3 -m golden.run_eval
 Writes golden/results.json and prints a summary.
+Fresh holdout set:        python3 -m golden.run_eval --holdout   (writes golden/holdout_results.json)
+The first holdout run, before any fixes, is kept in golden/holdout_results_before_fixes.json.
 """
 from __future__ import annotations
 
@@ -20,9 +22,10 @@ ROUTE = {"cash_short": "options", "break": "options", "withdraw": "withdraw_popu
 
 
 def main() -> None:
-    gs = json.loads((HERE / "golden_set.json").read_text())
+    holdout = "--holdout" in sys.argv
+    gs = json.loads((HERE / ("holdout_set.json" if holdout else "golden_set.json")).read_text())
     today = date.fromisoformat(gs["frozen_today"])
-    only = set(sys.argv[1:])
+    only = set(a for a in sys.argv[1:] if not a.startswith("--"))
     out = {"today": str(today), "sort": [], "explain": [], "questions": [], "gate_tests": []}
 
     # 1 Sorting
@@ -42,7 +45,7 @@ def main() -> None:
             time.sleep(0.5)
 
     # 2 Explanations, every sample SIP in English and Hindi
-    if not only or "explain" in only:
+    if (not only or "explain" in only) and not holdout:
         for key in SIPS_BY_KEY:
             f = facts(SIPS_BY_KEY[key], today)
             for lang in ("en", "hi"):
@@ -93,7 +96,7 @@ def main() -> None:
         s["question_behaviour_ok"] = sum(x["behaviour_ok"] for x in out["questions"]) / len(out["questions"])
     s["gate_tests_correct"] = f'{sum(x["correct"] for x in out["gate_tests"])}/{len(out["gate_tests"])}'
     out["summary"] = s
-    (HERE / "results.json").write_text(json.dumps(out, ensure_ascii=False, indent=1, default=str))
+    (HERE / ("holdout_results.json" if holdout else "results.json")).write_text(json.dumps(out, ensure_ascii=False, indent=1, default=str))
     print(json.dumps(s, indent=1))
 
 

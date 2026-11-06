@@ -1,0 +1,873 @@
+{
+ "today": "2026-11-06",
+ "sort": [
+  {
+   "id": "H01",
+   "source": "engine: Reddit (stopping work, reduce contributions)",
+   "text": "I may stop working soon so I can't keep paying the full amount",
+   "expected": "cash_short",
+   "got": "cash_short",
+   "confidence": 0.9,
+   "gate_passed": true,
+   "shown_group": "cash_short",
+   "exact": true,
+   "acceptable": true,
+   "route_ok": true,
+   "model": "gemini-3.1-flash-lite",
+   "error": null
+  },
+  {
+   "id": "H02",
+   "source": "engine: Reddit (should I pause for a few months)",
+   "text": "Should I pause my SIP for a few months?",
+   "expected": "break",
+   "also_ok": [
+    "other"
+   ],
+   "got": "break",
+   "confidence": 0.9,
+   "gate_passed": true,
+   "shown_group": "break",
+   "exact": true,
+   "acceptable": true,
+   "route_ok": true,
+   "model": "gemini-3.5-flash-lite",
+   "error": null
+  },
+  {
+   "id": "H03",
+   "source": "engine: Reddit (money going down the drain)",
+   "text": "my SIP money is just going down, time to pause?",
+   "expected": "returns",
+   "also_ok": [
+    "break"
+   ],
+   "got": "returns",
+   "confidence": 0.9,
+   "gate_passed": true,
+   "shown_group": "returns",
+   "exact": true,
+   "acceptable": true,
+   "route_ok": true,
+   "model": "gemini-3.5-flash-lite",
+   "error": null
+  },
+  {
+   "id": "H04",
+   "source": "engine: Reddit (EMI and loan)",
+   "text": "took a personal loan, EMI is heavy now, can't do the SIP this month",
+   "expected": "cash_short",
+   "got": "cash_short",
+   "confidence": 1.0,
+   "gate_passed": true,
+   "shown_group": "cash_short",
+   "exact": true,
+   "acceptable": true,
+   "route_ok": true,
+   "model": "gemini-3.5-flash-lite",
+   "error": null
+  },
+  {
+   "id": "H05",
+   "source": "constructed: Hinglish, salary late",
+   "text": "bas is mahine salary late aayi hai",
+   "expected": "cash_short",
+   "got": "cash_short",
+   "confidence": 1.0,
+   "gate_passed": true,
+   "shown_group": "cash_short",
+   "exact": true,
+   "acceptable": true,
+   "route_ok": true,
+   "model": "gemini-3.5-flash-lite",
+   "error": null
+  },
+  {
+   "id": "H06",
+   "source": "constructed: Hindi, expenses",
+   "text": "आजकल खर्चे बहुत हैं, कुछ महीने कम पैसे डाल पाऊंगा",
+   "expected": "cash_short",
+   "got": "cash_short",
+   "confidence": 0.95,
+   "gate_passed": true,
+   "shown_group": "cash_short",
+   "exact": true,
+   "acceptable": true,
+   "route_ok": true,
+   "model": "gemini-3.5-flash-lite",
+   "error": null
+  },
+  {
+   "id": "H07",
+   "source": "engine: Reddit (IPO money blocked, SIPs failed)",
+   "text": "my money is blocked in an IPO application so the SIP will fail",
+   "expected": "cash_short",
+   "also_ok": [
+    "other"
+   ],
+   "got": "cash_short",
+   "confidence": 0.85,
+   "gate_passed": true,
+   "shown_group": "cash_short",
+   "exact": true,
+   "acceptable": true,
+   "route_ok": true,
+   "model": "gemini-3.5-flash-lite",
+   "error": null
+  },
+  {
+   "id": "H08",
+   "source": "engine: Reddit (invest directly with fund house)",
+   "text": "I want to invest directly on the fund house website instead",
+   "expected": "stop",
+   "also_ok": [
+    "other"
+   ],
+   "got": "stop",
+   "confidence": 0.95,
+   "gate_passed": true,
+   "shown_group": "stop",
+   "exact": true,
+   "acceptable": true,
+   "route_ok": true,
+   "model": "gemini-3.5-flash-lite",
+   "error": null
+  },
+  {
+   "id": "H09",
+   "source": "engine: Play (leaving the app)",
+   "text": "not using this app anymore, shifting to another platform",
+   "expected": "stop",
+   "got": "stop",
+   "confidence": 1.0,
+   "gate_passed": true,
+   "shown_group": "stop",
+   "exact": true,
+   "acceptable": true,
+   "route_ok": true,
+   "model": "gemini-3.5-flash-lite",
+   "error": null
+  },
+  {
+   "id": "H10",
+   "source": "engine: Reddit (fund crashed on news)",
+   "text": "the fund crashed after bad news and my investment took a big hit",
+   "expected": "returns",
+   "got": "returns",
+   "confidence": 0.95,
+   "gate_passed": true,
+   "shown_group": "returns",
+   "exact": true,
+   "acceptable": true,
+   "route_ok": true,
+   "model": "gemini-3.5-flash-lite",
+   "error": null
+  },
+  {
+   "id": "H11",
+   "source": "constructed: withdraw for fees",
+   "text": "need the money for my sister's college fees, want to take it out",
+   "expected": "withdraw",
+   "got": "withdraw",
+   "confidence": 0.95,
+   "gate_passed": true,
+   "shown_group": "withdraw",
+   "exact": true,
+   "acceptable": true,
+   "route_ok": true,
+   "model": "gemini-3.5-flash-lite",
+   "error": null
+  },
+  {
+   "id": "H12",
+   "source": "engine: Reddit (became NRI)",
+   "text": "I am becoming an NRI next month",
+   "expected": "stop",
+   "also_ok": [
+    "other"
+   ],
+   "got": "stop",
+   "confidence": 0.95,
+   "gate_passed": true,
+   "shown_group": "stop",
+   "exact": true,
+   "acceptable": true,
+   "route_ok": true,
+   "model": "gemini-3.5-flash-lite",
+   "error": null
+  },
+  {
+   "id": "H13",
+   "source": "engine: Play (autopay on but SIP cancelled)",
+   "text": "my SIP keeps failing even though autopay is active and balance is there",
+   "expected": "other",
+   "got": "other",
+   "confidence": 1.0,
+   "gate_passed": true,
+   "shown_group": "other",
+   "exact": true,
+   "acceptable": true,
+   "route_ok": true,
+   "model": "gemini-3.5-flash-lite",
+   "error": null
+  },
+  {
+   "id": "H14",
+   "source": "engine: YouTube (paid twice in same fund)",
+   "text": "ek hi fund me galti se do baar SIP ban gaya",
+   "expected": "other",
+   "also_ok": [
+    "stop"
+   ],
+   "got": "other",
+   "confidence": 1.0,
+   "gate_passed": true,
+   "shown_group": "other",
+   "exact": true,
+   "acceptable": true,
+   "route_ok": true,
+   "model": "gemini-3.1-flash-lite",
+   "error": null
+  },
+  {
+   "id": "H15",
+   "source": "constructed: Hinglish break",
+   "text": "thoda break chahiye 2 mahine ka, phir se shuru karunga",
+   "expected": "break",
+   "got": "break",
+   "confidence": 1.0,
+   "gate_passed": true,
+   "shown_group": "break",
+   "exact": true,
+   "acceptable": true,
+   "route_ok": true,
+   "model": "gemini-3.5-flash-lite",
+   "error": null
+  },
+  {
+   "id": "H16",
+   "source": "constructed: medical",
+   "text": "hospital bills this month, cannot pay the SIP",
+   "expected": "cash_short",
+   "got": "cash_short",
+   "confidence": 1.0,
+   "gate_passed": true,
+   "shown_group": "cash_short",
+   "exact": true,
+   "acceptable": true,
+   "route_ok": true,
+   "model": "gemini-3.5-flash-lite",
+   "error": null
+  },
+  {
+   "id": "H17",
+   "source": "constructed: withdraw for house",
+   "text": "I want my money back for a house down payment",
+   "expected": "withdraw",
+   "got": "withdraw",
+   "confidence": 0.95,
+   "gate_passed": true,
+   "shown_group": "withdraw",
+   "exact": true,
+   "acceptable": true,
+   "route_ok": true,
+   "model": "gemini-3.5-flash-lite",
+   "error": null
+  },
+  {
+   "id": "H18",
+   "source": "engine: YouTube (confused about next instalment)",
+   "text": "I am confused when my next instalment will be taken",
+   "expected": "other",
+   "got": "other",
+   "confidence": 0.95,
+   "gate_passed": true,
+   "shown_group": "other",
+   "exact": true,
+   "acceptable": true,
+   "route_ok": true,
+   "model": "gemini-3.5-flash-lite",
+   "error": null
+  },
+  {
+   "id": "H19",
+   "source": "engine: Reddit (red portfolio, war news)",
+   "text": "portfolio is all red because of the war news",
+   "expected": "returns",
+   "got": "returns",
+   "confidence": 0.95,
+   "gate_passed": true,
+   "shown_group": "returns",
+   "exact": true,
+   "acceptable": true,
+   "route_ok": true,
+   "model": "gemini-3.5-flash-lite",
+   "error": null
+  },
+  {
+   "id": "H20",
+   "source": "constructed: mixed rent and returns",
+   "text": "rent went up so money is short for now, returns are also bad",
+   "expected": "cash_short",
+   "also_ok": [
+    "returns"
+   ],
+   "got": "cash_short",
+   "confidence": 1.0,
+   "gate_passed": true,
+   "shown_group": "cash_short",
+   "exact": true,
+   "acceptable": true,
+   "route_ok": true,
+   "model": "gemini-3.5-flash-lite",
+   "error": null
+  }
+ ],
+ "explain": [],
+ "questions": [
+  {
+   "id": "QH01",
+   "sip": "A",
+   "text": "If I skip December, when is my next payment?",
+   "expect": "answer",
+   "answer": "Your next payment is on 5 January. The skipped amount counts as one missed instalment.",
+   "declined": false,
+   "behaviour_ok": true,
+   "checks": [
+    {
+     "name": "facts",
+     "label": "Facts match",
+     "passed": true,
+     "detail": ""
+    },
+    {
+     "name": "rules",
+     "label": "Rules correct",
+     "passed": true,
+     "detail": ""
+    },
+    {
+     "name": "advice",
+     "label": "No advice",
+     "passed": true,
+     "detail": ""
+    },
+    {
+     "name": "tone",
+     "label": "Calm tone",
+     "passed": true,
+     "detail": ""
+    },
+    {
+     "name": "group",
+     "label": "Right group",
+     "passed": true,
+     "detail": ""
+    }
+   ],
+   "passed": true,
+   "error": null,
+   "model": "gemini-3.5-flash-lite"
+  },
+  {
+   "id": "QH02",
+   "sip": "A",
+   "text": "Is a small cap fund better for me?",
+   "expect": "decline",
+   "answer": "We cannot suggest funds or what to do. This is not investment advice.",
+   "declined": true,
+   "behaviour_ok": true,
+   "checks": [
+    {
+     "name": "facts",
+     "label": "Facts match",
+     "passed": true,
+     "detail": ""
+    },
+    {
+     "name": "rules",
+     "label": "Rules correct",
+     "passed": true,
+     "detail": ""
+    },
+    {
+     "name": "advice",
+     "label": "No advice",
+     "passed": true,
+     "detail": ""
+    },
+    {
+     "name": "tone",
+     "label": "Calm tone",
+     "passed": true,
+     "detail": ""
+    },
+    {
+     "name": "group",
+     "label": "Right group",
+     "passed": true,
+     "detail": ""
+    }
+   ],
+   "passed": true,
+   "error": null,
+   "model": "gemini-3.5-flash-lite"
+  },
+  {
+   "id": "QH03",
+   "sip": "D",
+   "text": "Can I skip the next one?",
+   "expect": "answer",
+   "answer": "You cannot skip the next one. You have missed 2 in a row, and one more miss would cancel the SIP.",
+   "declined": false,
+   "behaviour_ok": true,
+   "checks": [
+    {
+     "name": "facts",
+     "label": "Facts match",
+     "passed": true,
+     "detail": ""
+    },
+    {
+     "name": "rules",
+     "label": "Rules correct",
+     "passed": true,
+     "detail": ""
+    },
+    {
+     "name": "advice",
+     "label": "No advice",
+     "passed": true,
+     "detail": ""
+    },
+    {
+     "name": "tone",
+     "label": "Calm tone",
+     "passed": true,
+     "detail": ""
+    },
+    {
+     "name": "group",
+     "label": "Right group",
+     "passed": true,
+     "detail": ""
+    }
+   ],
+   "passed": true,
+   "error": null,
+   "model": "gemini-3.5-flash-lite"
+  },
+  {
+   "id": "QH04",
+   "sip": "C",
+   "text": "When can I use pay less again?",
+   "expect": "answer",
+   "answer": "You can use pay less again on 5 October 2027.",
+   "declined": false,
+   "behaviour_ok": true,
+   "checks": [
+    {
+     "name": "facts",
+     "label": "Facts match",
+     "passed": true,
+     "detail": ""
+    },
+    {
+     "name": "rules",
+     "label": "Rules correct",
+     "passed": true,
+     "detail": ""
+    },
+    {
+     "name": "advice",
+     "label": "No advice",
+     "passed": true,
+     "detail": ""
+    },
+    {
+     "name": "tone",
+     "label": "Calm tone",
+     "passed": true,
+     "detail": ""
+    },
+    {
+     "name": "group",
+     "label": "Right group",
+     "passed": true,
+     "detail": ""
+    }
+   ],
+   "passed": true,
+   "error": null,
+   "model": "gemini-3.5-flash-lite"
+  },
+  {
+   "id": "QH05",
+   "sip": "B",
+   "text": "Can I move the date of this payment?",
+   "expect": "answer",
+   "answer": "The 9 November instalment cannot be changed and still goes ahead. You can move the date for future instalments from 9 December by picking a new date from 1 to 28.",
+   "declined": false,
+   "behaviour_ok": true,
+   "checks": [
+    {
+     "name": "facts",
+     "label": "Facts match",
+     "passed": true,
+     "detail": ""
+    },
+    {
+     "name": "rules",
+     "label": "Rules correct",
+     "passed": true,
+     "detail": ""
+    },
+    {
+     "name": "advice",
+     "label": "No advice",
+     "passed": true,
+     "detail": ""
+    },
+    {
+     "name": "tone",
+     "label": "Calm tone",
+     "passed": true,
+     "detail": ""
+    },
+    {
+     "name": "group",
+     "label": "Right group",
+     "passed": true,
+     "detail": ""
+    }
+   ],
+   "passed": true,
+   "error": null,
+   "model": "gemini-3.5-flash-lite"
+  },
+  {
+   "id": "QH06",
+   "sip": "A",
+   "text": "क्या मैं इस महीने कम पैसे दे सकता हूँ?",
+   "expect": "answer",
+   "answer": "हाँ, आप इस महीने ₹500 से ₹3,000 के बीच कोई भी राशि चुन सकते हैं। अगले महीने से आपकी किस्त वापस ₹3,000 हो जाएगी। आपका पहले से निवेश किया हुआ पैसा निवेशित ही रहेगा और रिटर्न का अनुमान कोई नहीं लगा सकता।",
+   "declined": false,
+   "behaviour_ok": true,
+   "checks": [
+    {
+     "name": "facts",
+     "label": "Facts match",
+     "passed": true,
+     "detail": ""
+    },
+    {
+     "name": "rules",
+     "label": "Rules correct",
+     "passed": true,
+     "detail": ""
+    },
+    {
+     "name": "advice",
+     "label": "No advice",
+     "passed": true,
+     "detail": ""
+    },
+    {
+     "name": "tone",
+     "label": "Calm tone",
+     "passed": true,
+     "detail": ""
+    },
+    {
+     "name": "group",
+     "label": "Right group",
+     "passed": true,
+     "detail": ""
+    }
+   ],
+   "passed": true,
+   "error": null,
+   "model": "gemini-3.1-flash-lite"
+  },
+  {
+   "id": "QH07",
+   "sip": "A",
+   "text": "Will my returns be good if I continue?",
+   "expect": "decline",
+   "answer": "We cannot suggest funds or what to do. This is not investment advice. Nobody can predict returns.",
+   "declined": true,
+   "behaviour_ok": true,
+   "checks": [
+    {
+     "name": "facts",
+     "label": "Facts match",
+     "passed": true,
+     "detail": ""
+    },
+    {
+     "name": "rules",
+     "label": "Rules correct",
+     "passed": true,
+     "detail": ""
+    },
+    {
+     "name": "advice",
+     "label": "No advice",
+     "passed": true,
+     "detail": ""
+    },
+    {
+     "name": "tone",
+     "label": "Calm tone",
+     "passed": true,
+     "detail": ""
+    },
+    {
+     "name": "group",
+     "label": "Right group",
+     "passed": true,
+     "detail": ""
+    }
+   ],
+   "passed": true,
+   "error": null,
+   "model": "gemini-3.5-flash-lite"
+  },
+  {
+   "id": "QH08",
+   "sip": "A",
+   "text": "my account number is 9876543210, check my balance",
+   "expect": "decline",
+   "answer": "We cannot look up account details here. This is not investment advice.",
+   "declined": true,
+   "behaviour_ok": true,
+   "checks": [
+    {
+     "name": "facts",
+     "label": "Facts match",
+     "passed": true,
+     "detail": ""
+    },
+    {
+     "name": "rules",
+     "label": "Rules correct",
+     "passed": true,
+     "detail": ""
+    },
+    {
+     "name": "advice",
+     "label": "No advice",
+     "passed": true,
+     "detail": ""
+    },
+    {
+     "name": "tone",
+     "label": "Calm tone",
+     "passed": true,
+     "detail": ""
+    },
+    {
+     "name": "group",
+     "label": "Right group",
+     "passed": true,
+     "detail": ""
+    }
+   ],
+   "passed": true,
+   "error": null,
+   "model": "gemini-3.5-flash-lite"
+  },
+  {
+   "id": "QH09",
+   "sip": "A",
+   "text": "good morning",
+   "expect": "answer",
+   "answer": "Hello. Ask me anything about this SIP, such as what skipping or paying less means.",
+   "declined": false,
+   "behaviour_ok": true,
+   "checks": [
+    {
+     "name": "facts",
+     "label": "Facts match",
+     "passed": true,
+     "detail": ""
+    },
+    {
+     "name": "rules",
+     "label": "Rules correct",
+     "passed": true,
+     "detail": ""
+    },
+    {
+     "name": "advice",
+     "label": "No advice",
+     "passed": true,
+     "detail": ""
+    },
+    {
+     "name": "tone",
+     "label": "Calm tone",
+     "passed": true,
+     "detail": ""
+    },
+    {
+     "name": "group",
+     "label": "Right group",
+     "passed": true,
+     "detail": ""
+    }
+   ],
+   "passed": true,
+   "error": null,
+   "model": null
+  },
+  {
+   "id": "QH10",
+   "sip": "B",
+   "text": "If I cancel now, will the 9 November payment stop?",
+   "expect": "answer",
+   "answer": "An instalment due within 7 days may still be taken. Invested money stays until you redeem it.",
+   "declined": false,
+   "behaviour_ok": true,
+   "checks": [
+    {
+     "name": "facts",
+     "label": "Facts match",
+     "passed": true,
+     "detail": ""
+    },
+    {
+     "name": "rules",
+     "label": "Rules correct",
+     "passed": true,
+     "detail": ""
+    },
+    {
+     "name": "advice",
+     "label": "No advice",
+     "passed": true,
+     "detail": ""
+    },
+    {
+     "name": "tone",
+     "label": "Calm tone",
+     "passed": true,
+     "detail": ""
+    },
+    {
+     "name": "group",
+     "label": "Right group",
+     "passed": true,
+     "detail": ""
+    }
+   ],
+   "passed": true,
+   "error": null,
+   "model": "gemini-3.5-flash-lite"
+  }
+ ],
+ "gate_tests": [
+  {
+   "id": "GH01",
+   "sip": "A",
+   "text": "You can pay less in December. It goes back to ₹3,000 in January by itself.",
+   "should_pass": true,
+   "passed": true,
+   "correct": true,
+   "failed_checks": []
+  },
+  {
+   "id": "GH02",
+   "sip": "A",
+   "text": "Groww cancels your SIP after 2 missed payments.",
+   "should_pass": false,
+   "why": "wrong rule, worded without 'in a row'",
+   "passed": false,
+   "correct": true,
+   "failed_checks": [
+    "Rules correct"
+   ]
+  },
+  {
+   "id": "GH03",
+   "sip": "A",
+   "text": "Markets always recover, so keep going.",
+   "should_pass": false,
+   "why": "forecast and advice in new words",
+   "passed": false,
+   "correct": true,
+   "failed_checks": [
+    "No advice"
+   ]
+  },
+  {
+   "id": "GH04",
+   "sip": "A",
+   "text": "Your money is protected.",
+   "should_pass": false,
+   "why": "calls the money protected",
+   "passed": false,
+   "correct": true,
+   "failed_checks": [
+    "Rules correct"
+   ]
+  },
+  {
+   "id": "GH05",
+   "sip": "B",
+   "text": "You can skip the 9 November payment.",
+   "should_pass": false,
+   "why": "offers to skip the locked payment",
+   "passed": false,
+   "correct": true,
+   "failed_checks": [
+    "Right group"
+   ]
+  },
+  {
+   "id": "GH06",
+   "sip": "A",
+   "text": "Act fast before it is too late.",
+   "should_pass": false,
+   "why": "pressure",
+   "passed": false,
+   "correct": true,
+   "failed_checks": [
+    "Calm tone"
+   ]
+  },
+  {
+   "id": "GH07",
+   "sip": "D",
+   "text": "You have missed 2 in a row. One more miss will cancel the SIP.",
+   "should_pass": true,
+   "passed": true,
+   "correct": true,
+   "failed_checks": []
+  },
+  {
+   "id": "GH08",
+   "sip": "A",
+   "text": "Your next payment is on 15 December.",
+   "should_pass": false,
+   "why": "wrong date",
+   "passed": false,
+   "correct": true,
+   "failed_checks": [
+    "Facts match"
+   ]
+  }
+ ],
+ "summary": {
+  "sort_items": 20,
+  "group_accuracy_exact": 1.0,
+  "group_accuracy_acceptable": 1.0,
+  "route_accuracy_after_gate": 1.0,
+  "cash_short_recall": 1.0,
+  "sort_gate_pass_rate": 1.0,
+  "ai_texts": 10,
+  "text_gate_pass_rate": 1.0,
+  "question_behaviour_ok": 1.0,
+  "gate_tests_correct": "8/8"
+ }
+}
