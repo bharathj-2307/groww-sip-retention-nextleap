@@ -18,14 +18,14 @@ If one check fails, the user sees Groww's current pop-up and a link to Groww's h
 
 | Sample | Shows |
 |---|---|
-| Normal month | Screen 3 with all three options |
-| Debit is very close | Screen 8: the next debit is within 2 working days, so skip, pay less and move date apply from next month |
-| Pay less used twice | Screen 9: pay less is locked until a year after its first use |
-| Missed 2 in a row | Skip is hidden, because a third miss would cancel the SIP |
+| Case 1: Never missed a payment | Screen 3 with all three options |
+| Case 2: Payment is 1 or 2 days away | Screen 8: the next payment is within 2 working days, so it goes ahead. Skip, pay less and move date apply from next month |
+| Case 3: Already paid less twice | Screen 9: pay less is locked until a year after its first use |
+| Case 4: Missed last 2 payments | Skip is hidden, because a third miss would cancel the SIP |
 
 ## Golden set
 
-`golden/golden_set.json` holds 30 situations to sort, 15 questions and 14 planted good or bad texts.
+`golden/golden_set.json` holds 30 situations to sort, 18 questions and 23 planted good or bad texts.
 They are paraphrased from discovery engine posts and interview themes. Run from this folder:
 
 ```
@@ -33,6 +33,10 @@ python3 -m golden.run_eval
 ```
 
 Results go to `golden/results.json`. The app shows the summary under "For reviewers".
+
+`golden/holdout_set.json` is a fresh set of 20 situations, 10 questions and 8 planted texts.
+Its expected answers were committed before the first run. Run it with `python3 -m golden.run_eval --holdout`.
+The first run is kept in `golden/holdout_results_before_fixes.json`. The run after fixes is in `golden/holdout_results.json`.
 
 Date rules are checked for every day from today to the end of 2028, for all 4 cases and 13 salary days
 (month ends, year end and the leap February included):
