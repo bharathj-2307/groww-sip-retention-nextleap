@@ -13,16 +13,15 @@ from __future__ import annotations
 import re
 
 from .ai import GROUPS, CONFIDENCE_MIN
-from .sip import MONTHS, CHANGE_CUTOFF_WORKDAYS, CANCEL_NOTICE_DAYS, PAYDAY_GAP_DAYS, PAY_LESS_LIMIT, FUND_NAME
+from .sip import (MONTHS, CHANGE_CUTOFF_WORKDAYS, CANCEL_NOTICE_DAYS, PAYDAY_GAP_DAYS, PAY_LESS_LIMIT, SIP_DAY_MAX,
+                  FUND_NAME)
 
-SIP_DAY_MAX = 28  # a SIP date can be any day from 1 to 28
-
-HINDI_MONTHS = ["जनवरी", "फ़रवरी", "फरवरी", "मार्च", "अप्रैल", "मई", "जून", "जुलाई",
-                "अगस्त", "सितंबर", "सितम्बर", "अक्टूबर", "नवंबर", "नवम्बर", "दिसंबर", "दिसम्बर"]
 HINDI_MONTH_INDEX = {"जनवरी": 1, "फ़रवरी": 2, "फरवरी": 2, "मार्च": 3, "अप्रैल": 4, "मई": 5,
                      "जून": 6, "जुलाई": 7, "अगस्त": 8, "सितंबर": 9, "सितम्बर": 9, "अक्टूबर": 10,
                      "नवंबर": 11, "नवम्बर": 11, "दिसंबर": 12, "दिसम्बर": 12}
 DEV_DIGITS = str.maketrans("०१२३४५६७८९", "0123456789")
+WORD_NUMBERS = {"zero": 0, "one": 1, "two": 2, "three": 3, "four": 4, "five": 5}
+NUMBER = r"(\d+|" + "|".join(WORD_NUMBERS) + r")"  # a digit or a number word, as one regex group
 
 # Fund houses and brands sold in India. Any mention means the text names a fund.
 FUND_BRANDS = [
@@ -88,6 +87,11 @@ def _allowed_numbers(f: dict, extra_text: str = "") -> set[int]:
     return nums
 
 
+def _as_int(word: str) -> int:
+    """'2' or 'two' -> 2."""
+    return WORD_NUMBERS[word] if word in WORD_NUMBERS else int(word)
+
+
 def _numbers(text: str) -> list[int]:
     t = text.translate(DEV_DIGITS)
     out = []
@@ -148,23 +152,17 @@ def check_text(text: str, f: dict, *, group: str, confidence: float = 1.0,
 
     # 2 Rules correct
     hits = []
-    for m in re.finditer(r"(\d+|zero|one|two|three|four|five)\s+(?:\w+\s+){0,3}?in a row", low):
-        word = m.group(1)
-        n = {"zero": 0, "one": 1, "two": 2, "three": 3, "four": 4, "five": 5}.get(word, None)
-        n = int(word) if n is None else n
-        if n not in (f["misses_in_row"], f["miss_limit"], f["misses_left"]):
-            hits.append(m.group(0))
-    # "cancels after 2 missed payments" must use the real limit too
-    for m in re.finditer(r"after\s+(\d+|one|two|three|four|five)\s+(?:\w+\s+){0,2}?(?:missed|skipped|failed)", low):
-        w = m.group(1)
-        n = {"one": 1, "two": 2, "three": 3, "four": 4, "five": 5}.get(w) or int(w)
-        if n != f["miss_limit"]:
-            hits.append(m.group(0))
-    for m in re.finditer(r"(\d+|one|two|three|four)\s+times?\s+in\s+(?:any\s+|the\s+last\s+)?12\s+months", low):
-        w = m.group(1)
-        n = {"one": 1, "two": 2, "three": 3, "four": 4}.get(w) or int(w)
-        if n not in (PAY_LESS_LIMIT, f["pay_less_used"], f["pay_less_left"]):
-            hits.append(m.group(0))
+    # Each pattern: a number in the text, and the values it may take.
+    number_rules = [
+        (NUMBER + r"\s+(?:\w+\s+){0,3}?in a row", (f["misses_in_row"], f["miss_limit"], f["misses_left"])),
+        # "cancels after 2 missed payments" must use the real limit
+        (r"after\s+" + NUMBER + r"\s+(?:\w+\s+){0,2}?(?:missed|skipped|failed)", (f["miss_limit"],)),
+        (NUMBER + r"\s+times?\s+in\s+(?:any\s+|the\s+last\s+)?12\s+months", (PAY_LESS_LIMIT, f["pay_less_used"], f["pay_less_left"])),
+    ]
+    for pattern, allowed_values in number_rules:
+        for m in re.finditer(pattern, low):
+            if _as_int(m.group(1)) not in allowed_values:
+                hits.append(m.group(0))
     for p in WRONG_RULES:
         m = re.search(p, low)
         if m and not NEGATION.search(low[max(0, m.start() - 25):m.end() + 15]):

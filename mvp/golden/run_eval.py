@@ -17,8 +17,7 @@ from core import ai, gate
 from core.sip import SIPS_BY_KEY, facts
 
 HERE = Path(__file__).parent
-ROUTE = {"cash_short": "options", "break": "options", "withdraw": "withdraw_popup",
-         "stop": "cancel_popup", "returns": "returns_popup", "other": "general_popup"}
+ROUTE = ai.GROUP_SCREEN  # same group-to-screen map as the app
 
 
 def main() -> None:
