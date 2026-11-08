@@ -15,8 +15,9 @@ from pathlib import Path
 import streamlit as st
 
 from core import ai, gate
-from core.sip import (CANCEL_NOTICE_DAYS, SAMPLE_SIPS, SIPS_BY_KEY, MONTHS, facts, fmt_inr, fmt_short, fmt_date,
-                      new_day_after_payday, next_on_new_day, pay_less_choices)
+from core.sip import (CANCEL_NOTICE_DAYS, CHANGE_CUTOFF_WORKDAYS, PAY_LESS_LIMIT, SAMPLE_SIPS, SIP_DAY_MAX, SIPS_BY_KEY,
+                      facts, fmt_date, fmt_groww_date, fmt_inr, fmt_short, new_day_after_payday, next_on_new_day,
+                      ordinal, pay_less_choices)
 
 HELP_URL = "https://groww.in/help/mutual-funds/mf-sip"
 HERE = Path(__file__).parent
@@ -39,9 +40,6 @@ header[data-testid="stHeader"] {{ background: transparent; }}
 .block-container {{ max-width: 460px !important; padding-top: 1.2rem; padding-bottom: 3rem; }}
 .ss-guide-in {{ font-size:14px; line-height:21px; color:{INK}; }}
 .ss-guide-in ol {{ margin:0 0 6px 0; padding-left:20px; }}
-.ss-guide {{ background:#E8F5EF; border:1px solid #BFE3D3; border-radius:12px; padding:12px 16px; margin:4px 0 14px; font-size:14px; line-height:21px; color:{INK}; }}
-.ss-guide ol {{ margin:6px 0 0 0; padding-left:20px; }}
-.ss-guide li {{ margin:2px 0; }}
 .ss-case {{ background:#FFFFFF; border-left:3px solid {GREEN}; border-radius:6px; padding:8px 12px; margin:2px 0 12px; font-size:14px; line-height:20px; color:{INK}; }}
 .ss-step {{ font-size:14px; font-weight:600; color:{INK}; margin:0 0 8px; }}
 .st-key-cases [data-testid="stHorizontalBlock"] {{ flex-wrap: nowrap !important; gap: 10px; }}
@@ -73,7 +71,6 @@ header[data-testid="stHeader"] {{ background: transparent; }}
 .ss-green * {{ color:{GREEN_DARK} !important; }}
 .ss-grey {{ background:#F3F5F7; border-radius:12px; padding:12px 14px; font-size:14px; line-height:20px; margin: 8px 0; }}
 .ss-warn {{ background:#FFF8E6; border-radius:12px; padding:10px 14px; font-size:13px; line-height:19px; margin: 8px 0; }}
-.ss-new {{ font-size:11px; font-weight:600; color:#8A4B00 !important; background:#FFF1DC; border-radius:6px; padding:2px 6px; margin-left:6px; }}
 .ss-h2 {{ font-size:15px; font-weight:600; margin: 12px 0 4px; }}
 .ss-foot {{ border-top:1px solid {LINE}; margin-top: 14px; padding-top: 10px; }}
 .ss-bubble-u {{ margin: 8px 0 4px auto; max-width: 85%; background:#F3F5F7; border-radius:14px; padding:9px 13px; font-size:14px; line-height:20px; width: fit-content; }}
@@ -250,14 +247,22 @@ def save_reason(group: str) -> None:
 def route(group: str) -> None:
     S.group = group
     save_reason(group)
-    if group in ("cash_short", "break"):
-        open_options()
-    elif group in ("stop", "returns"):
-        go("popup_cancel")       # 10
-    elif group == "withdraw":
-        go("popup_withdraw")     # 10 (withdraw version)
+    screen = ai.GROUP_SCREEN.get(group, "popup_general")
+    if screen == "options":
+        open_options()           # runs the AI explanation through the gate first
     else:
-        go("popup_general")      # 11
+        go(screen)
+
+
+def gated_checks(r: dict, user_text: str = "") -> list[dict]:
+    """The 5 checks on an AI reply. No reply counts as a failed check. The reviewer switch forces a fail."""
+    if r.get("text"):
+        checks = gate.check_text(r["text"], F, group=S.group or "cash_short", user_text=user_text)
+    else:
+        checks = [{"name": "facts", "label": "Facts match", "passed": False, "detail": "The AI did not answer in time."}]
+    if S.force_fail:
+        checks = [{**checks[0], "passed": False, "detail": "Failed on purpose by the reviewer switch."}] + checks[1:]
+    return checks
 
 
 def open_options() -> None:
@@ -266,15 +271,7 @@ def open_options() -> None:
     if not S.explain or S.explain.get("key") != key:
         with st.spinner("Checking your SIP"):
             r = ai.explain(F, S.lang, S.group or "cash_short")
-        if "text" in r and r["text"]:
-            checks = gate.check_text(r["text"], F, group=S.group or "cash_short")
-        else:
-            checks = [{"name": "facts", "label": "Facts match", "passed": False,
-                       "detail": "The AI did not answer in time."}]
-        if S.force_fail:
-            checks = [dict(c) for c in checks]
-            checks[0] = {**checks[0], "passed": False, "detail": "Failed on purpose by the reviewer switch."}
-        S.explain = {"key": key, "text": r.get("text", ""), "checks": checks, "model": r.get("model")}
+        S.explain = {"key": key, "text": r.get("text", ""), "checks": gated_checks(r), "model": r.get("model")}
     go(F["screen"] if gate.passed(S.explain["checks"]) else "fallback")
 
 
@@ -326,6 +323,18 @@ def option(key: str, title: str, desc: str, new: bool = False) -> bool:
         return btn(label, key=f"optbtn_{key}")
 
 
+def standing_rows() -> list[tuple[str, str]]:
+    """The first rows of the facts card on screens 3 and 9."""
+    return [("Invested so far", f"{F['invested_text']} in {F['months_old']} months"),
+            ("Next instalment", f"{F['amount_text']} on {fmt_short(F['next_date'])}"),
+            ("Missed in a row", f"{F['misses_in_row']} of {F['miss_limit']}")]
+
+
+def move_option(note: str = "") -> None:
+    if option("move", "Move the date to after payday", "Pick a new date, such as a few days after your salary." + note):
+        go("movedate"); st.rerun()
+
+
 def ask_and_cancel() -> None:
     with st.container(key="ask_btn"):
         if btn("💬  Ask about your SIP", key="askbtn"):
@@ -340,9 +349,7 @@ def ask_and_cancel() -> None:
 def screen_options() -> None:      # 3
     top("Your SIP options")
     checks_badge(S.explain["checks"])
-    facts_card([("Invested so far", f"{F['invested_text']} in {F['months_old']} months"),
-                ("Next instalment", f"{F['amount_text']} on {fmt_short(F['next_date'])}"),
-                ("Missed in a row", f"{F['misses_in_row']} of {F['miss_limit']}")], S.explain["text"])
+    facts_card(standing_rows(), S.explain["text"])
     H('<div class="ss-h2">If money is tight this month, you can:</div>')
     m, m2 = F["target_month_text"], F["target_after_month_text"]
     if F["pay_less_ok"] and option("payless", "Pay less this month",
@@ -354,8 +361,7 @@ def screen_options() -> None:      # 3
     else:
         H(f'<div class="ss-locked"><div style="font-weight:600;font-size:15px;color:{MUTED}">Skip {m}</div>'
           f'<div class="ss-muted">{esc(F["skip_why"])}</div></div>')
-    if option("move", "Move the date to after payday", "Pick a new date, such as a few days after your salary."):
-        go("movedate"); st.rerun()
+    move_option()
     ask_and_cancel()
     footer()
 
@@ -363,7 +369,7 @@ def screen_options() -> None:      # 3
 def screen_too_close() -> None:    # 8
     top("Your SIP options")
     checks_badge(S.explain["checks"])
-    H(f'<div class="ss-grey">🕑 Your {F["amount_text"]} instalment is on {F["next_date_text"]}. It is within 2 working days, '
+    H(f'<div class="ss-grey">🕑 Your {F["amount_text"]} instalment is on {F["next_date_text"]}. It is within {CHANGE_CUTOFF_WORKDAYS} working days, '
       f'so it can no longer be lowered, skipped or moved. Changes you make now start from {F["target_month_text"]}.</div>')
     nm = F["misses_in_row"] + 1
     facts_card([("Missed in a row after that", f"{nm} of {F['miss_limit']}")], S.explain["text"],
@@ -378,8 +384,7 @@ def screen_too_close() -> None:    # 8
                                f"Your SIP continues on {F['target_after_text']}. This counts as 1 missed of {F['miss_limit']}. "
                                f"If the {F['next_date_text']} payment also fails, it will be 2 missed in a row."):
         go("popup_skip"); st.rerun()
-    if option("move", "Move the date to after payday", f"Pick a new date, such as a few days after your salary. Starts in {m}."):
-        go("movedate"); st.rerun()
+    move_option(f" Starts in {m}.")
     ask_and_cancel()
     footer()
 
@@ -388,22 +393,19 @@ def screen_pay_less_used() -> None:  # 9
     top("Your SIP options")
     checks_badge(S.explain["checks"])
     used = ", ".join(F["pay_less_use_months"])
-    facts_card([("Invested so far", f"{F['invested_text']} in {F['months_old']} months"),
-                ("Next instalment", f"{F['amount_text']} on {fmt_short(F['next_date'])}"),
-                ("Missed in a row", f"{F['misses_in_row']} of {F['miss_limit']}"),
-                ("Pay less used", f"{F['pay_less_used']} of 2 ({used})")], S.explain["text"])
+    facts_card(standing_rows() + [("Pay less used", f"{F['pay_less_used']} of {PAY_LESS_LIMIT} ({used})")],
+               S.explain["text"])
     m = F["target_month_text"]
     H('<div class="ss-h2">If money is tight this month, you can:</div>')
     H(f'<div class="ss-locked"><div style="font-weight:600;font-size:15px;color:{MUTED}">🔒 Pay less this month</div>'
-      f'<div class="ss-muted">You have used this 2 times in the last 12 months. You can use it again from {F["pay_less_reopen_text"]}.</div></div>')
+      f'<div class="ss-muted">You have used this {PAY_LESS_LIMIT} times in the last 12 months. You can use it again from {F["pay_less_reopen_text"]}.</div></div>')
     if F["skip_ok"] and option("skip", f"Skip {m}",
                                f"Your SIP continues on {F['target_after_text']}. This counts as 1 missed of {F['miss_limit']}."):
         go("popup_skip"); st.rerun()
     if option("lower", "Lower your monthly amount",
               f"Set a new amount from {F['fund_min_text']}. It stays until you change it. You can raise it any time."):
         go("lower"); st.rerun()
-    if option("move", "Move the date to after payday", "Pick a new date, such as a few days after your salary."):
-        go("movedate"); st.rerun()
+    move_option()
     ask_and_cancel()
     footer()
 
@@ -437,7 +439,7 @@ def screen_pay_less() -> None:
     nth = "first" if F["pay_less_used"] == 0 else "second"
     more = (f"If {F['target_after_month_text']} is also tight, you can ask once more. " if left_after > 0 else "")
     H(f'<div class="ss-green">🔁 <b>For {m} only.</b> On {ta} your SIP goes back to {F["amount_text"]} by itself. '
-      f'You do not need to do anything.<br><span style="display:block;margin-top:6px">{more}Pay less can be used 2 times in any 12 months. '
+      f'You do not need to do anything.<br><span style="display:block;margin-top:6px">{more}Pay less can be used {PAY_LESS_LIMIT} times in any 12 months. '
       f'This will be your {nth}.</span></div>')
     choices = pay_less_choices(F)
     if S.pick is None:
@@ -465,10 +467,6 @@ def screen_pay_less() -> None:
 
 
 # ---------- 5: move date ----------
-def ordinal(n: int) -> str:
-    return f"{n}{'th' if 11 <= n % 100 <= 13 else {1: 'st', 2: 'nd', 3: 'rd'}.get(n % 10, 'th')}"
-
-
 def screen_move_date() -> None:
     top("Move the SIP date", back_to=F["screen"])
     H('<div class="ss-h1" style="font-size:21px;line-height:28px">Pick a new SIP date</div>'
@@ -483,10 +481,10 @@ def screen_move_date() -> None:
         payday = st.number_input("Salary day (1 to 31)", min_value=1, max_value=31, value=15, step=1, key="pay_other")
     suggested = new_day_after_payday(int(payday))
     H('<div class="ss-step" style="margin-top:8px">2. Your new SIP date</div>')
-    new_day = st.selectbox("New SIP date", list(range(1, 29)), index=suggested - 1, format_func=ordinal,
+    new_day = st.selectbox("New SIP date", list(range(1, SIP_DAY_MAX + 1)), index=suggested - 1, format_func=ordinal,
                            key=f"sipday_{payday}", label_visibility="collapsed")
     H(f'<div class="ss-muted" style="margin:-6px 0 4px">Suggested: the {ordinal(suggested)}, a little after your salary. '
-      f'You can pick any date from the 1st to the 28th.</div>')
+      f'You can pick any date from the 1st to the {ordinal(SIP_DAY_MAX)}.</div>')
     first = next_on_new_day(F, new_day)
     H(f"""<div class="ss-card"><div style="font-size:15px;font-weight:600">What happens</div>
 <div class="ss-row"><span class="k">New SIP date</span><span class="v">{ordinal(new_day)} of every month</span></div>
@@ -527,13 +525,7 @@ SUGGESTED = ["If I pay less this month, will I lose anything?", "Can I skip agai
 def ask(q: str) -> None:
     with st.spinner("Checking the answer"):
         r = ai.answer(q, F, S.lang)
-    if "text" in r and r["text"]:
-        checks = gate.check_text(r["text"], F, group=S.group or "cash_short", user_text=q)
-    else:
-        checks = [{"name": "facts", "label": "Facts match", "passed": False, "detail": "No answer in time."}]
-    if S.force_fail:
-        checks[0] = {**checks[0], "passed": False, "detail": "Failed on purpose by the reviewer switch."}
-    S.chat.append({"q": q, "a": r.get("text", ""), "declined": r.get("declined", False), "checks": checks,
+    S.chat.append({"q": q, "a": r.get("text", ""), "declined": r.get("declined", False), "checks": gated_checks(r, q),
                    "small_talk": r.get("small_talk", False)})
 
 
@@ -583,7 +575,7 @@ def screen_done() -> None:
         left = F["pay_less_left"] - 1
         body = (f"Your SIP stays active. It goes back to {F['amount_text']} from {ta} by itself. "
                 + (f"You can pay less {left} more time in the next 12 months." if left > 0 else
-                   "You have now used pay less 2 times in the last 12 months."))
+                   f"You have now used pay less {PAY_LESS_LIMIT} times in the last 12 months."))
     elif k == "move":
         title = f"Your SIP moves to the {r['day']}"
         body = f"Your next instalment is {F['amount_text']} on {fmt_date(r['first'])}. The amount stays the same."
@@ -653,22 +645,33 @@ def sheet(icon: str, title: str, sub: str, primary: tuple[str, str], secondary: 
     footer()
 
 
+# Sheet buttons: the result each one leads to on the done screen (7).
+ACT_RESULT = {"cancel": "cancelled", "continue": "continue", "skip": "skip", "redeem": "redeem"}
+
+
 def act(what: str) -> None:
-    if what == "cancel":
-        S.result = {"kind": "cancelled"}; go("done")
-    elif what == "continue":
-        S.result = {"kind": "continue"}; go("done")
-    elif what == "skip":
-        S.result = {"kind": "skip"}; go("done")
-    elif what == "cancel_confirm":
+    if what == "cancel_confirm":
         go("popup_cancel_confirm")
-    elif what == "redeem":
-        S.result = {"kind": "redeem"}; go("done")
+    else:
+        S.result = {"kind": ACT_RESULT[what]}
+        go("done")
 
 
-def screen_popup_cancel() -> None:       # 10: same pop-up and text as Groww today
+def cancel_sheet(**kw) -> None:
+    """Groww's current cancel pop-up, same text as the app today."""
     sheet(ICON_STOP, "Future instalments will be stopped", "Your invested amount stays in this fund until you redeem it.",
-          ("Cancel SIP", "cancel"), ("Continue investing", "continue"))
+          ("Cancel SIP", "cancel"), ("Continue investing", "continue"), **kw)
+
+
+def skip_sheet(**kw) -> None:
+    """Groww's current skip pop-up."""
+    sheet(ICON_WARN, f"Are you sure you want to skip the {fmt_groww_date(F['target_date'])} instalment?",
+          f'<span style="background:#FFF6DA;border-radius:10px;padding:8px 12px;display:inline-block">ⓘ Your next due date will be {fmt_groww_date(F["target_after_date"])}</span>',
+          ("Skip instalment", "skip"), ("Cancel SIP anyway", "cancel_confirm"), **kw)
+
+
+def screen_popup_cancel() -> None:       # 10
+    cancel_sheet()
 
 
 def screen_popup_withdraw() -> None:     # 10, withdraw version
@@ -678,35 +681,24 @@ def screen_popup_withdraw() -> None:     # 10, withdraw version
 
 
 def screen_popup_general() -> None:      # 11
-    sheet(ICON_STOP, "Future instalments will be stopped", "Your invested amount stays in this fund until you redeem it.",
-          ("Cancel SIP", "cancel"), ("Continue investing", "continue"), extra_link=True)
+    cancel_sheet(extra_link=True)
 
 
 def screen_popup_cancel_confirm() -> None:
-    sheet(ICON_STOP, "Future instalments will be stopped", "Your invested amount stays in this fund until you redeem it.",
-          ("Cancel SIP", "cancel"), ("Continue investing", "continue"))
+    cancel_sheet()
 
 
-def groww_date(d: date) -> str:
-    return f"{d.day:02d} {MONTHS[d.month - 1][:3]} '{str(d.year)[2:]}"
-
-
-def screen_popup_skip() -> None:         # Groww's skip pop-up
-    sheet(ICON_WARN, f"Are you sure you want to skip the {groww_date(F['target_date'])} instalment?",
-          f'<span style="background:#FFF6DA;border-radius:10px;padding:8px 12px;display:inline-block">ⓘ Your next due date will be {groww_date(F["target_after_date"])}</span>',
-          ("Skip instalment", "skip"), ("Cancel SIP anyway", "cancel_confirm"))
+def screen_popup_skip() -> None:
+    skip_sheet()
 
 
 def screen_fallback() -> None:           # 12
     note = (f'<div class="ss-warn">We could not explain this clearly right now. Here are your basic options. '
             f'<a href="{HELP_URL}" target="_blank">Read Groww\'s help page on SIPs</a>.</div>')
     if F["skip_ok"]:
-        sheet(ICON_WARN, f"Are you sure you want to skip the {groww_date(F['target_date'])} instalment?",
-              f'<span style="background:#FFF6DA;border-radius:10px;padding:8px 12px;display:inline-block">ⓘ Your next due date will be {groww_date(F["target_after_date"])}</span>',
-              ("Skip instalment", "skip"), ("Cancel SIP anyway", "cancel_confirm"), note=note)
+        skip_sheet(note=note)
     else:  # skip is not allowed here, so show Groww's general pop-up instead
-        sheet(ICON_STOP, "Future instalments will be stopped", "Your invested amount stays in this fund until you redeem it.",
-              ("Cancel SIP", "cancel"), ("Continue investing", "continue"), note=note)
+        cancel_sheet(note=note)
 
 
 SCREENS = {
@@ -726,9 +718,9 @@ with st.expander("For reviewers: how the AI is checked"):
       'writes the facts in plain words, and answers questions. Fixed rules supply every number and date. '
       'Every AI text passes 5 checks before it is shown: facts match, rules correct, no advice, calm tone, right group. '
       'If one fails, the user sees Groww\'s current pop-up and a help link.<br><br>'
-      '<b>Time limits.</b> Skip and changes use Groww\'s rule: not for an instalment within 2 working days. '
-      'For cancel, Groww\'s help pages say 3 working days or 7 days. So an instalment due within 7 days "may still be taken". '
-      'A skip asked within 2 working days applies to the next instalment, as on Groww. '
+      f'<b>Time limits.</b> Skip and changes use Groww\'s rule: not for an instalment within {CHANGE_CUTOFF_WORKDAYS} working days. '
+      f'For cancel, Groww\'s help pages say 3 working days or 7 days. So an instalment due within {CANCEL_NOTICE_DAYS} days "may still be taken". '
+      f'A skip asked within {CHANGE_CUTOFF_WORKDAYS} working days applies to the next instalment, as on Groww. '
       'Real limits vary by fund house, and Groww says some funds cannot be edited at all. '
       'A launch would read each fund\'s own limits.</div>')
     if S.ai_sort:
@@ -739,8 +731,9 @@ with st.expander("For reviewers: how the AI is checked"):
     res = HERE / "golden" / "results.json"
     if res.exists():
         try:
-            s = json.loads(res.read_text())["summary"]
-            H(f"""<div class="ss-small" style="margin-top:6px"><b>Golden set results</b> (run on {json.loads(res.read_text())['today']}):<br>
+            results = json.loads(res.read_text())
+            s = results["summary"]
+            H(f"""<div class="ss-small" style="margin-top:6px"><b>Golden set results</b> (run on {results['today']}):<br>
 Right group: {s.get('group_accuracy_exact', 0):.0%} exact, {s.get('group_accuracy_acceptable', 0):.0%} acceptable, over {s.get('sort_items')} situations.<br>
 Right screen after the check: {s.get('route_accuracy_after_gate', 0):.0%}. Money-short replies that got the options: {s.get('cash_short_recall', 0):.0%}.<br>
 AI texts passing all 5 checks: {s.get('text_gate_pass_rate', 0):.0%} of {s.get('ai_texts')}.<br>

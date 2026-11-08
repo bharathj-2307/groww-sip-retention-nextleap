@@ -8,13 +8,16 @@ import calendar
 from datetime import date, timedelta
 
 from core.sip import (SAMPLE_SIPS, MONTHS, facts, workdays_until, new_day_after_payday, next_on_new_day,
-                      CHANGE_CUTOFF_WORKDAYS, CANCEL_NOTICE_DAYS, PAY_LESS_LIMIT)
+                      CHANGE_CUTOFF_WORKDAYS, CANCEL_NOTICE_DAYS, PAY_LESS_LIMIT, SIP_DAY_MAX)
 
 PAYDAYS = [1, 5, 7, 10, 15, 20, 25, 26, 27, 28, 29, 30, 31]
 
 
 def same_day_months_later(d: date, n: int, day: int) -> date:
-    """Calendar answer: the same SIP day n months later, or the month's last day if it is shorter."""
+    """Calendar answer: the same SIP day n months later, or the month's last day if it is shorter.
+
+    Written separately from core.sip on purpose, so the test does not check the code against itself.
+    """
     m = d.month - 1 + n
     y, m = d.year + m // 12, m % 12 + 1
     return date(y, m, min(day, calendar.monthrange(y, m)[1]))
@@ -63,8 +66,8 @@ def check_day(today: date) -> list[str]:
                     errs.append(f"{tag}: reopen {f['pay_less_reopen']} wrong")
                 if not f["pay_less_reopen"] > today:
                     errs.append(f"{tag}: reopen {f['pay_less_reopen']} is not in the future")
-        # move date: any SIP day the user picks from 1 to 28 must start on a valid date
-        for new in range(1, 29):
+        # move date: any SIP day the user picks must start on a valid date
+        for new in range(1, SIP_DAY_MAX + 1):
             first = next_on_new_day(f, new)
             if first.day != new or workdays_until(today, first) <= CHANGE_CUTOFF_WORKDAYS or (close and first <= nd) \
                     or (first - today).days > 70:
@@ -72,7 +75,7 @@ def check_day(today: date) -> list[str]:
         # move date: suggested day from the salary day
         for payday in PAYDAYS:
             new = new_day_after_payday(payday)
-            if not 1 <= new <= 28:
+            if not 1 <= new <= SIP_DAY_MAX:
                 errs.append(f"{tag}: payday {payday} gives SIP day {new}")
             gap = (new - payday) % 30 if new < payday else new - payday
             if not 2 <= gap <= 4:
@@ -96,7 +99,7 @@ def main() -> None:
         errs += check_day(d)
         days += 1
         d += timedelta(days=1)
-    print(f"Checked {days} days x {len(SAMPLE_SIPS)} cases x {len(PAYDAYS)} salary days and 28 picked SIP days.")
+    print(f"Checked {days} days x {len(SAMPLE_SIPS)} cases x {len(PAYDAYS)} salary days and {SIP_DAY_MAX} picked SIP days.")
     print(f"Problems: {len(errs)}")
     for e in errs[:25]:
         print(" ", e)

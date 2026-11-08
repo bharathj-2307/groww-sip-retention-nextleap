@@ -8,18 +8,13 @@ the run exits when all are out, and re-running resumes where it stopped.
 import argparse
 import concurrent.futures as cf
 import json
-import os
-import re
-import time
+import sys
 from pathlib import Path
 
-import requests
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from gemini_batch import BATCH, call  # noqa: E402  (shared Gemini client)
 
 ROOT = Path(__file__).resolve().parent.parent
-URL = "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions"
-MODELS = os.environ.get("TAG_MODELS", "gemini-3.5-flash,gemini-3.5-flash-lite,gemini-3.1-flash-lite").split(",")
-BATCH = int(os.environ.get("TAG_BATCH", 3))
-MAX_CHARS = 1200
 
 FIELDS = {
     "start_reason": ["tax_saving", "long_term_wealth", "specific_goal", "extra_income", "friend_family", "video_or_influencer",
@@ -58,33 +53,6 @@ Rules:
 - need_category (v2): asking others what to do with their money, whether to keep, switch or restructure funds, or which fund to pick is fund_guidance. A complaint about a delayed redemption is better_support or trust_reassurance, not reliable_autopay; reliable_autopay only when the post is about instalments not being collected.
 - Never recommend funds or give investment advice."""
 
-EXHAUSTED = set()
-
-
-def call(posts):
-    user = json.dumps([{"id": p["id"], "source": p["source"], "text": p["text"][:MAX_CHARS]} for p in posts], ensure_ascii=False)
-    for attempt in range(8):
-        live = [m for m in MODELS if m not in EXHAUSTED]
-        if not live:
-            raise SystemExit("All models hit their daily free-tier quota; resume after it resets.")
-        model = live[min(attempt // 2, len(live) - 1)]
-        try:
-            r = requests.post(URL, timeout=120, json={
-                "model": model, "temperature": 0, "response_format": {"type": "json_object"},
-                "messages": [{"role": "system", "content": SYSTEM}, {"role": "user", "content": user}]})
-            if r.ok:
-                content = r.json()["choices"][0]["message"]["content"]
-                items = json.loads(re.sub(r"^```(?:json)?|```$", "", content.strip()))["items"]
-                by_id = {i["id"]: i for i in items}
-                if all(p["id"] in by_id for p in posts):
-                    return [{**by_id[p["id"]], "model": model} for p in posts]
-            elif r.status_code == 429 and "PerDay" in r.text:
-                EXHAUSTED.add(model)
-                continue
-        except (requests.RequestException, ValueError, KeyError, TypeError):
-            pass
-        time.sleep(4 * (attempt + 1))
-    return [{"id": p["id"], "error": True} for p in posts]
 
 
 def main():
@@ -112,7 +80,7 @@ def main():
     batches = [todo[i:i + BATCH] for i in range(0, len(todo), BATCH)]
     print(f"{len(todo)} posts to extract in {len(batches)} batches", flush=True)
     with cf.ThreadPoolExecutor(a.workers) as ex:
-        for n, res in enumerate(ex.map(call, batches), 1):
+        for n, res in enumerate(ex.map(lambda batch: call(SYSTEM, batch), batches), 1):
             # open and close per batch: the project-files mount only keeps a file once it is closed
             with out.open("a") as f:
                 for r in res:

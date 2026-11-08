@@ -1,24 +1,20 @@
-"""Tag collected posts with Gemini using the codebook (v2).
+"""First AI pass: tag collected posts with Gemini using the codebook (prompt v3).
 
-Run: python tag.py [--limit N] [--out FILE]
+Run: TAG_BATCH=3 python tag.py [--limit N] [--out FILE] [--only ids.json]
 Reads ../data/raw/*.jsonl, writes ../data/tagged.jsonl (one JSON per post).
-Gemini is called through its OpenAI-compatible endpoint; the key is added by the network proxy.
+The Gemini client and free-tier handling are shared with extract.py (gemini_batch.py).
+Earlier prompt versions are in archive/.
 """
 import argparse
-import os
 import concurrent.futures as cf
 import json
-import re
-import time
+import sys
 from pathlib import Path
 
-import requests
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from gemini_batch import BATCH, call  # noqa: E402  (shared Gemini client)
 
 ROOT = Path(__file__).resolve().parent.parent
-URL = "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions"
-MODELS = os.environ.get("TAG_MODELS", "gemini-3.5-flash,gemini-3.5-flash-lite,gemini-3.1-flash-lite").split(",")  # tried in order, two attempts each
-BATCH = int(__import__("os").environ.get("TAG_BATCH", 8))
-MAX_CHARS = 1200  # long posts are cut; the first part carries the personal story
 
 THEMES = {
     "T1": "Why they started: stated reason for starting an SIP (tax saving, side income, friend/family, goal)",
@@ -61,37 +57,6 @@ Themes:
 """ + "\n".join(f"{k}: {v}" for k, v in THEMES.items())
 
 
-EXHAUSTED = set()  # models that hit the free tier's daily request quota during this run
-
-
-def call(posts):
-    user = json.dumps([{"id": p["id"], "source": p["source"], "text": p["text"][:MAX_CHARS]} for p in posts],
-                      ensure_ascii=False)
-    for attempt in range(8):
-        live = [m for m in MODELS if m not in EXHAUSTED]
-        if not live:
-            raise SystemExit("All models hit their daily free-tier quota; resume after it resets.")
-        model = live[min(attempt // 2, len(live) - 1)]
-        try:
-            r = requests.post(URL, timeout=120, json={
-                "model": model, "temperature": 0,
-                "response_format": {"type": "json_object"},
-                "messages": [{"role": "system", "content": SYSTEM}, {"role": "user", "content": user}]})
-            if r.ok:
-                content = r.json()["choices"][0]["message"]["content"]
-                items = json.loads(re.sub(r"^```(?:json)?|```$", "", content.strip()))["items"]
-                by_id = {i["id"]: i for i in items}
-                if all(p["id"] in by_id for p in posts):
-                    return [{**by_id[p["id"]], "model": model} for p in posts]
-            elif r.status_code == 429:
-                print("429", model, re.findall(r"quotaId.: .(\w+)", r.text), flush=True)
-                if "PerDay" in r.text:
-                    EXHAUSTED.add(model)  # daily quota gone: stop wasting calls on this model
-                    continue
-        except (requests.RequestException, ValueError, KeyError, TypeError):
-            pass
-        time.sleep(4 * (attempt + 1))
-    return [{"id": p["id"], "error": True} for p in posts]
 
 
 def main():
@@ -115,7 +80,7 @@ def main():
     print(f"{len(todo)} posts to tag in {len(batches)} batches", flush=True)
     meta = {p["id"]: p for p in posts}
     with out.open("a") as f, cf.ThreadPoolExecutor(a.workers) as ex:
-        for n, res in enumerate(ex.map(call, batches), 1):
+        for n, res in enumerate(ex.map(lambda batch: call(SYSTEM, batch), batches), 1):
             for r in res:
                 m = meta[r["id"]]
                 f.write(json.dumps({**r, "source": m["source"], "date": m["date"], "url": m["url"],

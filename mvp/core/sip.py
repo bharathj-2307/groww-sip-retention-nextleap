@@ -15,6 +15,7 @@ CHANGE_CUTOFF_WORKDAYS = 2  # instalment within 2 working days: skip and amount 
 CANCEL_NOTICE_DAYS = 7      # instalment within 7 days: it may still be taken after a cancel (Groww pages say 3 working or 7 days)
 PAYDAY_GAP_DAYS = 2        # new SIP date = 2 days after payday
 PAY_LESS_LIMIT = 2         # pay less can be used 2 times in any 12 months
+SIP_DAY_MAX = 28           # a SIP date can be any day from 1 to 28
 
 FUND_NAME = "Sample Equity Fund"  # generic on purpose: the MVP never names a real fund
 
@@ -67,7 +68,7 @@ def _month_add(d: date, n: int, day: int | None = None) -> date:
 
 def _next_on_day(today: date, day: int) -> date:
     """Next date with this day of month, strictly after today."""
-    d = date(today.year, today.month, min(day, 28))
+    d = date(today.year, today.month, min(day, SIP_DAY_MAX))
     return d if d > today else _month_add(d, 1, day)
 
 
@@ -94,6 +95,15 @@ def fmt_date(d: date, year: bool = False) -> str:
 
 def fmt_short(d: date) -> str:
     return f"{d.day} {MONTHS[d.month - 1][:3]}"
+
+
+def fmt_groww_date(d: date) -> str:
+    """Date as Groww's pop-ups write it: 05 Dec '26."""
+    return f"{d.day:02d} {MONTHS[d.month - 1][:3]} '{str(d.year)[2:]}"
+
+
+def ordinal(n: int) -> str:
+    return f"{n}{'th' if 11 <= n % 100 <= 13 else {1: 'st', 2: 'nd', 3: 'rd'}.get(n % 10, 'th')}"
 
 
 def fmt_inr(n: int) -> str:
@@ -203,9 +213,9 @@ def facts(sip: SampleSip, today: date | None = None) -> dict:
 
 
 def new_day_after_payday(payday: int) -> int:
-    """SIP day = 2 days after payday. SIP dates run 1-28, so late paydays roll to early next month."""
+    """SIP day = PAYDAY_GAP_DAYS after payday. SIP dates run 1 to SIP_DAY_MAX, so late paydays roll to early next month."""
     d = payday + PAYDAY_GAP_DAYS
-    if d > 28:
+    if d > SIP_DAY_MAX:
         d = max(1, d - 30)
     return d
 
@@ -226,6 +236,23 @@ def pay_less_choices(f: dict) -> list[int]:
         out.append(a)
         a += 500
     return out
+
+
+def _skip_option(f: dict) -> str:
+    if not f["skip_ok"]:
+        return "NOT available. " + f["skip_why"]
+    if f["too_close"]:
+        return (f"available for {f['target_text']} only. "
+                f"The {f['next_date_text']} instalment cannot be skipped and still goes ahead")
+    return f"available for {f['target_text']}"
+
+
+def _pay_less_option(f: dict) -> str:
+    if not f["pay_less_ok"]:
+        reopen = f" It opens again on {f['pay_less_reopen_text']}." if f["pay_less_reopen_text"] else ""
+        return "NOT available. " + f["pay_less_why"] + reopen
+    return (f"available for the {f['target_text']} instalment. Full amount returns on {f['target_after_text']}. "
+            f"Uses left in 12 months: {f['pay_less_left']}")
 
 
 def facts_for_prompt(f: dict) -> str:
@@ -249,9 +276,10 @@ def facts_for_prompt(f: dict) -> str:
     if f["too_close"]:
         lines.append(f"Situation: the {f['next_date_text']} instalment is within {CHANGE_CUTOFF_WORKDAYS} working days. It cannot be changed. Options apply from {f['target_text']}.")
     lines += [
-        f"Option skip: {'available for ' + f['target_text'] + (' only. The ' + f['next_date_text'] + ' instalment cannot be skipped and still goes ahead' if f['too_close'] else '') if f['skip_ok'] else 'NOT available. ' + f['skip_why']}",
-        f"Option pay less: {'available for the ' + f['target_text'] + ' instalment. Full amount returns on ' + f['target_after_text'] + '. Uses left in 12 months: ' + str(f['pay_less_left']) if f['pay_less_ok'] else 'NOT available. ' + f['pay_less_why'] + (' It opens again on ' + f['pay_less_reopen_text'] + '.' if f['pay_less_reopen_text'] else '')}",
-        "Option move date: available. The user picks a new SIP date from 1 to 28. The app suggests a date 2 days after their salary day, and the user confirms or changes it.",
+        "Option skip: " + _skip_option(f),
+        "Option pay less: " + _pay_less_option(f),
+        f"Option move date: available. The user picks a new SIP date from 1 to {SIP_DAY_MAX}. The app suggests a date "
+        f"{PAYDAY_GAP_DAYS} days after their salary day, and the user confirms or changes it.",
     ]
     if not f["pay_less_ok"] and f["pay_less_left"] == 0:
         lines.append("Option lower the amount for good: available, from the fund minimum. It stays until the user changes it.")

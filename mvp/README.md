@@ -14,6 +14,20 @@ Fixed rules supply every number and date (`core/sip.py`). AI only writes the wor
 Every AI text passes 5 checks before it is shown (`core/gate.py`): facts match, rules correct, no advice, calm tone, right group.
 If one check fails, the user sees Groww's current pop-up and a link to Groww's help page.
 
+## Code layout
+
+Each rule and number lives in one place. Other files import it.
+
+| File | What it holds |
+|---|---|
+| `core/sip.py` | Groww's rules and Steady SIP's limits as constants, the 4 sample SIPs, date maths, number and date formats, and `facts()`: every fact a screen or the AI may use |
+| `core/ai.py` | The three AI jobs (sort, explain, answer), the reason groups and chips, and `GROUP_SCREEN`: which screen each group leads to |
+| `core/gate.py` | The 5 quality checks on every AI text |
+| `core/llm.py` | The Gemini client |
+| `app.py` | The screens. They read facts from `core/sip.py` and send every AI text through `core/gate.py` |
+| `golden/run_eval.py` | Scores the AI on the golden set or the holdout set, with the same routing map as the app |
+| `tests/test_dates.py` | Checks the date rules against an independent calendar calculation |
+
 ## Sample SIPs
 
 | Sample | Shows |

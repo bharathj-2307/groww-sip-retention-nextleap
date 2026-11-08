@@ -8,10 +8,20 @@ from __future__ import annotations
 import re
 
 from .llm import chat, parse_json, LLMError
-from .sip import facts_for_prompt
+from .sip import MISS_LIMIT, facts_for_prompt
 
 GROUPS = ["cash_short", "break", "withdraw", "stop", "returns", "other"]
 CONFIDENCE_MIN = 0.7
+
+# The screen each group leads to (wireframe numbers). The app and the golden-set eval both use this map.
+GROUP_SCREEN = {
+    "cash_short": "options",      # 3, 8 or 9: own-SIP facts and the gentle options
+    "break": "options",
+    "withdraw": "popup_withdraw",  # 10, withdraw version
+    "stop": "popup_cancel",        # 10: Groww's current pop-up
+    "returns": "popup_cancel",
+    "other": "popup_general",      # 11: general pop-up with "Is money tight this month?"
+}
 
 # Chips map to a group with no AI call.
 CHIPS = {
@@ -79,9 +89,9 @@ def explain(f: dict, language: str = "en", group: str = "cash_short") -> dict:
     elif f.get("pay_less_left") == 0:
         focus = ("Say that the invested money stays invested whatever they choose. Say pay less has been used "
                  f"{f['pay_less_used']} times in the last 12 months and opens again on {f['pay_less_reopen_text']}. "
-                 "Say that a skip counts as 1 missed and the rule of 3 missed in a row.")
-    elif f.get("misses_in_row", 0) >= 2:
-        focus = ("Say that the invested money stays invested. Say calmly that they have missed 2 in a row and that "
+                 f"Say that a skip counts as 1 missed and the rule of {f['miss_limit']} missed in a row.")
+    elif f.get("misses_in_row", 0) >= MISS_LIMIT - 1:
+        focus = (f"Say that the invested money stays invested. Say calmly that they have missed {f['misses_in_row']} in a row and that "
                  "if the next one is also missed, Groww will cancel this SIP. Say the options on this screen keep it running.")
     else:
         focus = ("Say that the invested money stays invested whatever they choose, and that Groww cancels a SIP only "
